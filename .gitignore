@@ -1,0 +1,7 @@
+scripts/generate
+syn_vivado
+syn_quartus
+syn_xst
+syn_yosys
+temp
+rtl
