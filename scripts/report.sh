@@ -151,7 +151,7 @@ else
 fi
 
 {
-	echo "<h3>Hammer Report: $job</h3>"
+	echo "<h3>Vlog-Hammer Report: $job</h3>"
 	echo "<table border>"
 	echo "<tr><th width=\"100\"></th>"
 	for q in $syn_list rtl $sim_list; do

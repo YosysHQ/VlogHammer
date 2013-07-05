@@ -1,0 +1,42 @@
+
+         Vlog-Hammer -- A Verilog Synthesis Regression Test
+         ==================================================
+
+This test generates a large number of small Verilog modules and checks
+different synthesis tools for equivialence. The following tools are
+supported:
+
+	Yosys (no specific version)
+	Xilinx Vivado WebPack (2013.2)
+	Xilinx ISE (XST) WebPack (14.5)
+	Altera Quartus Web Edition (13.0)
+
+In addition to this synthesis tools, the offending test cases and pattern
+are checked using the following Verilog synthesis tools:
+
+	Xilinx ISIM (from Xilinx ISE 14.5)
+	Modelsim 10.1d (from Quartus 13.0)
+	Icarus Verilog (no specific version)
+
+Instructions:
+
+ * Install Xilinx Vivado WebPack 2013.2 in /opt/Xilinx/Vivado/2013.2
+ * Insatll Xilinx ISE WebPack 14.5 in /opt/Xilinx/14.5/
+ * Install Altera Quartus Web Edition 13.0 in /opt/altera/13.0/
+
+ * Generate Test Cases:
+
+	make purge generate
+
+ * Synthesize Test Cases:
+
+	make -j4 -l6 syn
+
+ * Check Individual Synthesis Results vs. Yosys RTL:
+
+	make -j4 -l6 check
+
+ * Generate Reports on Failed Test Cases:
+
+	make -j4 -l6 report
+

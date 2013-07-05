@@ -34,9 +34,10 @@ clean:
 	rm -rf temp ./scripts/generate
 
 purge: clean
-	rm -rf rtl cache report
+	rm -rf rtl report
 	rm -rf syn_vivado syn_quartus syn_xst syn_yosys
 	rm -rf check_vivado check_quartus check_xst check_yosys
+	rm -rf cache_vivado cache_quartus cache_xst cache_yosys
 
 # -------------------------------------------------------------------------------------------
 
