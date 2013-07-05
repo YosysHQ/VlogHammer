@@ -7,5 +7,10 @@ check_vivado
 check_quartus
 check_xst
 check_yosys
+cache_vivado
+cache_quartus
+cache_xst
+cache_yosys
+report
 temp
 rtl

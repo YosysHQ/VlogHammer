@@ -1,9 +1,5 @@
 #!/bin/bash
 
-use_vivado=false
-use_quartus=false
-checkdir="check"
-
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 <syn_type> <job_name>" >&2
 	exit 1
@@ -30,6 +26,9 @@ flatten $job;
 hierarchy -top $job;
 write_ilang syn.il
 "
+
+mkdir -p ../../cache_${syn}
+cp syn.il ../../cache_${syn}/$job.il
 
 {
 	egrep '^ *(module|input|output)' rtl.v | sed 's/ y/ y_rtl, y_syn/'

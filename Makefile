@@ -28,11 +28,17 @@ help:
 	@echo "  make -j4 -l6 report"
 	@echo ""
 
+# -------------------------------------------------------------------------------------------
+
 clean:
 	rm -rf temp ./scripts/generate
 
 purge: clean
-	rm -rf rtl syn_yosys
+	rm -rf rtl cache report
+	rm -rf syn_vivado syn_quartus syn_xst syn_yosys
+	rm -rf check_vivado check_quartus check_xst check_yosys
+
+# -------------------------------------------------------------------------------------------
 
 generate:
 ifdef ONLY_SAMPLES
@@ -97,6 +103,14 @@ check_yosys:
 
 check_yosys/%.txt:
 	bash scripts/check.sh yosys $(notdir $(basename $@))
+
+# -------------------------------------------------------------------------------------------
+
+report:
+	ls check_vivado check_quartus check_xst check_yosys | grep '\.err$$' | sort -u | cut -f1 -d. | gawk '{ print "report/" $$0 ".html"; }' | xargs -r $(MAKE)
+
+report/%.html:
+	bash scripts/report.sh $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
