@@ -72,6 +72,35 @@ syn_yosys/%.v:
 
 # -------------------------------------------------------------------------------------------
 
+check: check_vivado check_quartus check_xst check_yosys
+
+check_vivado:
+	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_vivado/" $$0 ".txt"; }' | xargs -r $(MAKE)
+
+check_vivado/%.txt:
+	bash scripts/check.sh vivado $(notdir $(basename $@))
+
+check_quartus:
+	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_quartus/" $$0 ".txt"; }' | xargs -r $(MAKE)
+
+check_quartus/%.txt:
+	bash scripts/check.sh quartus $(notdir $(basename $@))
+
+check_xst:
+	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_xst/" $$0 ".txt"; }' | xargs -r $(MAKE)
+
+check_xst/%.txt:
+	bash scripts/check.sh xst $(notdir $(basename $@))
+
+check_yosys:
+	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_yosys/" $$0 ".txt"; }' | xargs -r $(MAKE)
+
+check_yosys/%.txt:
+	bash scripts/check.sh yosys $(notdir $(basename $@))
+
+# -------------------------------------------------------------------------------------------
+
 .PHONY: help clean purge generate
 .PHONY: syn syn_vivado syn_quartus syn_xst syn_yosys
+.PHONY: check check_vivado check_quartus check_xst check_yosys
 
