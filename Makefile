@@ -53,26 +53,22 @@ endif
 
 syn: syn_vivado syn_quartus syn_xst syn_yosys
 
-syn_vivado:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_vivado/" $$0 ".v"; }' | xargs -r $(MAKE)
+syn_vivado: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_vivado/" $$0 ".v"; }')
 
 syn_vivado/%.v:
 	bash scripts/syn_vivado.sh $(notdir $(basename $@))
 
-syn_quartus:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_quartus/" $$0 ".v"; }' | xargs -r $(MAKE)
+syn_quartus: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_quartus/" $$0 ".v"; }')
 
 syn_quartus/%.v:
 	bash scripts/syn_quartus.sh $(notdir $(basename $@))
 
-syn_xst:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_xst/" $$0 ".v"; }' | xargs -r $(MAKE)
+syn_xst: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_xst/" $$0 ".v"; }')
 
 syn_xst/%.v:
 	bash scripts/syn_xst.sh $(notdir $(basename $@))
 
-syn_yosys:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_yosys/" $$0 ".v"; }' | xargs -r $(MAKE)
+syn_yosys: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_yosys/" $$0 ".v"; }')
 
 syn_yosys/%.v:
 	bash scripts/syn_yosys.sh $(notdir $(basename $@))
@@ -81,34 +77,29 @@ syn_yosys/%.v:
 
 check: check_vivado check_quartus check_xst check_yosys
 
-check_vivado:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_vivado/" $$0 ".txt"; }' | xargs -r $(MAKE)
+check_vivado: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_vivado/" $$0 ".txt"; }')
 
 check_vivado/%.txt:
 	bash scripts/check.sh vivado $(notdir $(basename $@))
 
-check_quartus:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_quartus/" $$0 ".txt"; }' | xargs -r $(MAKE)
+check_quartus: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_quartus/" $$0 ".txt"; }')
 
 check_quartus/%.txt:
 	bash scripts/check.sh quartus $(notdir $(basename $@))
 
-check_xst:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_xst/" $$0 ".txt"; }' | xargs -r $(MAKE)
+check_xst: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_xst/" $$0 ".txt"; }')
 
 check_xst/%.txt:
 	bash scripts/check.sh xst $(notdir $(basename $@))
 
-check_yosys:
-	ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_yosys/" $$0 ".txt"; }' | xargs -r $(MAKE)
+check_yosys: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_yosys/" $$0 ".txt"; }')
 
 check_yosys/%.txt:
 	bash scripts/check.sh yosys $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
-report:
-	ls check_vivado check_quartus check_xst check_yosys | grep '\.err$$' | sort -u | cut -f1 -d. | gawk '{ print "report/" $$0 ".html"; }' | xargs -r $(MAKE)
+report: $(shell ls check_vivado check_quartus check_xst check_yosys | grep '\.err$$' | sort -u | cut -f1 -d. | gawk '{ print "report/" $$0 ".html"; }')
 
 report/%.html:
 	bash scripts/report.sh $(notdir $(basename $@))
