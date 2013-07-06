@@ -1,4 +1,6 @@
 
+// Based on the simulation models from /opt/Xilinx/14.5/ISE_DS/ISE/verilog/src/unisims/
+
 module IBUF(O, I);
 output O;
 input  I;

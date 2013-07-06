@@ -12,7 +12,7 @@ supported:
 	Altera Quartus Web Edition (13.0)
 
 In addition to this synthesis tools, the offending test cases and pattern
-are checked using the following Verilog synthesis tools:
+are checked using the following Verilog simulators:
 
 	Xilinx ISIM (from Xilinx ISE 14.5)
 	Modelsim 10.1d (from Quartus 13.0)
@@ -20,6 +20,7 @@ are checked using the following Verilog synthesis tools:
 
 Instructions:
 
+ * Install Yosys (yosys) and Icarus Verilog (iverilog)
  * Install Xilinx Vivado WebPack 2013.2 in /opt/Xilinx/Vivado/2013.2
  * Insatll Xilinx ISE WebPack 14.5 in /opt/Xilinx/14.5/
  * Install Altera Quartus Web Edition 13.0 in /opt/altera/13.0/
