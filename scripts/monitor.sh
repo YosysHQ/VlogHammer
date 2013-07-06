@@ -66,10 +66,21 @@ gawk 'ARGIND == 1 { mintm = $1; maxtm = $1; mincnt = $2; maxcnt = $2; }
       ~/.vloghammer/monitordata.txt ~/.vloghammer/monitordata.txt
 
 echo
-date "+ $sum   [%H:%M:%S]" | figlet -W -w160
-statuslen=$((sum % 20 + (sum % 20 - 1) / 5))
-[ $statuslen -eq 0 ] && statuslen=160
-printf "   %.*s" $statuslen "ooooo|ooooo|ooooo|ooooo" | figlet -fsmall -w160
+
+statuslen=$((sum % 50))
+if [ $statuslen -gt 25 ]; then
+	statusbar="$( printf "%.*slllllllllllllllllllllllll" $((statuslen-25)) "........................." )"
+else
+	statusbar="$( printf "%.*s........................." $statuslen "lllllllllllllllllllllllll" )"
+fi
+statusbar="$( echo "$statusbar" | sed -r '
+	s/^(.{4})\./\1,/; s/^(.{4})l/\1|/;
+	s/^(.{9})\./\1,/; s/^(.{9})l/\1|/;
+	s/^(.{14})\./\1,/; s/^(.{14})l/\1|/;
+	s/^(.{19})\./\1,/; s/^(.{19})l/\1|/;
+	s/^(.{24})\./\1,/; s/^(.{24})l/\1|/;
+' )"
+printf "   %.25s     $(echo $sum | sed 's/./\0 /g;')" "$statusbar" | figlet -w160
 
 echo
 for pid in $( pidof make ); do
