@@ -39,5 +39,5 @@ sed -i 's,^// DATE.*,,;' fv/conformal/$job.vo
 mkdir -p ../../syn_quartus
 cp fv/conformal/$job.vo ../../syn_quartus/$job.v
 
-sync
+rm -rf ../syn_quartus_$job
 echo READY.

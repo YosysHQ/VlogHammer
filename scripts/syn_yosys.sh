@@ -35,5 +35,5 @@ yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
 mkdir -p ../../syn_yosys
 cp synth.v ../../syn_yosys/$job.v
 
-sync
+rm -rf ../syn_yosys_$job
 echo READY.

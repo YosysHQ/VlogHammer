@@ -82,5 +82,5 @@ else
 	cp check.log ../../check_${syn}/${job}.err
 fi
 
-sync
+rm -rf ../check_${syn}_${job}
 echo READY.

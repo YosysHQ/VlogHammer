@@ -50,5 +50,5 @@ sed -i '/^`ifndef/,/^`endif/ d; s/ *Timestamp: .*//;' $job.v
 mkdir -p ../../syn_xst
 cp $job.v ../../syn_xst/$job.v
 
-sync
+rm -rf ../syn_xst_$job
 echo READY.

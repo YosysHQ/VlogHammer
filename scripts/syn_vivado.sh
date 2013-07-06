@@ -41,5 +41,5 @@ EOT
 mkdir -p ../../syn_vivado
 cp synth.v ../../syn_vivado/$job.v
 
-sync
+rm -rf ../syn_vivado_$job
 echo READY.

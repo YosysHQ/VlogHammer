@@ -200,6 +200,6 @@ fi
 mkdir -p ../../report
 cp report.html ../../report/${job}.html
 
-sync
+rm -rf ../report_${job}
 echo READY.
 
