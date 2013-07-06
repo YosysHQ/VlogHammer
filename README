@@ -11,8 +11,9 @@ supported:
 	Xilinx ISE (XST) WebPack (14.5)
 	Altera Quartus Web Edition (13.0)
 
-In addition to this synthesis tools, the offending test cases and pattern
-are checked using the following Verilog simulators:
+The built-in SAT-solver in Yosis is used for formal equivalence checking.
+The test cases that fail this check and the found example pattern are
+then tried using the following Verilog simulators:
 
 	Xilinx ISIM (from Xilinx ISE 14.5)
 	Modelsim 10.1d (from Quartus 13.0)
