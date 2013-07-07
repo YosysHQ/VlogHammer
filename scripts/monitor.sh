@@ -30,17 +30,19 @@ function stat_line()
 			printf "%-15s%5s" "" ""
 			continue
 		fi
-		if ! test -d $dir && [ "$dir" != "total" ]; then
+		if ! test -d $dir && [ "$dir" != "total" -a "$dir" != "failed" ]; then
 			printf "%-15s%5s" "$dir" "----"
 			continue
 		fi
-		if [ $dir != "total" ]; then
-			count=$( ls $dir | grep -v '\.err$' | wc -l )
-		else
+		if [ $dir == "failed" ]; then
+			count=$( ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$' | sort -u | wc -l )
+		elif [ $dir == "total" ]; then
 			count=$sum
+		else
+			count=$( ls $dir | grep -v '\.err$' | wc -l )
 		fi
 		printf "%-15s%5s" $dir $count
-		if [ $dir != "total" ]; then
+		if [ $dir != "total" -a $dir != "failed" ]; then
 			sum=$((sum+count))
 		fi
 	done
@@ -48,8 +50,8 @@ function stat_line()
 }
 echo "     +------------------------------+------------------------------+------------------------------+"
 stat_line {syn,check}_vivado   rtl
-stat_line {syn,check}_quartus  report
-stat_line {syn,check}_xst      ""
+stat_line {syn,check}_quartus  failed
+stat_line {syn,check}_xst      report
 stat_line {syn,check}_yosys    total
 echo "     +------------------------------+------------------------------+------------------------------+"
 
@@ -59,7 +61,7 @@ mkdir -p ~/.vloghammer
 mv ~/.vloghammer/monitordata.new ~/.vloghammer/monitordata.txt
 
 echo
-echo -n "$(uptime),  avg. seconds per out file: "
+echo -n "$(uptime),  floating avg. s/job: "
 gawk 'ARGIND == 1 { mintm = $1; maxtm = $1; mincnt = $2; maxcnt = $2; }
       ARGIND == 2 && $1 > maxtm-600 && $1 < mintm { mintm = $1; mincnt = $2; }
       END { printf "%.2f\n", (maxtm - mintm) / (maxcnt - mincnt + 1); }' \
@@ -83,7 +85,7 @@ statusbar="$( echo "$statusbar" | sed -r '
 printf "   %.25s     $(echo $sum | sed 's/./\0 /g;')" "$statusbar" | figlet -w160
 
 echo
-for pid in $( pidof make ); do
+for pid in $( ps h -o pid,ppid $( pidof make ) | gawk '{ d[$1]=$2; } END { for (p in d) if (!(d[p] in d)) print p; }' ); do
 	pstree $pid
 done
 
