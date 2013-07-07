@@ -12,5 +12,6 @@ cache_quartus
 cache_xst
 cache_yosys
 report
+report.html
 temp
 rtl

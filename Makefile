@@ -16,6 +16,14 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+SYN_LIST  := vivado quartus xst yosys
+SIM_LIST  := isim modelsim icarus
+RTL_LIST  := $(shell ls rtl 2> /dev/null | sort -u | cut -f1 -d.)
+FAIL_LIST := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
+MAKE_JOBS := -j4 -l6
+
+export SYN_LIST SIM_LIST
+
 help:
 	@echo ""
 	@echo "  make clean  ..............................  remove temp files"
@@ -45,13 +53,25 @@ help:
 	@echo "  make -j4 -l6 report"
 	@echo ""
 
+world:
+	$(MAKE) $(MAKE_JOBS) syn
+	$(MAKE) $(MAKE_JOBS) check
+	$(MAKE) $(MAKE_JOBS) report
+
 # -------------------------------------------------------------------------------------------
+
+backup:
+	mkdir -p ~/.vloghammer
+	tar czf ~/.vloghammer/backup_syn.tar.gz syn_*
+	tar czf ~/.vloghammer/backup_check.tar.gz check_*
+	tar czf ~/.vloghammer/backup_cache.tar.gz cache_*
+	tar czf ~/.vloghammer/backup_report.tar.gz report
 
 clean:
 	rm -rf temp ./scripts/generate
 
 purge: clean
-	rm -rf rtl report
+	rm -rf rtl report report.html
 	rm -rf syn_vivado syn_quartus syn_xst syn_yosys
 	rm -rf check_vivado check_quartus check_xst check_yosys
 	rm -rf cache_vivado cache_quartus cache_xst cache_yosys
@@ -65,65 +85,67 @@ else
 	clang -Wall -Wextra -O2 -o scripts/generate scripts/generate.cc -lstdc++
 endif
 	./scripts/generate
+	cp archive/* rtl/
 
 # -------------------------------------------------------------------------------------------
 
-syn: syn_vivado syn_quartus syn_xst syn_yosys
+syn: $(addprefix syn_,$(SYN_LIST))
 
-syn_vivado: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_vivado/" $$0 ".v"; }')
+syn_vivado: $(addprefix syn_vivado/,$(addsuffix .v,$(RTL_LIST)))
 
 syn_vivado/%.v:
 	bash scripts/syn_vivado.sh $(notdir $(basename $@))
 
-syn_quartus: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_quartus/" $$0 ".v"; }')
+syn_quartus: $(addprefix syn_quartus/,$(addsuffix .v,$(RTL_LIST)))
 
 syn_quartus/%.v:
 	bash scripts/syn_quartus.sh $(notdir $(basename $@))
 
-syn_xst: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_xst/" $$0 ".v"; }')
+syn_xst: $(addprefix syn_xst/,$(addsuffix .v,$(RTL_LIST)))
 
 syn_xst/%.v:
 	bash scripts/syn_xst.sh $(notdir $(basename $@))
 
-syn_yosys: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "syn_yosys/" $$0 ".v"; }')
+syn_yosys: $(addprefix syn_yosys/,$(addsuffix .v,$(RTL_LIST)))
 
 syn_yosys/%.v:
 	bash scripts/syn_yosys.sh $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
-check: check_vivado check_quartus check_xst check_yosys
+check: $(addprefix check_,$(SYN_LIST))
 
-check_vivado: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_vivado/" $$0 ".txt"; }')
+check_vivado: $(addprefix check_vivado/,$(addsuffix .txt,$(RTL_LIST)))
 
 check_vivado/%.txt:
 	bash scripts/check.sh vivado $(notdir $(basename $@))
 
-check_quartus: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_quartus/" $$0 ".txt"; }')
+check_quartus: $(addprefix check_quartus/,$(addsuffix .txt,$(RTL_LIST)))
 
 check_quartus/%.txt:
 	bash scripts/check.sh quartus $(notdir $(basename $@))
 
-check_xst: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_xst/" $$0 ".txt"; }')
+check_xst: $(addprefix check_xst/,$(addsuffix .txt,$(RTL_LIST)))
 
 check_xst/%.txt:
 	bash scripts/check.sh xst $(notdir $(basename $@))
 
-check_yosys: $(shell ls rtl | sort -u | cut -f1 -d. | gawk '{ print "check_yosys/" $$0 ".txt"; }')
+check_yosys: $(addprefix check_yosys/,$(addsuffix .txt,$(RTL_LIST)))
 
 check_yosys/%.txt:
 	bash scripts/check.sh yosys $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
-report: $(shell ls check_vivado check_quartus check_xst check_yosys | grep '\.err$$' | sort -u | cut -f1 -d. | gawk '{ print "report/" $$0 ".html"; }')
+report: $(addprefix report/,$(addsuffix .html,$(FAIL_LIST)))
+	car report/* > report.html
 
 report/%.html:
 	bash scripts/report.sh $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
-.PHONY: help clean purge generate
+.PHONY: help world backup clean purge generate report
 .PHONY: syn syn_vivado syn_quartus syn_xst syn_yosys
 .PHONY: check check_vivado check_quartus check_xst check_yosys
 
