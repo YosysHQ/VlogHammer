@@ -17,8 +17,14 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-syn_list="vivado quartus xst yosys"
-sim_list="isim modelsim icarus"
+syn_list="${SYN_LIST:-vivado quartus xst yosys}"
+sim_list="${SIM_LIST:-isim modelsim icarus}"
+keep=false
+
+if [ "$1" = "-keep" ]; then
+	keep=true
+	shift
+fi
 
 if [ $# -ne 1 ]; then
 	echo "Usage: $0 <job_name>" >&2
@@ -107,7 +113,7 @@ done; done
 	echo "  initial begin"
 	extra_patterns=""
 	bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
-	inputs=$( echo "{" $( grep '^  input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) "}" | sed 's/, }/ }/;' )
+	inputs=$( echo "{" $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) "}" | sed 's/, }/ }/;' )
 	for x in 1 2 3 4 5 6 7 8 9 0; do
 		extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
 	done
@@ -193,13 +199,14 @@ fi
 	done
 	echo "<tr><td colspan=\"$( echo left $syn_list rtl $sim_list | wc -w )\"><pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v |
 		perl -pe 's!([^\w#]|^)(\w+)\b!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /module|input|wire|output|assign|signed|endmodule/ ? "#008800;" : "#000088;", $y)!eg' )</pre></td></tr>"
-	#perl -pe 's,\b(module|input|wire|output|assign|signed|endmodule)\b,<span style="color: #008800;">$1</span>,g' )</pre></td></tr>"
 	echo "</table>"
 } > report.html
 
 mkdir -p ../../report
 cp report.html ../../report/${job}.html
 
-rm -rf ../report_${job}
+if ! $keep; then
+	rm -rf ../report_${job}
+fi
 echo READY.
 
