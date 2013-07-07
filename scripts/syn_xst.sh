@@ -23,9 +23,12 @@ if [ $# -ne 1 ]; then
 fi
 
 job="$1"
-set -e --
+set -ex --
 
-. /opt/Xilinx/14.5/ISE_DS/settings64.sh
+test -n "$ISE_SETTINGS"
+
+set +x
+. ${ISE_SETTINGS}
 set -x
 
 rm -rf temp/syn_xst_$job

@@ -61,7 +61,7 @@ mkdir -p ~/.vloghammer
 mv ~/.vloghammer/monitordata.new ~/.vloghammer/monitordata.txt
 
 echo
-echo -n "$(uptime),  floating avg. s/job: "
+echo -n "$(uptime),  floating avg. sec/job: "
 gawk 'ARGIND == 1 { mintm = $1; maxtm = $1; mincnt = $2; maxcnt = $2; }
       ARGIND == 2 && $1 > maxtm-600 && $1 < mintm { mintm = $1; mincnt = $2; }
       END { printf "%.2f\n", (maxtm - mintm) / (maxcnt - mincnt + 1); }' \

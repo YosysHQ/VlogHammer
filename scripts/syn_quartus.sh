@@ -25,14 +25,16 @@ fi
 job="$1"
 set -ex --
 
+test -n "$QUARTUS_DIR"
+
 rm -rf temp/syn_quartus_$job
 mkdir -p temp/syn_quartus_$job
 cd temp/syn_quartus_$job
 
 cp ../../rtl/$job.v .
-/opt/altera/13.0/quartus/bin/quartus_map $job --source=$job.v --family="Cyclone III"
-/opt/altera/13.0/quartus/bin/quartus_fit $job
-/opt/altera/13.0/quartus/bin/quartus_eda $job --formal_verification --tool=conformal
+${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
+${QUARTUS_DIR}/quartus_fit $job
+${QUARTUS_DIR}/quartus_eda $job --formal_verification --tool=conformal
 
 sed -i 's,^// DATE.*,,;' fv/conformal/$job.vo
 

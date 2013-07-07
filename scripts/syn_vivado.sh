@@ -25,6 +25,8 @@ fi
 job="$1"
 set -ex --
 
+test -n "${VIVADO_BIN}"
+
 rm -rf temp/syn_vivado_$job
 mkdir -p temp/syn_vivado_$job
 cd temp/syn_vivado_$job
@@ -36,7 +38,7 @@ cat > $job.tcl <<- EOT
 	write_verilog -force synth.v
 EOT
 
-/opt/Xilinx/Vivado/2013.2/bin/vivado -mode batch -source $job.tcl
+${VIVADO_BIN} -mode batch -source $job.tcl
 
 mkdir -p ../../syn_vivado
 cp synth.v ../../syn_vivado/$job.v

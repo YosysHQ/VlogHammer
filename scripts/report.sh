@@ -17,10 +17,7 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-syn_list="${SYN_LIST:-vivado quartus xst yosys}"
-sim_list="${SIM_LIST:-isim modelsim icarus}"
 keep=false
-
 if [ "$1" = "-keep" ]; then
 	keep=true
 	shift
@@ -34,6 +31,11 @@ fi
 job="$1"
 set -ex --
 
+test -n "$SYN_LIST"
+test -n "$SIM_LIST"
+test -n "$ISE_SETTINGS"
+test -n "$MODELSIM_DIR"
+
 rm -rf temp/report_${job}
 mkdir -p temp/report_${job}
 cd temp/report_${job}
@@ -41,7 +43,7 @@ cd temp/report_${job}
 cp ../../rtl/$job.v rtl.v
 cp rtl.v syn_rtl.v
 
-for p in $syn_list; do
+for p in ${SYN_LIST}; do
 	cp ../../syn_$p/$job.v syn_$p.v
 	cp ../../cache_$p/$job.il syn_$p.il
 done
@@ -54,8 +56,8 @@ done
 } > top.v
 
 echo -n > fail_patterns.txt
-for p in $syn_list rtl; do
-for q in $syn_list rtl; do
+for p in ${SYN_LIST} rtl; do
+for q in ${SYN_LIST} rtl; do
 	if test -f result.${q}.${p}.txt; then
 		cp result.${q}.${p}.txt result.${p}.${q}.txt
 		continue
@@ -105,7 +107,7 @@ done; done
 	echo "module testbench;"
 
 	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
-	for p in $syn_list rtl; do
+	for p in ${SYN_LIST} rtl; do
 		sed -r "/^ *output / !d; s/output/wire/; s/ y;/ ${p}_y;/;" rtl.v
 		sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p ${job}_$p (/;" rtl.v
 	done
@@ -119,7 +121,7 @@ done; done
 	done
 	for pattern in $bits\'b0 ~$bits\'b0 $( sed "s/^/$bits'b/;" < fail_patterns.txt ) $extra_patterns; do
 		echo "    $inputs <= $pattern; #1;"
-		for p in $syn_list rtl; do
+		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++RPT++ %b $p\", ${p}_y);"
 		done
 		echo "    \$display(\"++RPT++ ----\");"
@@ -128,7 +130,7 @@ done; done
 
 	echo "endmodule"
 
-	for p in $syn_list rtl; do
+	for p in ${SYN_LIST} rtl; do
 		sed "s/^module ${job}/module ${job}_${p}/; /^\`timescale/ d;" < syn_$p.v
 	done
 
@@ -136,10 +138,10 @@ done; done
 	cat ../../scripts/cells_xilinx_7.v
 } > testbench.v
 
-if [[ " $sim_list " == *" isim "* ]]; then
+if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	(
 	set +x
-	. /opt/Xilinx/14.5/ISE_DS/settings64.sh
+	. ${ISE_SETTINGS}
 	set -x
 	vlogcomp testbench.v
 	fuse -o testbench testbench
@@ -148,19 +150,19 @@ if [[ " $sim_list " == *" isim "* ]]; then
 	)
 fi
 
-if [[ " $sim_list " == *" modelsim "* ]]; then
-	/opt/altera/13.0/modelsim_ase/bin/vlib work
-	/opt/altera/13.0/modelsim_ase/bin/vlog testbench.v
-	/opt/altera/13.0/modelsim_ase/bin/vsim -c -do "run; exit" work.testbench | tee sim_modelsim.log
+if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
+	${MODELSIM_DIR}/vlib work
+	${MODELSIM_DIR}/vlog testbench.v
+	${MODELSIM_DIR}/vsim -c -do "run; exit" work.testbench | tee sim_modelsim.log
 fi
 
-if [[ " $sim_list " == *" isim "* ]]; then
+if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	iverilog testbench.v
 	./a.out | tee sim_icarus.log
 fi
 
-for p in $syn_list rtl; do
-for q in $sim_list; do
+for p in ${SYN_LIST} rtl; do
+for q in ${SIM_LIST}; do
 	echo $( grep '++RPT++' sim_$q.log | sed 's,.*++RPT++ ,,' | grep " $p\$" | gawk '{ print $1; }' | md5sum | gawk '{ print $1; }' ) > result.${p}.${q}.txt
 done; done
 
@@ -177,13 +179,13 @@ fi
 	echo "<h3>Vlog-Hammer Report: $job</h3>"
 	echo "<table border>"
 	echo "<tr><th width=\"100\"></th>"
-	for q in $syn_list rtl $sim_list; do
+	for q in ${SYN_LIST} rtl ${SIM_LIST}; do
 		echo "<th width=\"100\">$q</th>"
 	done
 	echo "</tr>"
-	for p in $syn_list rtl; do
+	for p in ${SYN_LIST} rtl; do
 		echo "<tr><th>$p</th>"
-		for q in $syn_list rtl $sim_list; do
+		for q in ${SYN_LIST} rtl ${SIM_LIST}; do
 			read result < result.${p}.${q}.txt
 			if ! test -f color_$result.txt; then
 				case $( ls color_*.txt | wc -l ) in
@@ -197,7 +199,7 @@ fi
 		done
 		echo "</tr>"
 	done
-	echo "<tr><td colspan=\"$( echo left $syn_list rtl $sim_list | wc -w )\"><pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v |
+	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v |
 		perl -pe 's!([^\w#]|^)(\w+)\b!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /module|input|wire|output|assign|signed|endmodule/ ? "#008800;" : "#000088;", $y)!eg' )</pre></td></tr>"
 	echo "</table>"
 } > report.html

@@ -16,13 +16,17 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-SYN_LIST  := vivado quartus xst yosys
-SIM_LIST  := isim modelsim icarus
-RTL_LIST  := $(shell ls rtl 2> /dev/null | sort -u | cut -f1 -d.)
-FAIL_LIST := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
-MAKE_JOBS := -j4 -l6
+SYN_LIST     := vivado quartus xst yosys
+SIM_LIST     := isim modelsim icarus
+RTL_LIST     := $(shell ls rtl 2> /dev/null | sort -u | cut -f1 -d.)
+FAIL_LIST    := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
+ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh
+MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
+QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
+VIVADO_BIN   := /opt/Xilinx/Vivado/2013.2/bin/vivado
+MAKE_JOBS    := -j4 -l6
 
-export SYN_LIST SIM_LIST
+export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 
 help:
 	@echo ""
@@ -52,6 +56,9 @@ help:
 	@echo "  make -j4 -l6 check"
 	@echo "  make -j4 -l6 report"
 	@echo ""
+
+sh:
+	FORCE_PS1='<\[\e[1;31m\]VlogHammer\[\e[0m\]> \w\$$ ' bash
 
 world:
 	$(MAKE) $(MAKE_JOBS) syn
@@ -145,7 +152,7 @@ report/%.html:
 
 # -------------------------------------------------------------------------------------------
 
-.PHONY: help world backup clean purge generate report
+.PHONY: help sh world backup clean purge generate report
 .PHONY: syn syn_vivado syn_quartus syn_xst syn_yosys
 .PHONY: check check_vivado check_quartus check_xst check_yosys
 
