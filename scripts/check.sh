@@ -67,7 +67,7 @@ cp syn.il ../../cache_${syn}/$job.il
 
 	ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
 	echo "sat -timeout 60 -verify-no-timeout -show $ports -prove y_rtl y_syn ${job}"
-	if [ $syn = yosys ] && [[ $job != expression_* ]]; then
+	if [ $syn = yosys ] && [[ $job != expression_* ]] && [[ $job != archive_* ]]; then
 		echo "eval -brute_force_equiv_checker ${job}_rtl ${job}_syn"
 	fi
 } > check.ys
