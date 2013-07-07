@@ -103,6 +103,13 @@ for q in ${SYN_LIST} rtl; do
 	rm test.$p.$q.input_ok
 done; done
 
+extra_patterns=""
+bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
+inputs=$( echo "{" $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) "}" | sed 's/, }/ }/;' )
+for x in 1 2 3 4 5 6 7 8 9 0; do
+	extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
+done
+
 {
 	echo "module testbench;"
 
@@ -113,12 +120,6 @@ done; done
 	done
 
 	echo "  initial begin"
-	extra_patterns=""
-	bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
-	inputs=$( echo "{" $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) "}" | sed 's/, }/ }/;' )
-	for x in 1 2 3 4 5 6 7 8 9 0; do
-		extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
-	done
 	for pattern in $bits\'b0 ~$bits\'b0 $( sed "s/^/$bits'b/;" < fail_patterns.txt ) $extra_patterns; do
 		echo "    $inputs <= $pattern; #1;"
 		for p in ${SYN_LIST} rtl; do
@@ -138,6 +139,28 @@ done; done
 	cat ../../scripts/cells_xilinx_7.v
 } > testbench.v
 
+{
+	echo "module ${job}_tb;"
+	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
+	sed -r "/^ *output / !d; s/output/wire/;" rtl.v
+	sed "/^ *module/ ! d; s/.*(/  ${job} uut (/;" rtl.v
+
+	echo "  task test_pattern;"
+	echo "    input [$bits-1:0] pattern;"
+	echo "    begin"
+	echo "      $inputs <= pattern; #1;"
+	echo "      \$display(\"++RPT++ %b\", y);"
+	echo "    end"
+	echo "  endtask"
+
+	echo "  initial begin"
+	for pattern in $bits\'b0 ~$bits\'b0 $( sed "s/^/$bits'b/;" < fail_patterns.txt ) $extra_patterns; do
+		echo "    test_pattern( $pattern );"
+	done
+	echo "  end"
+	echo "endmodule"
+} > simple_tb.v
+
 if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	(
 	set +x
@@ -156,7 +179,7 @@ if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
 	${MODELSIM_DIR}/vsim -c -do "run; exit" work.testbench | tee sim_modelsim.log
 fi
 
-if [[ " ${SIM_LIST} " == *" isim "* ]]; then
+if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
 	iverilog testbench.v
 	./a.out | tee sim_icarus.log
 fi
@@ -199,8 +222,9 @@ fi
 		done
 		echo "</tr>"
 	done
-	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v |
-		perl -pe 's!([^\w#]|^)(\w+)\b!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /module|input|wire|output|assign|signed|endmodule/ ? "#008800;" : "#000088;", $y)!eg' )</pre></td></tr>"
+	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
+			perl -pe 's!([^\w#]|^)([\w'\'']+|\$display|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
+			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$display)$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre></td></tr>"
 	echo "</table>"
 } > report.html
 

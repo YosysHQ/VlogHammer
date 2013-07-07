@@ -25,6 +25,7 @@ MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
 VIVADO_BIN   := /opt/Xilinx/Vivado/2013.2/bin/vivado
 MAKE_JOBS    := -j4 -l6
+REPORT_OPTS  :=
 
 export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 
@@ -145,10 +146,10 @@ check_yosys/%.txt:
 # -------------------------------------------------------------------------------------------
 
 report: $(addprefix report/,$(addsuffix .html,$(FAIL_LIST)))
-	car report/* > report.html
+	cat report/* > report.html
 
 report/%.html:
-	bash scripts/report.sh $(notdir $(basename $@))
+	bash scripts/report.sh $(REPORT_OPTS) $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
