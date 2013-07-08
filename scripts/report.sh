@@ -105,7 +105,7 @@ done; done
 
 extra_patterns=""
 bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
-inputs=$( echo "{" $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) "}" | sed 's/, }/ }/;' )
+inputs=$( echo $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) | sed 's/, *$//;' )
 for x in 1 2 3 4 5 6 7 8 9 0; do
 	extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
 done
@@ -121,9 +121,9 @@ done
 
 	echo "  initial begin"
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
-		echo "    $inputs <= $pattern; #1;"
+		echo "    { $inputs } <= $pattern; #1;"
 		for p in ${SYN_LIST} rtl; do
-			echo "    \$display(\"++RPT++ %b $p\", ${p}_y);"
+			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, ${p}_y);"
 		done
 		echo "    \$display(\"++RPT++ ----\");"
 	done
@@ -148,8 +148,8 @@ done
 	echo "  task test_pattern;"
 	echo "    input [$bits-1:0] pattern;"
 	echo "    begin"
-	echo "      $inputs <= pattern; #1;"
-	echo "      \$display(\"++RPT++ %b\", y);"
+	echo "      { $inputs } <= pattern; #1;"
+	echo "      \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", $inputs, y);"
 	echo "    end"
 	echo "  endtask"
 
@@ -186,7 +186,7 @@ fi
 
 for p in ${SYN_LIST} rtl; do
 for q in ${SIM_LIST}; do
-	echo $( grep '++RPT++' sim_$q.log | sed 's,.*++RPT++ ,,' | grep " $p\$" | gawk '{ print $1; }' | md5sum | gawk '{ print $1; }' ) > result.${p}.${q}.txt
+	echo $( grep '++RPT++' sim_$q.log | sed 's,.*++RPT++ ,,' | grep " $p\$" | gawk '{ print $(NF-1); }' | md5sum | gawk '{ print $1; }' ) > result.${p}.${q}.txt
 done; done
 
 echo "#00ff00" > color_PASS.txt
