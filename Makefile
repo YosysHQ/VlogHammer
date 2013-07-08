@@ -19,7 +19,7 @@
 SYN_LIST     := vivado quartus xst yosys
 SIM_LIST     := isim modelsim icarus
 RTL_LIST     := $(shell ls rtl 2> /dev/null | sort -u | cut -f1 -d.)
-FAIL_LIST    := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
+REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
 ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh
 MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
@@ -101,22 +101,38 @@ syn: $(addprefix syn_,$(SYN_LIST))
 
 syn_vivado: $(addprefix syn_vivado/,$(addsuffix .v,$(RTL_LIST)))
 
+ifndef DEPS
 syn_vivado/%.v:
+else
+syn_vivado/%.v: rtl/%.v
+endif
 	bash scripts/syn_vivado.sh $(notdir $(basename $@))
 
 syn_quartus: $(addprefix syn_quartus/,$(addsuffix .v,$(RTL_LIST)))
 
+ifndef DEPS
 syn_quartus/%.v:
+else
+syn_quartus/%.v: rtl/%.v
+endif
 	bash scripts/syn_quartus.sh $(notdir $(basename $@))
 
 syn_xst: $(addprefix syn_xst/,$(addsuffix .v,$(RTL_LIST)))
 
+ifndef DEPS
 syn_xst/%.v:
+else
+syn_xst/%.v: rtl/%.v
+endif
 	bash scripts/syn_xst.sh $(notdir $(basename $@))
 
 syn_yosys: $(addprefix syn_yosys/,$(addsuffix .v,$(RTL_LIST)))
 
+ifndef DEPS
 syn_yosys/%.v:
+else
+syn_yosys/%.v: rtl/%.v
+endif
 	bash scripts/syn_yosys.sh $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
@@ -125,30 +141,50 @@ check: $(addprefix check_,$(SYN_LIST))
 
 check_vivado: $(addprefix check_vivado/,$(addsuffix .txt,$(RTL_LIST)))
 
+ifndef DEPS
 check_vivado/%.txt:
+else
+check_vivado/%.txt: syn_vivado/%.v
+endif
 	bash scripts/check.sh vivado $(notdir $(basename $@))
 
 check_quartus: $(addprefix check_quartus/,$(addsuffix .txt,$(RTL_LIST)))
 
+ifndef DEPS
 check_quartus/%.txt:
+else
+check_quartus/%.txt: syn_quartus/%.v
+endif
 	bash scripts/check.sh quartus $(notdir $(basename $@))
 
 check_xst: $(addprefix check_xst/,$(addsuffix .txt,$(RTL_LIST)))
 
+ifndef DEPS
 check_xst/%.txt:
+else
+check_xst/%.txt: syn_xst/%.v
+endif
 	bash scripts/check.sh xst $(notdir $(basename $@))
 
 check_yosys: $(addprefix check_yosys/,$(addsuffix .txt,$(RTL_LIST)))
 
+ifndef DEPS
 check_yosys/%.txt:
+else
+check_yosys/%.txt: syn_yosys/%.v
+endif
 	bash scripts/check.sh yosys $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
 
-report: $(addprefix report/,$(addsuffix .html,$(FAIL_LIST)))
+report: $(addprefix report/,$(addsuffix .html,$(REPORT_LIST)))
 	cat report/* > report.html
 
+ifndef DEPS
 report/%.html:
+else
+report/%.html: $(addprefix check_,$(addsuffix /%.txt,$(SYN_LIST)))
+endif
 	bash scripts/report.sh $(REPORT_OPTS) $(notdir $(basename $@))
 
 # -------------------------------------------------------------------------------------------
@@ -156,4 +192,8 @@ report/%.html:
 .PHONY: help sh world backup clean purge generate report
 .PHONY: syn syn_vivado syn_quartus syn_xst syn_yosys
 .PHONY: check check_vivado check_quartus check_xst check_yosys
+
+.PRECIOUS: rtl/%.v report/%.html
+.PRECIOUS: syn_vivado/%.v syn_quartus/%.v syn_xst/%.v syn_yosys/%.v
+.PRECIOUS: check_vivado/%.txt check_quartus/%.txt check_xst/%.txt check_yosys/%.txt
 
