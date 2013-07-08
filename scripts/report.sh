@@ -120,7 +120,7 @@ done
 	done
 
 	echo "  initial begin"
-	for pattern in $bits\'b0 ~$bits\'b0 $( sed "s/^/$bits'b/;" < fail_patterns.txt ) $extra_patterns; do
+	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    $inputs <= $pattern; #1;"
 		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++RPT++ %b $p\", ${p}_y);"
@@ -154,7 +154,7 @@ done
 	echo "  endtask"
 
 	echo "  initial begin"
-	for pattern in $bits\'b0 ~$bits\'b0 $( sed "s/^/$bits'b/;" < fail_patterns.txt ) $extra_patterns; do
+	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    test_pattern( $pattern );"
 	done
 	echo "  end"
