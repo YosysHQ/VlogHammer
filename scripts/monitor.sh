@@ -94,7 +94,7 @@
 {
 	echo '<html>'
 	echo '<meta http-equiv="refresh" content="10"/>'
-	echo "<pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' < monitor.txt )</pre>"
+	echo "<pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' < monitor.txt_new )</pre>"
 	echo '</html>'
 } > monitor.html_new
 
