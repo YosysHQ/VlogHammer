@@ -178,7 +178,7 @@ endif
 # -------------------------------------------------------------------------------------------
 
 report: $(addprefix report/,$(addsuffix .html,$(REPORT_LIST)))
-	cat report/* > report.html
+	-cat report/* > report.html
 
 ifndef DEPS
 report/%.html:

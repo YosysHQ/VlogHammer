@@ -95,7 +95,7 @@ for q in ${SYN_LIST} rtl; do
 			echo PASS > result.${p}.${q}.txt
 		fi
 	else
-		echo $( grep '^ *\\[ab][0-9]* ' test.$p.$q.log | gawk '{ print $4; }' | tr -d '\n' ) >> fail_patterns.txt
+		echo $( grep '^ *\\[a-xz][0-9]* ' test.$p.$q.log | gawk '{ print $4; }' | tr -d '\n' ) >> fail_patterns.txt
 		echo FAIL > result.${p}.${q}.txt
 	fi
 
@@ -103,7 +103,7 @@ for q in ${SYN_LIST} rtl; do
 	rm test.$p.$q.input_ok
 done; done
 
-extra_patterns=""
+extra_patterns="$( grep '^ *// *PATTERN:' rtl.v | cut -f2- -d: )"
 bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
 inputs=$( echo $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) | sed 's/, *$//;' )
 for x in 1 2 3 4 5 6 7 8 9 0; do
