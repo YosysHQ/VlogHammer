@@ -223,8 +223,8 @@ fi
 		echo "</tr>"
 	done
 	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
-			perl -pe 's!([^\w#]|^)([\w'\'']+|\$display|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
-			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$display)$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre></td></tr>"
+			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
+			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre></td></tr>"
 	echo "</table>"
 } > report.html
 
