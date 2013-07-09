@@ -13,5 +13,7 @@ cache_xst
 cache_yosys
 report
 report.html
+monitor.html
+monitor.txt
 temp
 rtl

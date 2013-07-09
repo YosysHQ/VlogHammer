@@ -76,6 +76,7 @@ backup:
 	tar czf ~/.vloghammer/backup_report.tar.gz report
 
 clean:
+	rm -f monitor.html monitor.txt
 	rm -rf temp ./scripts/generate
 
 purge: clean
