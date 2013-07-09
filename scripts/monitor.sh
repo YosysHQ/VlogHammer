@@ -43,7 +43,7 @@
 				count=$( ls $dir | grep -v '\.err$' | wc -l )
 			fi
 			printf "%-15s%5s" $dir $count
-			if [ $dir != "total" -a $dir != "failed" ]; then
+			if [ $dir != "rtl" -a $dir != "total" -a $dir != "failed" ]; then
 				sum=$((sum+count))
 			fi
 		done
@@ -57,16 +57,15 @@
 	echo "     +------------------------------+------------------------------+------------------------------+"
 
 	mkdir -p ~/.vloghammer
-	{ tail -n100 ~/.vloghammer/monitordata.txt 2> /dev/null;
-			date "+%s $sum"; } > ~/.vloghammer/monitordata.new
-	mv ~/.vloghammer/monitordata.new ~/.vloghammer/monitordata.txt
+	{ tail -n100 monitor.dat 2> /dev/null; date "+%s $sum"; } > monitor.dat_new
+	mv monitor.dat_new monitor.dat
 
 	echo
 	echo -n "$(uptime),  floating avg. sec/job: "
 	gawk 'ARGIND == 1 { mintm = $1; maxtm = $1; mincnt = $2; maxcnt = $2; }
-	      ARGIND == 2 && $1 > maxtm-600 && $1 < mintm { mintm = $1; mincnt = $2; }
+	      ARGIND == 2 && $1 > maxtm-120 && $1 < mintm { mintm = $1; mincnt = $2; }
 	      END { printf "%.2f\n", (maxtm - mintm) / (maxcnt - mincnt + 1); }' \
-	      ~/.vloghammer/monitordata.txt ~/.vloghammer/monitordata.txt
+	      monitor.dat monitor.dat
 
 	echo
 
