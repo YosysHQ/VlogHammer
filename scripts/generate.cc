@@ -150,7 +150,7 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 		fprintf(f, "(");
 		p = binary_ops[xorshift32() % num_binary_ops];
 		if (!strcmp(p, "*"))
-			budget = budget < 3 ? budget : 3;
+			budget = budget < 4 ? budget : 4;
 		print_expression(f, budget/2, mask);
 		fprintf(f, "%s", p);
 		print_expression(f, budget/2, mask);
@@ -173,9 +173,9 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 		fprintf(f, "}");
 		break;
 	case 7:
-		i = xorshift32() % 4;
+		i = (xorshift32() % 4) + 1;
 		fprintf(f, "{%d{", i);
-		print_expression(f, budget, mask);
+		print_expression(f, budget / i, mask);
 		fprintf(f, "}}");
 		break;
 	}
@@ -447,7 +447,7 @@ int main()
 		fprintf(f, "y);\n");
 
 		for (char var = 'a'; var <= 'y'; var++) {
-			for (int j = 0; j < SIZE(arg_types)*(var == 'y' ? 8 : 1); j++) {
+			for (int j = 0; j < SIZE(arg_types)*(var == 'y' ? 3 : 1); j++) {
 				std::string decl = arg_types[j % SIZE(arg_types)][0];
 				strsubst(decl, "{dir}", var == 'y' ? "wire" : "input");
 				snprintf(buffer, 1024, "%c%d", var, j);
@@ -460,17 +460,17 @@ int main()
 		}
 
 		int total_y_size = 0;
-		for (int j = 0; j < SIZE(arg_types)*8; j++)
+		for (int j = 0; j < SIZE(arg_types)*3; j++)
 			total_y_size += atoi(arg_types[j % SIZE(arg_types)][2]);
 		fprintf(f, "  output [%d:0] y;\n", total_y_size);
 
 		fprintf(f, "  assign y = {");
-		for (int j = 0; j < SIZE(arg_types)*8; j++)
+		for (int j = 0; j < SIZE(arg_types)*3; j++)
 			fprintf(f, "%sy%d", j ? "," : "", j);
 		fprintf(f, "};\n");
 		fprintf(f, "\n");
 
-		for (int j = 0; j < SIZE(arg_types)*8; j++) {
+		for (int j = 0; j < SIZE(arg_types)*3; j++) {
 			fprintf(f, "  assign y%d = ", j);
 			print_expression(f, 1 + xorshift32() % 20);
 			fprintf(f, ";\n");
