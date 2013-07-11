@@ -93,6 +93,19 @@
 {
 	echo '<html>'
 	echo '<meta http-equiv="refresh" content="10"/>'
+	echo '<script language="JavaScript"><!--'
+	echo 'var bgfadecount = 0;'
+	echo 'function bgfade() {'
+	echo '	if (bgfadecount++ < 30) {'
+	echo '		var k = 1 - Math.exp(-bgfadecount*0.3);'
+	echo '		var s = (255*k+256).toString(16).slice(1, 3);'
+	echo '		document.bgColor = "#" + s + s + s;'
+	echo '		window.setTimeout(bgfade, 30);'
+	echo '	} else'
+	echo '		document.bgColor = "#ffffff";'
+	echo '}'
+	echo 'bgfade();'
+	echo '//--></script>'
 	echo "<pre>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' < monitor.txt_new )</pre>"
 	echo '</html>'
 } > monitor.html_new
