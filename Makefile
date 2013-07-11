@@ -179,7 +179,7 @@ endif
 # -------------------------------------------------------------------------------------------
 
 report: $(addprefix report/,$(addsuffix .html,$(REPORT_LIST)))
-	-cat report/* > report.html
+	-sed '/REFRESH:BEGIN/,/REFRESH:END/ d;' report/* > report.html
 
 ifndef DEPS
 report/%.html:

@@ -18,10 +18,21 @@
 #
 
 keep=false
-if [ "$1" = "-keep" ]; then
-	keep=true
-	shift
-fi
+refresh=false
+
+while true; do
+	if [ "$1" = "-keep" ]; then
+		keep=true
+		shift
+		continue
+	fi
+	if [ "$1" = "-refresh" ]; then
+		refresh=true
+		shift
+		continue
+	fi
+	break
+done
 
 if [ $# -ne 1 ]; then
 	echo "Usage: $0 <job_name>" >&2
@@ -199,9 +210,28 @@ else
 fi
 
 {
+	if $refresh; then
+		echo '<!-- REFRESH:BEGIN -->'
+		echo "<body onload=\"pingfade();\">"
+		echo '<meta http-equiv="refresh" content="2"/>'
+		echo '<script language="JavaScript"><!--'
+		echo 'var pingfadecount = 0;'
+		echo 'function pingfade() {'
+		echo '	if (pingfadecount++ < 30) {'
+		echo '		var k = 1 - Math.exp(-pingfadecount*0.3);'
+		echo '		var s = (255*k+256).toString(16).slice(1, 3);'
+		echo '		document.getElementById("x").bgColor = "#" + s + s + s;'
+		echo '		window.setTimeout(pingfade, 30);'
+		echo '	} else'
+		echo '		document.getElementById("x").bgColor = "#ffffff";'
+		echo '}'
+		echo '//--></script>'
+		echo '<!-- REFRESH:END -->'
+	fi
+
 	echo "<h3>Vlog-Hammer Report: $job</h3>"
 	echo "<table border>"
-	echo "<tr><th width=\"100\"></th>"
+	echo "<tr><th width=\"100\" id=\"x\"></th>"
 	for q in ${SYN_LIST} rtl ${SIM_LIST}; do
 		echo "<th width=\"100\">$q</th>"
 	done
