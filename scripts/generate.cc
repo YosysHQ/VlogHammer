@@ -127,13 +127,12 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 		return;
 	}
 
-	int num_modes = 8;
+	int num_modes = 9;
 	while ((mask & ~((~0) << num_modes)) == 0)
 		mask = xorshift32();
 	do {
 		mode = xorshift32() % num_modes;
 	} while (((1 << mode) & mask) == 0);
-	// fprintf(f, "/* %d */", mode);
 
 	budget--;
 	switch (mode)
@@ -177,6 +176,15 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 		fprintf(f, "{%d{", i);
 		print_expression(f, budget / i, mask);
 		fprintf(f, "}}");
+		break;
+	case 8:
+		fprintf(f, "(");
+		print_expression(f, budget / 3, mask);
+		fprintf(f, "?");
+		print_expression(f, budget / 3, mask);
+		fprintf(f, ":");
+		print_expression(f, budget / 3, mask);
+		fprintf(f, ")");
 		break;
 	}
 }
