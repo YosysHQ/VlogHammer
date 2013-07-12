@@ -205,8 +205,12 @@ echo "#ff0000" > color_FAIL.txt
 
 if cmp result.rtl.isim.txt result.rtl.modelsim.txt; then
 	echo "#00ff00" > color_$( cat result.rtl.isim.txt ).txt
+elif cmp result.rtl.modelsim.txt result.rtl.icarus.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.modelsim.txt ).txt
+elif cmp result.rtl.icarus.txt result.rtl.isim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.icarus.txt ).txt
 else
-	echo "#00ff00" > color_NO_SIM_COMMON.txt
+	echo "#00ff00" > color_$( egrep -h '^[a-f0-9]+$' result.*.txt | sort | uniq -c | sort -rn | gawk 'NR == 1 { a=$1; x=$2; } NR == 2 { b=$1; } END { if (a>b+2) print x; else print "NO_SIM_COMMON"; }' ).txt
 fi
 
 {
