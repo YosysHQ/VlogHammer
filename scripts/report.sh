@@ -251,17 +251,23 @@ fi
 	cat <<- EOT
 		<style><!--
 
-		table.valuestab,
-		table.valuestab th { border-collapse:collapse; border: 2px solid black; }
-		table.valuestab td { border-collapse:collapse; border: 1px solid black; }
+		.overviewtab { margin: 0.7em; }
 
-		table.valuestab th,
-		table.valuestab td { padding-left: 0.2em; padding-right: 0.2em; }
+		.valuestab { font-size: 70%; }
 
-		table.valuestab tr:nth-child(2n) { background: #eee; }
-		table.valuestab tr:nth-child(2) { background: #ccc; }
-		table.valuestab td:nth-child(2n) { color: #060; border-right: 2px solid black; }
-		table.valuestab { margin: 1em; }
+		.valuestab,
+		.valuestab th { border-collapse:collapse; border: 2px solid black; }
+		.valuestab td { border-collapse:collapse; border: 1px solid black; }
+
+		.valuestab th,
+		.valuestab td { padding-left: 0.2em; padding-right: 0.2em; }
+
+		.valuestab tr:nth-child(2n) { background: #eee; }
+		.valuestab tr:nth-child(2) { background: #ccc; }
+		.valuestab td:nth-child(2n) { color: #060; border-right: 2px solid black; }
+		.valuestab { margin: 1em; }
+
+		.testbench { margin: 1em; border: 5px dashed gray; padding: 1em; width: 900px; }
 
 		//--></style>
 	EOT
@@ -286,7 +292,7 @@ fi
 	fi
 
 	echo "<h3>Vlog-Hammer Report: $job</h3>"
-	echo "<table border>"
+	echo "<table class=\"overviewtab\" border>"
 	echo "<tr><th width=\"100\" id=\"x\"></th>"
 	for q in ${SYN_LIST} rtl ${SIM_LIST}; do
 		echo "<th width=\"100\">$q</th>"
@@ -308,6 +314,7 @@ fi
 		done
 		echo "</tr>"
 	done
+	echo "</table>"
 
 	sim_files=""
 	for p in ${SIM_LIST}; do
@@ -317,7 +324,6 @@ fi
 		END { for (key in keys) { $0=key; for (i=1; i<ARGC; i++) $(i+1) = values[key, i]; print; }}' $sim_files > sim_values.txt
 
 	if test -s sim_values.txt; then
-		echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\">"
 		echo "<table class=\"valuestab\">"
 		echo "<tr>"
 		echo "<th colspan=\"$( echo ${inputs//,/} ${inputs//,/} | wc -w )\">&nbsp;</th>"
@@ -336,13 +342,11 @@ fi
 		echo "</tr>"
 		sed 's,^ *,<tr><td>,; s, *$,</td></tr>,; s,  *,</td><td>,g;' sim_values.txt
 		echo "</table>"
-		echo "</td></tr>"
 	fi
 
-	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
+	echo "<pre class=\"testbench\"><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
 			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
-			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre></td></tr>"
-	echo "</table>"
+			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre>"
 } > report.html
 
 mkdir -p ../../report
