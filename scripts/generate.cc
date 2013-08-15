@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include <string>
 
 const char *arg_types[][3] = {
@@ -59,27 +60,27 @@ const char *binary_ops[] = {
 	"+",	// 00
 	"-",	// 01
 	"*",	// 02
-//	"/",
-//	"%",
-//	"**",
-	">",	// 03
-	">=",	// 04
-	"<",	// 05
-	"<=",	// 06
-	"&&",	// 07
-	"||",	// 08
-	"==",	// 09
-	"!=",	// 10
-	"===",	// 11
-	"!==",	// 12
-	"&",	// 13
-	"|",	// 14
-	"^",	// 15
-	"^~",	// 16
-	"<<",	// 17
-	">>",	// 18
-	"<<<",	// 19
-	">>>",	// 20
+	"/",	// 03
+	"%",	// 04
+	"**",	// 05
+	">",	// 06
+	">=",	// 07
+	"<",	// 08
+	"<=",	// 09
+	"&&",	// 10
+	"||",	// 11
+	"==",	// 12
+	"!=",	// 13
+	"===",	// 14
+	"!==",	// 15
+	"&",	// 16
+	"|",	// 17
+	"^",	// 18
+	"^~",	// 19
+	"<<",	// 20
+	">>",	// 21
+	"<<<",	// 22
+	">>>",	// 23
 };
 
 const char *unary_ops[] = {
@@ -122,6 +123,7 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 	int i, j, mode;
 	const char *p;
 
+	assert(budget >= 0);
 	if (budget == 0) {
 		fprintf(f, "%c%d", 'a' + char(xorshift32() % 2), int(xorshift32() % num_arg_types));
 		return;
@@ -148,11 +150,21 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 	case 3:
 		fprintf(f, "(");
 		p = binary_ops[xorshift32() % num_binary_ops];
-		if (!strcmp(p, "*"))
-			budget = budget < 4 ? budget : 4;
-		print_expression(f, budget/2, mask);
-		fprintf(f, "%s", p);
-		print_expression(f, budget/2, mask);
+		if (!strcmp(p, "**")) {
+			fprintf(f, "4'd2 %s", p);
+			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask);
+		} else
+		if (!strcmp(p, "/") || !strcmp(p, "%")) {
+			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask);
+			fprintf(f, "%s", p);
+			print_expression(f, 0, mask);
+		} else {
+			if (!strcmp(p, "*"))
+				budget = budget < 4 ? budget : 4;
+			print_expression(f, budget/2, mask);
+			fprintf(f, "%s", p);
+			print_expression(f, budget/2, mask);
+		}
 		fprintf(f, ")");
 		break;
 	case 4:
@@ -235,8 +247,12 @@ int main()
 		fprintf(f, "  %s;\n", a_decl.c_str());
 		fprintf(f, "  %s;\n", b_decl.c_str());
 		fprintf(f, "  %s;\n", y_decl.c_str());
-		fprintf(f, "  assign %s = %s %s %s;\n", y_ref.c_str(),
-				a_ref.c_str(), binary_ops[oi], b_ref.c_str());
+		if (!strcmp(binary_ops[oi], "**"))
+			fprintf(f, "  assign %s = %s%s ** %s;\n", y_ref.c_str(), arg_types[ai][2],
+					strstr(arg_types[ai][0], " signed ") ? "'sd2" : "'d2", b_ref.c_str());
+		else
+			fprintf(f, "  assign %s = %s %s %s;\n", y_ref.c_str(),
+					a_ref.c_str(), binary_ops[oi], b_ref.c_str());
 		fprintf(f, "endmodule\n");
 		fclose(f);
 	}
