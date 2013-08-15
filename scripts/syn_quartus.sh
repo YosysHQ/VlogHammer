@@ -32,14 +32,25 @@ mkdir -p temp/syn_quartus_$job
 cd temp/syn_quartus_$job
 
 cp ../../rtl/$job.v .
-${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
-${QUARTUS_DIR}/quartus_fit $job
-${QUARTUS_DIR}/quartus_eda $job --formal_verification --tool=conformal
+if ! ${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
+then
+	{
+		echo '// [VLOGHAMMER_SYN_ERROR] Quartus failed!'
+		sed -e '/^Error/ ! d; s,^,// ,;' $job.map.rpt
+		sed -e '/^ *assign/ s,^ *,//,;' $job.v
+	} > quartus_failed.v
 
-sed -i 's,^// DATE.*,,;' fv/conformal/$job.vo
+	mkdir -p ../../syn_quartus
+	cp quartus_failed.v ../../syn_quartus/$job.v
+else
+	${QUARTUS_DIR}/quartus_fit $job
+	${QUARTUS_DIR}/quartus_eda $job --formal_verification --tool=conformal
 
-mkdir -p ../../syn_quartus
-cp fv/conformal/$job.vo ../../syn_quartus/$job.v
+	sed -i 's,^// DATE.*,,;' fv/conformal/$job.vo
+
+	mkdir -p ../../syn_quartus
+	cp fv/conformal/$job.vo ../../syn_quartus/$job.v
+fi
 
 rm -rf ../syn_quartus_$job
 echo READY.
