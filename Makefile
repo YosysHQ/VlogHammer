@@ -18,8 +18,8 @@
 
 SYN_LIST     := vivado quartus xst yosys
 SIM_LIST     := isim modelsim icarus
-RTL_LIST     := $(shell ls rtl 2> /dev/null | sort -u | cut -f1 -d.)
-REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | sort -u | cut -f1 -d.)
+RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
+REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh
 MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
@@ -89,12 +89,11 @@ purge: clean
 
 generate:
 ifdef ONLY_SAMPLES
-	clang -DONLY_SAMPLES -Wall -Wextra -O2 -o scripts/generate scripts/generate.cc -lstdc++
+	clang -DONLY_SAMPLES -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
 else
-	clang -Wall -Wextra -O2 -o scripts/generate scripts/generate.cc -lstdc++
+	clang -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
 endif
 	./scripts/generate
-	cp archive/* rtl/
 
 # -------------------------------------------------------------------------------------------
 
