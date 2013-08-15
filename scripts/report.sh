@@ -149,7 +149,7 @@ done
 		done
 		q="    if ("
 		for p in ${SYN_LIST}; do
-			echo -n "${q}rtl_y != ${p}_y"; q=" || "
+			echo -n "${q}rtl_y !== ${p}_y"; q=" || "
 		done
 		echo ")"
 		echo -n "      \$display(\"++VALUES++"
@@ -251,8 +251,8 @@ fi
 	cat <<- EOT
 		<style><!--
 
-		table.valuestab, 
-		table.valuestab th,
+		table.valuestab,
+		table.valuestab th { border-collapse:collapse; border: 2px solid black; }
 		table.valuestab td { border-collapse:collapse; border: 1px solid black; }
 
 		table.valuestab th,
@@ -260,7 +260,7 @@ fi
 
 		table.valuestab tr:nth-child(2n) { background: #eee; }
 		table.valuestab tr:nth-child(2) { background: #ccc; }
-		table.valuestab td:nth-child(2n) { color: #060; }
+		table.valuestab td:nth-child(2n) { color: #060; border-right: 2px solid black; }
 		table.valuestab { margin: 1em; }
 
 		//--></style>
