@@ -96,7 +96,7 @@ for q in ${SYN_LIST} rtl; do
 		echo "! touch test.$p.$q.input_ok"
 
 		ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
-		echo "sat -timeout 10 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
+		echo "sat -ignore_div_by_zero -timeout 10 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
 	} > test.$p.$q.ys
 
 	if yosys -l test.$p.$q.log test.$p.$q.ys; then
@@ -130,11 +130,22 @@ done
 		sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p ${job}_$p (/;" rtl.v
 	done
 
+	y_type=$( grep '^ *output ' rtl.v | sed 's,^ *output ,,; s, y;.*,,;' )
+
+	echo "  function $y_type apply_rtl_undef;"
+	echo "    input $y_type y;"
+	echo "    integer i;"
+	echo "    begin"
+	echo "      for (i = 0; i <= $( echo "$y_type" | tr '[' ':' | cut -f2 -d: ); i=i+1)"
+	echo "        apply_rtl_undef[i] = rtl_y[i] === 1'bx ? 1'bx : y[i];"
+	echo "    end"
+	echo "  endfunction"
+
 	echo "  initial begin"
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    { $inputs } <= $pattern; #1;"
 		for p in ${SYN_LIST} rtl; do
-			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, ${p}_y);"
+			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, apply_rtl_undef(${p}_y));"
 		done
 		echo "    \$display(\"++RPT++ ----\");"
 	done
@@ -252,7 +263,7 @@ fi
 					*) echo "#888888" > color_$result.txt ;;
 				esac
 			fi
-			echo "<td align=\"center\" bgcolor=\"$( cat color_$result.txt )\">$( echo $result | cut -c1-8 )</td>"
+			echo "<!-- REPORT-DATA: $( printf "%-8s %-8s %-8.8s" $p $q $result ) --><td align=\"center\" bgcolor=\"$( cat color_$result.txt )\">$( echo $result | cut -c1-8 )</td>"
 		done
 		echo "</tr>"
 	done
