@@ -127,7 +127,7 @@ done
 	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
 	for p in ${SYN_LIST} rtl; do
 		sed -r "/^ *output / !d; s/output/wire/; s/ y;/ ${p}_y;/;" rtl.v
-		sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p ${job}_$p (/;" rtl.v
+		sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
 	done
 
 	y_type=$( grep '^ *output ' rtl.v | sed 's,^ *output ,,; s, y;.*,,;' )
@@ -147,6 +147,29 @@ done
 		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, apply_rtl_undef(${p}_y));"
 		done
+		q="    if ("
+		for p in ${SYN_LIST}; do
+			echo -n "${q}rtl_y != ${p}_y"; q=" || "
+		done
+		echo ")"
+		echo -n "      \$display(\"++VALUES++"
+		for p in ${inputs//,/}; do
+			echo -n " %b %d"
+		done
+		echo -n " :"
+		for p in rtl ${SYN_LIST}; do
+			echo -n " %b %d"
+		done
+		echo -n "\""
+		for p in ${inputs//,/}; do
+			echo -n ", uut_rtl.$p"
+			echo -n ", uut_rtl.$p"
+		done
+		for p in rtl ${SYN_LIST}; do
+			echo -n ", ${p}_y"
+			echo -n ", ${p}_y"
+		done
+		echo ");"
 		echo "    \$display(\"++RPT++ ----\");"
 	done
 	echo "  end"
@@ -189,9 +212,9 @@ if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	. ${ISE_SETTINGS}
 	set -x
 	vlogcomp testbench.v
-	fuse -o testbench testbench
+	fuse -o testbench_isim testbench
 	{ echo "run all"; echo "exit"; } > run-all.tcl
-	./testbench -tclbatch run-all.tcl | tee sim_isim.log
+	./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
 	)
 fi
 
@@ -202,8 +225,8 @@ if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
-	iverilog testbench.v
-	./a.out | tee sim_icarus.log
+	iverilog -o testbench_icarus testbench.v
+	./testbench_icarus | tee sim_icarus.log
 fi
 
 for p in ${SYN_LIST} rtl; do
@@ -225,6 +248,24 @@ else
 fi
 
 {
+	cat <<- EOT
+		<style><!--
+
+		table.valuestab, 
+		table.valuestab th,
+		table.valuestab td { border-collapse:collapse; border: 1px solid black; }
+
+		table.valuestab th,
+		table.valuestab td { padding-left: 0.2em; padding-right: 0.2em; }
+
+		table.valuestab tr:nth-child(2n) { background: #eee; }
+		table.valuestab tr:nth-child(2) { background: #ccc; }
+		table.valuestab td:nth-child(2n) { color: #060; }
+		table.valuestab { margin: 1em; }
+
+		//--></style>
+	EOT
+
 	if $refresh; then
 		echo '<!-- REFRESH:BEGIN -->'
 		echo "<body onload=\"pingfade();\">"
@@ -267,6 +308,37 @@ fi
 		done
 		echo "</tr>"
 	done
+
+	sim_files=""
+	for p in ${SIM_LIST}; do
+		sim_files="$sim_files sim_$p.log"
+	done
+	gawk -F: '/\+\+VALUES\+\+/ { sub(/.*\+\+VALUES\+\+/, ""); gsub(/ +/, " "); keys[$1]=""; values[$1, ARGIND]=$2; }
+		END { for (key in keys) { $0=key; for (i=1; i<ARGC; i++) $(i+1) = values[key, i]; print; }}' $sim_files > sim_values.txt
+
+	if test -s sim_values.txt; then
+		echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\">"
+		echo "<table class=\"valuestab\">"
+		echo "<tr>"
+		echo "<th colspan=\"$( echo ${inputs//,/} ${inputs//,/} | wc -w )\">&nbsp;</th>"
+		for p in ${SIM_LIST}; do
+			echo "<th colspan=\"$( echo rtl ${SYN_LIST} rtl ${SYN_LIST} | wc -w )\">$p</th>"
+		done
+		echo "</tr><tr>"
+		for p in ${inputs//,/}; do
+			echo "<th colspan=\"2\">$p</th>"
+		done
+		for q in ${SIM_LIST}; do
+			for p in rtl ${SYN_LIST}; do
+				echo "<th colspan=\"2\">$p</th>"
+			done
+		done
+		echo "</tr>"
+		sed 's,^ *,<tr><td>,; s, *$,</td></tr>,; s,  *,</td><td>,g;' sim_values.txt
+		echo "</table>"
+		echo "</td></tr>"
+	fi
+
 	echo "<tr><td colspan=\"$( echo left ${SYN_LIST} rtl ${SIM_LIST} | wc -w )\"><pre><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
 			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
 			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre></td></tr>"
