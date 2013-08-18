@@ -54,9 +54,19 @@ cd temp/report_${job}
 cp ../../rtl/$job.v rtl.v
 cp rtl.v syn_rtl.v
 
+html_notes=""
+in_lists="all"
+
 for p in ${SYN_LIST}; do
-	cp ../../syn_$p/$job.v syn_$p.v
-	cp ../../cache_$p/$job.il syn_$p.il
+	if grep -q VLOGHAMMER_SYN_ERROR ../../syn_$p/$job.v; then
+		html_notes="$html_notes
+<div class=\"note\">Synthesis of $job using <i>$p</i> failed!</div>"
+		in_lists="$in_lists $p"
+		SYN_LIST="$( echo " ${SYN_LIST} " | sed "s, $p , ,; s,^ ,,; s, \$,,;" )"
+	else
+		cp ../../syn_$p/$job.v syn_$p.v
+		cp ../../cache_$p/$job.il syn_$p.il
+	fi
 done
 
 {
@@ -96,7 +106,7 @@ for q in ${SYN_LIST} rtl; do
 		echo "! touch test.$p.$q.input_ok"
 
 		ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
-		echo "sat -ignore_div_by_zero -timeout 10 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
+		echo "sat -ignore_div_by_zero -timeout 20 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
 	} > test.$p.$q.ys
 
 	if yosys -l test.$p.$q.log test.$p.$q.ys; then
@@ -144,34 +154,19 @@ done
 	echo "  initial begin"
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    { $inputs } <= $pattern; #1;"
+		for p in ${inputs//,/}; do
+			echo "    \$display(\"++PAT++ %b $p %b %d\", {$inputs}, uut_rtl.$p, uut_rtl.$p);"
+		done
 		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, apply_rtl_undef(${p}_y));"
 		done
-		q="    if ("
-		for p in ${SYN_LIST}; do
-			echo -n "${q}rtl_y !== ${p}_y"; q=" || "
+		for p in ${SYN_LIST} rtl; do
+			echo "    \$display(\"++VAL++ %b $p %b %d\", {$inputs}, ${p}_y, ${p}_y);"
 		done
-		echo ")"
-		echo -n "      \$display(\"++VALUES++"
-		for p in ${inputs//,/}; do
-			echo -n " %b %d"
-		done
-		echo -n " :"
-		for p in rtl ${SYN_LIST}; do
-			echo -n " %b %d"
-		done
-		echo -n "\""
-		for p in ${inputs//,/}; do
-			echo -n ", uut_rtl.$p"
-			echo -n ", uut_rtl.$p"
-		done
-		for p in rtl ${SYN_LIST}; do
-			echo -n ", ${p}_y"
-			echo -n ", ${p}_y"
-		done
-		echo ");"
 		echo "    \$display(\"++RPT++ ----\");"
 	done
+		echo "    \$display(\"++OK++\");"
+		echo "    \$finish;"
 	echo "  end"
 
 	echo "endmodule"
@@ -214,7 +209,7 @@ if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	vlogcomp testbench.v
 	fuse -o testbench_isim testbench
 	{ echo "run all"; echo "exit"; } > run-all.tcl
-	./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
+	timeout 600 ./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
 	)
 fi
 
@@ -228,6 +223,15 @@ if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
 	iverilog -o testbench_icarus testbench.v
 	./testbench_icarus | tee sim_icarus.log
 fi
+
+for p in ${SIM_LIST}; do
+	if ! grep -q '\+\+OK\+\+' sim_$p.log; then
+		html_notes="$html_notes
+<div class=\"note\">Simulation of $job using <i>$p</i> failed!</div>"
+		in_lists="$in_lists $p"
+		SIM_LIST="$( echo " ${SIM_LIST} " | sed "s, $p , ,; s,^ ,,; s, \$,,;" )"
+	fi
+done
 
 for p in ${SYN_LIST} rtl; do
 for q in ${SIM_LIST}; do
@@ -247,27 +251,46 @@ else
 	echo "#00ff00" > color_$( egrep -h '^[a-f0-9]+$' result.*.txt | sort | uniq -c | sort -rn | gawk 'NR == 1 { a=$1; x=$2; } NR == 2 { b=$1; } END { if (a>b+2) print x; else print "NO_SIM_COMMON"; }' ).txt
 fi
 
+if test -f result.rtl.modelsim.txt; then
+	for q in ${SIM_LIST}; do
+		if ! cmp result.rtl.modelsim.txt result.rtl.$q.txt; then
+			in_lists="$in_lists $q"
+		fi
+	done
+	for q in ${SYN_LIST}; do
+		if ! cmp result.rtl.modelsim.txt result.$q.modelsim.txt; then
+			in_lists="$in_lists $q"
+		fi
+	done
+fi
+
 {
 	cat <<- EOT
 		<style><!--
 
+		.note { margin: 1em; }
+		.note:before { content: "Note: "; font-weight:bold; }
+
 		.overviewtab { margin: 0.7em; }
+		.overviewtab th { width: 100px; }
 
-		.valuestab { font-size: 70%; }
+		.valuestab { border-collapse:collapse; border: 2px solid black; }
 
-		.valuestab,
-		.valuestab th { border-collapse:collapse; border: 2px solid black; }
+		.valuestab th,
 		.valuestab td { border-collapse:collapse; border: 1px solid black; }
 
 		.valuestab th,
 		.valuestab td { padding-left: 0.2em; padding-right: 0.2em; }
 
-		.valuestab tr:nth-child(2n) { background: #eee; }
-		.valuestab tr:nth-child(2) { background: #ccc; }
-		.valuestab td:nth-child(2n) { color: #060; border-right: 2px solid black; }
+		.valuestab tr:nth-child(2n-1) { background: #eee; }
+		.valuestab tr:nth-child(1) { background: #ccc; }
+		.valuestab td:nth-child(1) { max-width: 700px; }
+		.valuestab td:nth-child(2) { font-family: monospace; text-align: right; min-width: 100px; }
+		.valuestab td:nth-child(3) { font-family: monospace; text-align: right; min-width: 100px; }
+		/* .valuestab td:nth-child(3) { color: #060; border-right: 2px solid black; } */
 		.valuestab { margin: 1em; }
 
-		.testbench { margin: 1em; border: 5px dashed gray; padding: 1em; width: 900px; }
+		.testbench { margin: 1em; border: 5px dashed gray; padding: 1em; max-width: 900px; }
 
 		//--></style>
 	EOT
@@ -292,10 +315,13 @@ fi
 	fi
 
 	echo "<h3>Vlog-Hammer Report: $job</h3>"
+	echo "<!-- LISTS: $in_lists -->"
+	echo "<!-- REPORT:BEGIN -->"
+	echo "<div class=\"note\">This report is part of the following lists: <i>$in_lists</i></div>$html_notes"
 	echo "<table class=\"overviewtab\" border>"
-	echo "<tr><th width=\"100\" id=\"x\"></th>"
+	echo "<tr><th id=\"x\"></th>"
 	for q in ${SYN_LIST} rtl ${SIM_LIST}; do
-		echo "<th width=\"100\">$q</th>"
+		echo "<th>$q</th>"
 	done
 	echo "</tr>"
 	for p in ${SYN_LIST} rtl; do
@@ -316,37 +342,14 @@ fi
 	done
 	echo "</table>"
 
-	sim_files=""
-	for p in ${SIM_LIST}; do
-		sim_files="$sim_files sim_$p.log"
-	done
-	gawk -F: '/\+\+VALUES\+\+/ { sub(/.*\+\+VALUES\+\+/, ""); gsub(/ +/, " "); keys[$1]=""; values[$1, ARGIND]=$2; }
-		END { for (key in keys) { $0=key; for (i=1; i<ARGC; i++) $(i+1) = values[key, i]; print; }}' $sim_files > sim_values.txt
-
-	if test -s sim_values.txt; then
-		echo "<table class=\"valuestab\">"
-		echo "<tr>"
-		echo "<th colspan=\"$( echo ${inputs//,/} ${inputs//,/} | wc -w )\">&nbsp;</th>"
-		for p in ${SIM_LIST}; do
-			echo "<th colspan=\"$( echo rtl ${SYN_LIST} rtl ${SYN_LIST} | wc -w )\">$p</th>"
-		done
-		echo "</tr><tr>"
-		for p in ${inputs//,/}; do
-			echo "<th colspan=\"2\">$p</th>"
-		done
-		for q in ${SIM_LIST}; do
-			for p in rtl ${SYN_LIST}; do
-				echo "<th colspan=\"2\">$p</th>"
-			done
-		done
-		echo "</tr>"
-		sed 's,^ *,<tr><td>,; s, *$,</td></tr>,; s,  *,</td><td>,g;' sim_values.txt
-		echo "</table>"
-	fi
-
 	echo "<pre class=\"testbench\"><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
 			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
 			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre>"
+
+	echo "<!-- VALUES:BEGIN -->"
+	python ../../scripts/valtab.py ${SIM_LIST}
+	echo "<!-- VALUES:END -->"
+	echo "<!-- REPORT:END -->"
 } > report.html
 
 mkdir -p ../../report

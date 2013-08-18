@@ -38,24 +38,12 @@ cat > $job.tcl <<- EOT
 	write_verilog -force synth.v
 EOT
 
-${VIVADO_BIN} -mode batch -source $job.tcl > output.txt 2>&1 &
-vivado_pid=$!
-
-set +x
-for ((i = 0; i < 600; i++)); do
-	sleep 1
-	test -d /proc/$vivado_pid || break
-done
-
-test -d /proc/$vivado_pid && kill -9 $vivado_pid
-set -x
-
-if ! wait $vivado_pid
+if ! timeout 600 ${VIVADO_BIN} -mode batch -source $job.tcl > >( tee output.txt ) 2>&1
 then
 	{
-		echo '// [VLOGHAMMER_SYN_ERROR] Vivado failed or hung in endless loop!'
+		echo '// [VLOGHAMMER_SYN_ERROR] Vivado failed, crashed or hung in endless loop!'
 		tail -n5 output.txt | sed -e 's,^,// ,;'
-		sed -e '/^ *assign/ s,^ *,//,;' rtl.v
+		sed -e '/^ *assign/ s,^ *,//,;' ../../rtl/$job.v
 	} > vivado_failed.v
 
 	mkdir -p ../../syn_vivado
