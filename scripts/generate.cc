@@ -115,7 +115,7 @@ uint32_t xorshift32(uint32_t seed = 0) {
 	return x;
 }
 
-void print_expression(FILE *f, int budget, uint32_t mask = 0)
+void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef)
 {
 	int num_binary_ops = SIZE(binary_ops);
 	int num_unary_ops = SIZE(unary_ops);
@@ -142,35 +142,39 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 	case 0:
 		fprintf(f, "%s(", xorshift32() % 3 == 0 ? "$signed" :
 				xorshift32() % 2 == 0 ? "$unsigned" : "");
-		print_expression(f, budget, mask);
+		print_expression(f, budget, mask, avoid_undef);
 		fprintf(f, ")");
 		break;
 	case 1:
 	case 2:
 	case 3:
 		fprintf(f, "(");
-		p = binary_ops[xorshift32() % num_binary_ops];
+		do {
+			p = binary_ops[xorshift32() % num_binary_ops];
+		} while (avoid_undef && (!strcmp(p, "/") || !strcmp(p, "%")));
+		if (!strcmp(p, "===") || !strcmp(p, "!=="))
+			avoid_undef = true;
 		if (!strcmp(p, "**")) {
 			fprintf(f, "4'd2 %s", p);
-			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask);
+			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask, avoid_undef);
 		} else
 		if (!strcmp(p, "/") || !strcmp(p, "%")) {
-			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask);
+			print_expression(f, budget < 3 ? std::max(budget-1, 0) : 2, mask, avoid_undef);
 			fprintf(f, "%s", p);
-			print_expression(f, 0, mask);
+			print_expression(f, 0, mask, avoid_undef);
 		} else {
 			if (!strcmp(p, "*"))
 				budget = budget < 4 ? budget : 4;
-			print_expression(f, budget/2, mask);
+			print_expression(f, budget/2, mask, avoid_undef);
 			fprintf(f, "%s", p);
-			print_expression(f, budget/2, mask);
+			print_expression(f, budget/2, mask, avoid_undef);
 		}
 		fprintf(f, ")");
 		break;
 	case 4:
 	case 5:
 		fprintf(f, "(%s", unary_ops[xorshift32() % num_unary_ops]);
-		print_expression(f, budget, mask);
+		print_expression(f, budget, mask, avoid_undef);
 		fprintf(f, ")");
 		break;
 	case 6:
@@ -179,23 +183,23 @@ void print_expression(FILE *f, int budget, uint32_t mask = 0)
 		for (j = 0; j < i; j++) {
 			if (j)
 				fprintf(f, ",");
-			print_expression(f, budget / i, mask);
+			print_expression(f, budget / i, mask, avoid_undef);
 		}
 		fprintf(f, "}");
 		break;
 	case 7:
 		i = (xorshift32() % 4) + 1;
 		fprintf(f, "{%d{", i);
-		print_expression(f, budget / i, mask);
+		print_expression(f, budget / i, mask, avoid_undef);
 		fprintf(f, "}}");
 		break;
 	case 8:
 		fprintf(f, "(");
-		print_expression(f, budget / 3, mask);
+		print_expression(f, budget / 3, mask, avoid_undef);
 		fprintf(f, "?");
-		print_expression(f, budget / 3, mask);
+		print_expression(f, budget / 3, mask, avoid_undef);
 		fprintf(f, ":");
-		print_expression(f, budget / 3, mask);
+		print_expression(f, budget / 3, mask, avoid_undef);
 		fprintf(f, ")");
 		break;
 	}
@@ -496,7 +500,7 @@ int main()
 
 		for (int j = 0; j < SIZE(arg_types)*3; j++) {
 			fprintf(f, "  assign y%d = ", j);
-			print_expression(f, 1 + xorshift32() % 20);
+			print_expression(f, 1 + xorshift32() % 20, 0, false);
 			fprintf(f, ";\n");
 		}
 
