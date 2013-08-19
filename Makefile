@@ -70,6 +70,7 @@ world:
 
 backup:
 	mkdir -p ~/.vloghammer
+	tar czf ~/.vloghammer/backup_rtl.tar.gz rtl
 	tar czf ~/.vloghammer/backup_syn.tar.gz syn_*
 	tar czf ~/.vloghammer/backup_check.tar.gz check_*
 	tar czf ~/.vloghammer/backup_cache.tar.gz cache_*
