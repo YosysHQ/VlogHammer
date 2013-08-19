@@ -209,7 +209,7 @@ if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	vlogcomp testbench.v
 	fuse -o testbench_isim testbench
 	{ echo "run all"; echo "exit"; } > run-all.tcl
-	timeout 600 ./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
+	timeout 120 ./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
 	)
 fi
 
@@ -268,8 +268,11 @@ fi
 	cat <<- EOT
 		<style><!--
 
+		.info { margin: 1em; }
+		.info:before { content: "Info: "; font-weight:bold; }
+
 		.note { margin: 1em; }
-		.note:before { content: "Note: "; font-weight:bold; }
+		.note:before { content: "Error Note: "; font-weight:bold; }
 
 		.overviewtab { margin: 0.7em; }
 		.overviewtab th { width: 100px; }
@@ -315,9 +318,10 @@ fi
 	fi
 
 	echo "<h3>Vlog-Hammer Report: $job</h3>"
-	echo "<!-- LISTS: $in_lists -->"
+	echo "<!-- LISTS:" $( echo $in_lists | tr ' ' '\n' | sort -u ) "-->"
 	echo "<!-- REPORT:BEGIN -->"
-	echo "<div class=\"note\">This report is part of the following lists: <i>$in_lists</i></div>$html_notes"
+	echo "<div class=\"info\">This report is part of the following lists: <i>" \
+			$( echo $in_lists | tr ' ' '\n' | sort -u ) "</i></div>$html_notes"
 	echo "<table class=\"overviewtab\" border>"
 	echo "<tr><th id=\"x\"></th>"
 	for q in ${SYN_LIST} rtl ${SIM_LIST}; do

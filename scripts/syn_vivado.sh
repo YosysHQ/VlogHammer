@@ -38,7 +38,7 @@ cat > $job.tcl <<- EOT
 	write_verilog -force synth.v
 EOT
 
-if ! timeout 600 ${VIVADO_BIN} -mode batch -source $job.tcl > >( tee output.txt ) 2>&1
+if ! timeout 180 ${VIVADO_BIN} -mode batch -source $job.tcl > >( tee output.txt ) 2>&1
 then
 	{
 		echo '// [VLOGHAMMER_SYN_ERROR] Vivado failed, crashed or hung in endless loop!'
