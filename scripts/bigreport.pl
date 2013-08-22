@@ -178,7 +178,7 @@ function click_about()
 function changed_report()
 {
 	document.getElementById(active_content_id).style.display = "none";
-	var report_num = document.getElementById("sel_report").selectedOptions[0].value;
+	var report_num = document.getElementById("sel_report").value;
 
 	if (report_num < 0)
 		active_content_id = "about";
@@ -199,7 +199,7 @@ function update_reports()
 	op.value = -1;
 	el.add(op, null);
 
-	reports = lists[document.getElementById("sel_list").selectedOptions[0].text];
+	reports = lists[document.getElementById("sel_list").value];
 	for (report_num in reports) {
 		var op = document.createElement("option");
 		op.text = reports[report_num];
