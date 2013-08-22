@@ -99,12 +99,14 @@ for my $fn (@ARGV)
 	$id =~ s,\.html$,,;
 
 	my $state = 0;
+	my $in_testbench = 0;
 	print "<div class=\"report\" id=\"$id\" style=\"display: none;\">\n";
 	print "<h3>Report on $id:</h3>\n";
 
 	open(F, "<$fn");
 	while (<F>)
 	{
+		next if /^\s*$/;
 		if (/^<!-- LISTS:\s+(.*\S)\s+-->/) {
 			my @this_lists = split /\s+/, $1;
 			for my $list (@this_lists) {
@@ -125,7 +127,12 @@ for my $fn (@ARGV)
 			s,<!--.*?-->,,g;
 			s,<span[^>]*>,,g;
 			s,</span>,,g;
-			print;
+			$in_testbench = 1 if /^module.*_tb;/;
+			if ($in_testbench && /^endmodule/) {
+				$in_testbench = 0;
+				s/^[^<]*//g;
+			}
+			print unless $in_testbench;
 		}
 	}
 	close F;
