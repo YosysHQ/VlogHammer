@@ -146,9 +146,13 @@ var active_content_id = "";
 var reports = [ ], lists = {
 EOT
 
+my $first = 1;
 for my $list (sort keys %lists) {
-	print "  '$list': [ '" . (join "', '", @{$lists{$list}}) . "' ],\n";
+	print ",\n" unless $first;
+	print "  '$list': [ '" . (join "', '", @{$lists{$list}}) . "' ]";
+	$first = 0;
 }
+print "\n";
 
 print <<EOT;
 };
