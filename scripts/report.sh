@@ -221,7 +221,7 @@ fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
 	iverilog -o testbench_icarus testbench.v
-	./testbench_icarus | tee sim_icarus.log
+	timeout 120 ./testbench_icarus | tee sim_icarus.log
 fi
 
 for p in ${SIM_LIST}; do
