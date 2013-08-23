@@ -68,7 +68,13 @@ h3 { margin: 0.5em; }
 .valuestab td:nth-child(3) { font-family: monospace; text-align: right; min-width: 100px; }
 .valuestab { margin: 1em; }
 
-.testbench { margin: 1em; border: 5px dashed gray; padding: 1em; max-width: 900px; }
+.testbench {
+	margin: 1em;
+	padding: 1em;
+	border: 5px dashed gray;
+	border-radius: 5px;
+	max-width: 900px;
+}
 
 --></style>
 </head><body onLoad="main();">
