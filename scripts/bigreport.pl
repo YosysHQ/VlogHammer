@@ -7,6 +7,18 @@ my $date = `date "+%Y-%m-%d"`;
 
 print <<EOT;
 <html><head>
+<title>VlogHammer Report</title>
+<script type="text/javascript"><!--
+window.onerror = function(msg, url, line)
+{
+	var pre = document.createElement("pre");
+	pre.appendChild(document.createTextNode("Error \\"" + msg + "\\" in line " + line + "."));
+	var div = document.getElementById("error");
+	div.appendChild(pre);
+	div.style.display = "block";
+	return false;
+};
+//--></script>
 <style><!--
 
 .report, .about, .banner {
@@ -61,16 +73,17 @@ h3 { margin: 0.5em; }
 --></style>
 </head><body onLoad="main();">
 <div id=\"loading\">Loading...</div>
+<div id=\"error\" style=\"display: none;\"></div>
 <div class=\"banner\" id=\"banner\" style=\"display: none;\">
 
 <table width="100%">
 <tr>
 <td width="100" rowspan="2"><a href="javascript:click_prev()">&lt; PREV</a></td>
 <td width="10">List:</td><td width="10"><select id="sel_list" onchange="changed_list()"></select></td>
-<td rowspan="2"><big><b>VlogHammer Report $date</b></big><br/>
+<td rowspan="2" align="center"><big><b>VlogHammer Report $date</b></big><br/>
 <a href="javascript:click_about()">About this report</a> |
 <a href="http://www.clifford.at/yosys/vloghammer.html">About VlogHammer</a></td>
-<td width="100" rowspan="2"><a href="javascript:click_next()">NEXT &gt;</a></td></tr>
+<td width="100" rowspan="2" align="right"><a href="javascript:click_next()">NEXT &gt;</a></td></tr>
 <tr><td width="10">Report:</td><td width="10"><select id="sel_report" onchange="changed_report()"></select></td></tr>
 </table>
 
