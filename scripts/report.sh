@@ -239,6 +239,7 @@ for q in ${SIM_LIST}; do
 done; done
 
 echo "#00ff00" > color_PASS.txt
+echo "#33aa33" > color_TIMEOUT.txt
 echo "#ff0000" > color_FAIL.txt
 
 if cmp result.rtl.isim.txt result.rtl.modelsim.txt; then
