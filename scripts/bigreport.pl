@@ -11,11 +11,15 @@ print <<EOT;
 <script type="text/javascript"><!--
 window.onerror = function(msg, url, line)
 {
-	var pre = document.createElement("pre");
-	pre.appendChild(document.createTextNode("Error \\"" + msg + "\\" in line " + line + "."));
-	var div = document.getElementById("error");
-	div.appendChild(pre);
-	div.style.display = "block";
+	try {
+		var pre = document.createElement("pre");
+		pre.appendChild(document.createTextNode("Error \\"" + msg + "\\" in line " + line + "."));
+		var div = document.getElementById("error");
+		div.appendChild(pre);
+		div.style.display = "block";
+	} catch (err) {
+		/* simply ignore errors from error reporting */
+	}
 	return false;
 };
 //--></script>
@@ -61,11 +65,10 @@ h3 { margin: 0.5em; }
 .valuestab th,
 .valuestab td { padding-left: 0.2em; padding-right: 0.2em; }
 
-.valuestab tr:nth-child(2n-1) { background: #eee; }
 .valuestab tr:nth-child(1) { background: #ccc; }
-.valuestab td:nth-child(1) { max-width: 700px; }
-.valuestab td:nth-child(2) { font-family: monospace; text-align: right; min-width: 100px; }
-.valuestab td:nth-child(3) { font-family: monospace; text-align: right; min-width: 100px; }
+.valuestab td.valsimlist { max-width: 300px; }
+.valuestab td:nth-last-child(1) { font-family: monospace; text-align: right; min-width: 100px; }
+.valuestab td:nth-last-child(2) { font-family: monospace; text-align: right; min-width: 100px; }
 .valuestab { margin: 1em; }
 
 .testbench {

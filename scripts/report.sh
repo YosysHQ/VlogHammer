@@ -19,6 +19,7 @@
 
 keep=false
 refresh=false
+quick=false
 
 while true; do
 	if [ "$1" = "-keep" ]; then
@@ -28,6 +29,11 @@ while true; do
 	fi
 	if [ "$1" = "-refresh" ]; then
 		refresh=true
+		shift
+		continue
+	fi
+	if [ "$1" = "-quick" ]; then
+		quick=true
 		shift
 		continue
 	fi
@@ -106,7 +112,11 @@ for q in ${SYN_LIST} rtl; do
 		echo "! touch test.$p.$q.input_ok"
 
 		ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
-		echo "sat -ignore_div_by_zero -timeout 20 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
+		if $quick; then
+			echo "sat -ignore_div_by_zero -timeout 2 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
+		else
+			echo "sat -ignore_div_by_zero -timeout 20 -verify-no-timeout -show $ports -prove y1 y2 ${job}"
+		fi
 	} > test.$p.$q.ys
 
 	if yosys -l test.$p.$q.log test.$p.$q.ys; then
@@ -288,10 +298,9 @@ fi
 
 		.valuestab tr:nth-child(2n-1) { background: #eee; }
 		.valuestab tr:nth-child(1) { background: #ccc; }
-		.valuestab td:nth-child(1) { max-width: 700px; }
-		.valuestab td:nth-child(2) { font-family: monospace; text-align: right; min-width: 100px; }
-		.valuestab td:nth-child(3) { font-family: monospace; text-align: right; min-width: 100px; }
-		/* .valuestab td:nth-child(3) { color: #060; border-right: 2px solid black; } */
+		.valuestab td.valsimlist { max-width: 300px;  background: #f8f8f8; }
+		.valuestab td:nth-last-child(1) { font-family: monospace; text-align: right; min-width: 100px; }
+		.valuestab td:nth-last-child(2) { font-family: monospace; text-align: right; min-width: 100px; }
 		.valuestab { margin: 1em; }
 
 		.testbench { margin: 1em; border: 5px dashed gray; padding: 1em; max-width: 900px; }

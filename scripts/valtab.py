@@ -20,7 +20,7 @@ for sim in args:
     m = re_parse_pat.search(line)
     if m:
       if not m.group(1) in data:
-        data[m.group(1)] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { } }
+        data[m.group(1)] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
       data[m.group(1)]['inputs'][m.group(2)] = [ m.group(3), m.group(4) ]
     m = re_parse_val.search(line)
     if m:
@@ -44,16 +44,76 @@ for pat in data.keys():
     data[pat]['grouped_outputs'][k] = d
 
 #############################################################################
+# Split outputs as indicated in rtl code
+#############################################################################
+
+def binary2decimal(bits, signed):
+  current_val = 1;
+  total_val = 0;
+  for i in range(len(bits)):
+    if (signed and i == len(bits)-1):
+      current_val = -current_val
+    if bits[len(bits)-1-i] == '1':
+      total_val = total_val + current_val
+    elif bits[len(bits)-1-i] != '0':
+      return "X"
+    current_val = current_val * 2
+  return str(total_val)
+
+re_parse_y_wire = re.compile('^\s*wire(\s+signed|)\s*\[(\d+):0\]\s*(y\d+)\s*;\s*$')
+
+f = open('rtl.v', 'r')
+bitcounter = 0
+bitpartitions = []
+for line in f:
+  m = re_parse_y_wire.search(line)
+  if m:
+    bitpartitions.append([ bitcounter, int(m.group(2)) + 1, m.group(3), m.group(1) != "" ])
+    bitcounter = bitcounter + int(m.group(2)) + 1
+f.close()
+
+for pat in data.keys():
+  for lst in data[pat]['grouped_outputs']:
+    data[pat]['split_outputs'][lst] = { }
+    if len(bitpartitions) == 0:
+      data[pat]['split_outputs'][lst]['y'] = data[pat]['grouped_outputs'][lst]
+    else:
+      for part in bitpartitions:
+        data[pat]['split_outputs'][lst][part[2]] = [
+            data[pat]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]],
+            binary2decimal(data[pat]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]], part[3])
+        ]
+  if len(bitpartitions) != 0:
+    for part in bitpartitions:
+      vars_found_diff = False
+      ref_lst = data[pat]['split_outputs'].keys()[0]
+      for lst in data[pat]['split_outputs'].keys():
+        if data[pat]['split_outputs'][lst][part[2]] != data[pat]['split_outputs'][ref_lst][part[2]]:
+          vars_found_diff = True
+      if not vars_found_diff:
+        for lst in data[pat]['split_outputs'].keys():
+          del data[pat]['split_outputs'][lst][part[2]]
+
+#############################################################################
 # Generate HTML table for each data record
 #############################################################################
 
+def outvar_compare(a, b):
+    return int(a[1:]) - int(b[1:]);
+
 for pat in sorted(data.keys()):
   d = data[pat];
-  if len(d['grouped_outputs']) > 1:
-    print '<table class="valuestab"><tr><th></th><th>binary</th><th>decimal</th></tr>'
+  if len(d['split_outputs']) > 1:
+    print '<table class="valuestab" border><tr><th colspan="2"></th><th>binary</th><th>decimal</th></tr>'
     for key in sorted(d['inputs'].keys()):
-      print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
-    for key in sorted(d['grouped_outputs'].keys()):
-      print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['grouped_outputs'][key][0], d['grouped_outputs'][key][1])
+      print '<tr><td colspan="2">{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
+    for lst in sorted(d['split_outputs'].keys()):
+      first_var = True
+      for var in sorted(d['split_outputs'][lst].keys(), cmp=outvar_compare):
+        if first_var:
+          print '<tr><td>{}</td><td class="valsimlist" rowspan="{}">{}</td><td>{}</td><td>{}</td></tr>'.format(var, len(d['split_outputs'][lst].keys()), lst, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
+        else:
+          print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(var, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
+        first_var = False
     print '</table>'
 
