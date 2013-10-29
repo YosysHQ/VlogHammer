@@ -143,9 +143,12 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 	switch (mode)
 	{
 	case 0:
-		fprintf(f, "%s(", xorshift32() % 3 == 0 ? "$signed" :
-				xorshift32() % 2 == 0 ? "$unsigned" : "");
-		print_expression(f, budget, mask, avoid_undef, avoid_signed);
+		if (avoid_signed)
+			fprintf(f, "$unsigned(");
+		else
+			fprintf(f, "%s(", xorshift32() % 3 == 0 ? "$signed" :
+					xorshift32() % 2 == 0 ? "$unsigned" : "");
+		print_expression(f, budget, mask, avoid_undef, false);
 		fprintf(f, ")");
 		break;
 	case 1:
