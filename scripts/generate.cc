@@ -132,7 +132,7 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		return;
 	}
 
-	int num_modes = 9;
+	int num_modes = 10;
 	while ((mask & ~((~0) << num_modes)) == 0)
 		mask = xorshift32();
 	do {
@@ -206,6 +206,15 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		print_expression(f, budget / 3, mask, avoid_undef, avoid_signed);
 		fprintf(f, ":");
 		print_expression(f, budget / 3, mask, avoid_undef, avoid_signed);
+		fprintf(f, ")");
+		break;
+	case 9:
+		fprintf(f, "(");
+		i = (xorshift32() % 4) + 2;
+		if (xorshift32() % 2 == 0 && !avoid_signed)
+			fprintf(f, "%s%d'sd%d", xorshift32() % 2 == 0 ? "-" : "", i, xorshift32() % (1 << (i-1)));
+		else
+			fprintf(f, "%d'd%d", i, xorshift32() % (1 << i));
 		fprintf(f, ")");
 		break;
 	}
