@@ -230,8 +230,11 @@ if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
-	iverilog -o testbench_icarus testbench.v
-	timeout 120 ./testbench_icarus | tee sim_icarus.log
+	if iverilog -o testbench_icarus testbench.v; then
+		timeout 120 ./testbench_icarus | tee sim_icarus.log
+	else
+		echo -n > sim_icarus.log
+	fi
 fi
 
 for p in ${SIM_LIST}; do
