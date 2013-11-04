@@ -32,7 +32,8 @@ export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 help:
 	@echo ""
 	@echo "  make clean  ..............................  remove temp files"
-	@echo "  make purge  ..............................  remove results"
+	@echo "  make mrproper  ...........................  remove output files"
+	@echo "  make purge  ..............................  remove output files and rtl"
 	@echo ""
 	@echo "  make generate  ...........................  generate rtl files"
 	@echo ""
@@ -80,11 +81,14 @@ clean:
 	rm -f monitor.html monitor.txt monitor.dat
 	rm -rf temp ./scripts/generate
 
-purge: clean
-	rm -rf rtl report report.html
+mrproper: clean
+	rm -rf report report.html
 	rm -rf syn_vivado syn_quartus syn_xst syn_yosys
 	rm -rf check_vivado check_quartus check_xst check_yosys
 	rm -rf cache_vivado cache_quartus cache_xst cache_yosys
+
+purge: mrproper
+	rm -rf rtl
 
 # -------------------------------------------------------------------------------------------
 

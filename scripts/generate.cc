@@ -16,11 +16,11 @@
  *  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#undef GENERATE_BINARY_OPS
-#undef GENERATE_UNARY_OPS
-#undef GENERATE_TERNARY_OPS
-#undef GENERATE_CONCAT_OPS
-#undef GENERATE_REPEAT_OPS
+#define GENERATE_BINARY_OPS
+#define GENERATE_UNARY_OPS
+#define GENERATE_TERNARY_OPS
+#define GENERATE_CONCAT_OPS
+#define GENERATE_REPEAT_OPS
 #define GENERATE_EXPRESSIONS
 
 // Use 'make generate ONLY_SAMPLES=1'
@@ -505,7 +505,7 @@ int main()
 		int total_y_size = 0;
 		for (int j = 0; j < SIZE(arg_types)*3; j++)
 			total_y_size += atoi(arg_types[j % SIZE(arg_types)][2]);
-		fprintf(f, "  output [%d:0] y;\n", total_y_size);
+		fprintf(f, "  output [%d:0] y;\n", total_y_size-1);
 
 		fprintf(f, "  assign y = {");
 		for (int j = 0; j < SIZE(arg_types)*3; j++)

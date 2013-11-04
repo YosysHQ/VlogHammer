@@ -149,7 +149,7 @@ for my $fn (@ARGV)
 			s,<!--.*?-->,,g;
 			s,<span[^>]*>,,g;
 			s,</span>,,g;
-			$in_testbench = 1 if /^module.*_tb;/;
+			# $in_testbench = 1 if /^module.*_tb;/;
 			if ($in_testbench && /^endmodule/) {
 				$in_testbench = 0;
 				s/^[^<]*//g;
