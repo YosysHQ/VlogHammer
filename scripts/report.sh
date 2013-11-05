@@ -85,6 +85,10 @@ done
 echo -n > fail_patterns.txt
 for p in ${SYN_LIST} rtl; do
 for q in ${SYN_LIST} rtl; do
+	if [ "$p" = "$q" ]; then
+		echo PASS > result.${p}.${q}.txt
+		continue
+	fi
 	if test -f result.${q}.${p}.txt; then
 		cp result.${q}.${p}.txt result.${p}.${q}.txt
 		continue
@@ -161,22 +165,24 @@ done
 	echo "    end"
 	echo "  endfunction"
 
+	index=0
 	echo "  initial begin"
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    { $inputs } <= $pattern; #1;"
 		for p in ${inputs//,/}; do
-			echo "    \$display(\"++PAT++ %b $p %b %d\", {$inputs}, uut_rtl.$p, uut_rtl.$p);"
+			echo "    \$display(\"++PAT++ %d %b $p %b %d\", $index, {$inputs}, uut_rtl.$p, uut_rtl.$p);"
 		done
 		for p in ${SYN_LIST} rtl; do
-			echo "    \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $inputs, apply_rtl_undef(${p}_y));"
+			echo "    \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $index, $inputs, apply_rtl_undef(${p}_y));"
 		done
 		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++VAL++ %b $p %b %d\", {$inputs}, ${p}_y, ${p}_y);"
 		done
 		echo "    \$display(\"++RPT++ ----\");"
+		index=$(( index + 1 ))
 	done
-		echo "    \$display(\"++OK++\");"
-		echo "    \$finish;"
+	echo "    \$display(\"++OK++\");"
+	echo "    \$finish;"
 	echo "  end"
 
 	echo "endmodule"
@@ -196,16 +202,19 @@ done
 	sed "/^ *module/ ! d; s/.*(/  ${job} uut (/;" rtl.v
 
 	echo "  task test_pattern;"
+	echo "    input [5:0] index;"
 	echo "    input [$bits-1:0] pattern;"
 	echo "    begin"
 	echo "      { $inputs } <= pattern; #1;"
-	echo "      \$display(\"++RPT++ $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", $inputs, y);"
+	echo "      \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", index, $inputs, y);"
 	echo "    end"
 	echo "  endtask"
 
+	index=0
 	echo "  initial begin"
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
-		echo "    test_pattern( $pattern );"
+		printf '    test_pattern( %2d, %s );\n' $index "$pattern"
+		index=$(( index + 1 ))
 	done
 	echo "  end"
 	echo "endmodule"

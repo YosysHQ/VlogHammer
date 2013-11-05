@@ -128,7 +128,7 @@ for my $fn (@ARGV)
 	open(F, "<$fn");
 	while (<F>)
 	{
-		next if /^\s*$/;
+		# next if /^\s*$/;
 		if (/^<!-- LISTS:\s+(.*\S)\s+-->/) {
 			my @this_lists = split /\s+/, $1;
 			for my $list (@this_lists) {
@@ -147,8 +147,8 @@ for my $fn (@ARGV)
 		}
 		if ($state == 1) {
 			s,<!--.*?-->,,g;
-			s,<span[^>]*>,,g;
-			s,</span>,,g;
+			# s,<span[^>]*>,,g;
+			# s,</span>,,g;
 			# $in_testbench = 1 if /^module.*_tb;/;
 			if ($in_testbench && /^endmodule/) {
 				$in_testbench = 0;

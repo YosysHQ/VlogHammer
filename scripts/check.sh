@@ -66,7 +66,7 @@ cp syn.il ../../cache_${syn}/$job.il
 	echo "opt_clean"
 
 	ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
-	echo "sat -timeout 60 -verify-no-timeout -show $ports -prove y_rtl y_syn ${job}"
+	echo "sat -ignore_div_by_zero -timeout 60 -verify-no-timeout -show $ports -prove y_rtl y_syn ${job}"
 	if [ $syn = yosys ] && ([[ $job == binary_ops_* ]] || [[ $job == concat_ops_* ]] || [[ $job == repeat_ops_* ]] ||
 			[[ $job == ternary_ops_* ]] || [[ $job == unary_ops_* ]]); then
 		echo "eval -brute_force_equiv_checker_x ${job}_rtl ${job}_syn"

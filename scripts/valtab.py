@@ -12,16 +12,22 @@ args.pop(0)
 #############################################################################
 
 data = { }
-re_parse_pat = re.compile('\\+\\+PAT\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
+titles = { }
+sorted_keys = []
+re_parse_pat = re.compile('\\+\\+PAT\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+) +(\S+)')
 re_parse_val = re.compile('\\+\\+VAL\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
 for sim in args:
   sim_outfile = open("sim_"+sim+".log", "r")
   for line in sim_outfile:
     m = re_parse_pat.search(line)
     if m:
-      if not m.group(1) in data:
-        data[m.group(1)] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
-      data[m.group(1)]['inputs'][m.group(2)] = [ m.group(3), m.group(4) ]
+      if not m.group(2) in data:
+        data[m.group(2)] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
+      data[m.group(2)]['inputs'][m.group(3)] = [ m.group(4), m.group(5) ]
+      titles[m.group(2)] = "Pattern #{}".format(int(m.group(1)))
+      while len(sorted_keys) <= int(m.group(1)):
+        sorted_keys.append("")
+      sorted_keys[int(m.group(1))] = m.group(2)
     m = re_parse_val.search(line)
     if m:
       data[m.group(1)]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
@@ -101,17 +107,41 @@ for pat in data.keys():
 def outvar_compare(a, b):
     return int(a[1:]) - int(b[1:]);
 
-for pat in sorted(data.keys()):
+def pretty_list(txt):
+    list = [ token.split('.') for token in txt.split(', ') ]
+    ordered_fwd = {}
+    ordered_rev = {}
+    for token in list:
+        i, j = token
+        if not i in ordered_fwd:
+            ordered_fwd[i] = set()
+        if not j in ordered_rev:
+            ordered_rev[j] = set()
+        ordered_fwd[i].add(j)
+        ordered_rev[j].add(i)
+    len_orig = len(list)
+    len_fwd = len(ordered_fwd)
+    len_rev = len(ordered_rev)
+    if len_orig * 0.7 < min(len_fwd, len_rev):
+        return txt
+    if len_fwd < len_rev-1:
+        txt = ",<br/>".join([ "%s.{%s}" % (i, ",".join(ordered_fwd[i])) for i in ordered_fwd ])
+    else:
+        txt = ",<br/>".join([ "{%s}.%s" % (",".join(ordered_rev[j]), j) for j in ordered_rev ])
+    return txt
+
+for pat in sorted_keys:
   d = data[pat];
   if len(d['split_outputs']) > 1:
-    print '<table class="valuestab" border><tr><th colspan="2"></th><th>binary</th><th>decimal</th></tr>'
+    print '<table class="valuestab" border><tr><th colspan="2" align="left">{}</th><th>binary</th><th>decimal</th></tr>'.format(titles[pat])
     for key in sorted(d['inputs'].keys()):
       print '<tr><td colspan="2">{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
     for lst in sorted(d['split_outputs'].keys()):
       first_var = True
       for var in sorted(d['split_outputs'][lst].keys(), cmp=outvar_compare):
         if first_var:
-          print '<tr><td>{}</td><td class="valsimlist" rowspan="{}">{}</td><td>{}</td><td>{}</td></tr>'.format(var, len(d['split_outputs'][lst].keys()), lst, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
+          print '<tr><td>{}</td><td class="valsimlist" rowspan="{}">{}</td><td>{}</td><td>{}</td></tr>'.format(var,
+                len(d['split_outputs'][lst].keys()), pretty_list(lst), d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
         else:
           print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(var, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
         first_var = False
