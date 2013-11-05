@@ -231,7 +231,7 @@ int main()
 	for (int oi = 0; oi < SIZE(binary_ops); oi++)
 	{
 #ifdef ONLY_SAMPLES
-		if (ai || bi || yi || oi)
+		if (xorshift32() % 20)
 			continue;
 #endif
 		std::string a_decl = arg_types[ai][0];
@@ -283,7 +283,7 @@ int main()
 	for (int oi = 0; oi < SIZE(unary_ops); oi++)
 	{
 #ifdef ONLY_SAMPLES
-		if (ai || yi || oi)
+		if (xorshift32() % 20)
 			continue;
 #endif
 		std::string a_decl = arg_types[ai][0];
@@ -323,7 +323,7 @@ int main()
 	for (int yi = 0; yi < SIZE(arg_types); yi++)
 	{
 #ifdef ONLY_SAMPLES
-		if (ai || bi || ci || yi)
+		if (xorshift32() % 20)
 			continue;
 #endif
 		if (!strcmp(small_arg_types[ai][2], "3"))
@@ -387,7 +387,7 @@ int main()
 	for (int yi = 0; yi < SIZE(arg_types); yi++)
 	{
 #ifdef ONLY_SAMPLES
-		if (ai || bi || yi)
+		if (xorshift32() % 20)
 			continue;
 #endif
 		std::string a_decl = small_arg_types[ai][0];
@@ -434,7 +434,7 @@ int main()
 	for (int yi = 0; yi < SIZE(arg_types); yi++)
 	{
 #ifdef ONLY_SAMPLES
-		if (a || bi || yi)
+		if (xorshift32() % 20)
 			continue;
 #endif
 		std::string b_decl = small_arg_types[bi][0];
@@ -470,7 +470,7 @@ int main()
 	for (int i = 0; i < 1000; i++)
 	{
 #ifdef ONLY_SAMPLES
-		if (i > 3)
+		if (i > 100)
 			continue;
 #endif
 		xorshift32(1234 + i);
