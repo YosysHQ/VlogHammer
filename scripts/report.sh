@@ -196,26 +196,6 @@ done
 } > testbench.v
 
 {
-	for p in ${SYN_LIST} rtl; do
-		sed "s/^module ${job}/module ${job}_${p}/; /^\`timescale/ d;" < syn_$p.v
-	done
-	cat ../../scripts/cells_cyclone_iii.v
-	cat ../../scripts/cells_xilinx_7.v
-} > testbench_yosys.v
-
-{
-	echo "read_verilog testbench_yosys.v"
-	echo "hierarchy; proc; clean"
-	for p in ${SYN_LIST} rtl; do
-		echo "flatten ${job}_${p}"
-	done
-	echo -n "eval -vloghammer_report ${job}_ "
-	echo ${SYN_LIST} rtl | tr ' ' , | tr '\n' ' '
-	echo $inputs | tr -d ' ' | tr '\n' ' '
-	echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ','
-} > testbench_yosys.ys
-
-{
 	echo "module ${job}_tb;"
 	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
 	sed -r "/^ *output / !d; s/output/wire/;" rtl.v
@@ -267,7 +247,22 @@ if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" yosim "* ]]; then
-	yosys -q -l sim_yosim.log testbench_yosys.ys
+	{
+		echo "read_verilog rtl.v"
+		echo "rename ${job} ${job}_rtl"
+		for p in ${SYN_LIST}; do
+			echo "read_ilang syn_${p}.il"
+			echo "rename ${job} ${job}_${p}"
+		done
+		echo -n "eval -vloghammer_report ${job}_ "
+		echo rtl ${SYN_LIST} | tr ' ' , | tr '\n' ' '
+		echo $inputs | tr -d ' ' | tr '\n' ' '
+		echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ','
+	} > testbench_yosys.ys
+
+	if ! yosys -l sim_yosim.log -q testbench_yosys.ys; then
+		echo -n > sim_yosim.log
+	fi
 fi
 
 for p in ${SIM_LIST}; do
@@ -288,25 +283,38 @@ echo "#00ff00" > color_PASS.txt
 echo "#33aa33" > color_TIMEOUT.txt
 echo "#ff0000" > color_FAIL.txt
 
-if cmp result.rtl.isim.txt result.rtl.modelsim.txt; then
-	echo "#00ff00" > color_$( cat result.rtl.isim.txt ).txt
+goodsim="modelsim"
+if cmp result.rtl.modelsim.txt result.rtl.isim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.modelsim.txt ).txt
 elif cmp result.rtl.modelsim.txt result.rtl.icarus.txt; then
 	echo "#00ff00" > color_$( cat result.rtl.modelsim.txt ).txt
-elif cmp result.rtl.icarus.txt result.rtl.isim.txt; then
-	echo "#00ff00" > color_$( cat result.rtl.icarus.txt ).txt
+elif cmp result.rtl.modelsim.txt result.rtl.yosim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.modelsim.txt ).txt
+elif cmp result.rtl.isim.txt result.rtl.yosim.txt && cmp result.rtl.icarus.txt result.rtl.yosim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.yosim.txt ).txt
+	goodsim="yosim"
 else
-	echo "#00ff00" > color_$( egrep -h '^[a-f0-9]+$' result.*.txt | sort | uniq -c | sort -rn | gawk 'NR == 1 { a=$1; x=$2; } NR == 2 { b=$1; } END { if (a>b+2) print x; else print "NO_SIM_COMMON"; }' ).txt
+	goodcode=$( egrep -h '^[a-f0-9]+$' result.*.txt | sort | uniq -c | sort -rn | gawk 'NR == 1 { a=$1; x=$2; } NR == 2 { b=$1; } END { if (a>b+2) print x; else print "NO_SIM_COMMON"; }' )
+	echo "#00ff00" > color_$goodcode.txt
+	for q in ${SIM_LIST}; do
+		if grep -q $goodcode result.rtl.$q.txt; then
+			goodsim="$q"
+		fi
+	done
 fi
 
-if test -f result.rtl.modelsim.txt; then
+if test -f result.rtl.$goodsim.txt; then
 	for q in ${SIM_LIST}; do
-		if ! cmp result.rtl.modelsim.txt result.rtl.$q.txt; then
+		if ! cmp result.rtl.$goodsim.txt result.rtl.$q.txt; then
 			in_lists="$in_lists $q"
 		fi
 	done
 	for q in ${SYN_LIST}; do
-		if ! cmp result.rtl.modelsim.txt result.$q.modelsim.txt; then
+		if ! cmp result.rtl.$goodsim.txt result.$q.$goodsim.txt; then
 			in_lists="$in_lists $q"
+		fi
+		if test -f result.$q.yosim.txt && ! cmp result.$q.$goodsim.txt result.$q.yosim.txt; then
+			in_lists="$in_lists yosim"
 		fi
 	done
 fi
