@@ -1,5 +1,5 @@
 /*
- *  Vlog-Hammer -- A Verilog Synthesis Regression Test
+ *  VlogHammer -- A Verilog Synthesis Regression Test
  *
  *  Copyright (C) 2013  Clifford Wolf <clifford@clifford.at>
  *  
@@ -470,8 +470,8 @@ int main()
 	for (int i = 0; i < 1000; i++)
 	{
 #ifdef ONLY_SAMPLES
-		if (i > 100)
-			continue;
+		if (i == 100)
+			break;
 #endif
 		xorshift32(1234 + i);
 		xorshift32();

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Vlog-Hammer -- A Verilog Synthesis Regression Test
+#  VlogHammer -- A Verilog Synthesis Regression Test
 #
 #  Copyright (C) 2013  Clifford Wolf <clifford@clifford.at>
 #  

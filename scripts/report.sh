@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Vlog-Hammer -- A Verilog Synthesis Regression Test
+#  VlogHammer -- A Verilog Synthesis Regression Test
 #
 #  Copyright (C) 2013  Clifford Wolf <clifford@clifford.at>
 #  
@@ -203,10 +203,15 @@ done
 
 	echo "  task test_pattern;"
 	echo "    input [5:0] index;"
-	echo "    input [$bits-1:0] pattern;"
+	echo "    input [$(( bits-1 )):0] pattern;"
 	echo "    begin"
 	echo "      { $inputs } <= pattern; #1;"
-	echo "      \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", index, $inputs, y);"
+	if [ $( echo "$inputs" | wc -w ) -gt 6 ]; then
+		echo "      \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", index,"
+		echo "                    $inputs, y);"
+	else
+		echo "      \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b\", index, $inputs, y);"
+	fi
 	echo "    end"
 	echo "  endtask"
 
@@ -371,7 +376,7 @@ fi
 		echo '<!-- REFRESH:END -->'
 	fi
 
-	echo "<h3>Vlog-Hammer Report: $job</h3>"
+	echo "<h3>VlogHammer Report: $job</h3>"
 	echo "<!-- LISTS:" $( echo $in_lists | tr ' ' '\n' | sort -u ) "-->"
 	echo "<!-- REPORT:BEGIN -->"
 	echo "<div class=\"info\">This report is part of the following lists: <i>" \
