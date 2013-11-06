@@ -378,13 +378,13 @@ fi
 			$( echo $in_lists | tr ' ' '\n' | sort -u ) "</i></div>$html_notes"
 	echo "<table class=\"overviewtab\" border>"
 	echo "<tr><th id=\"x\"></th>"
-	for q in ${SYN_LIST} rtl ${SIM_LIST}; do
+	for q in ${SYN_LIST} ${SIM_LIST}; do
 		echo "<th>$q</th>"
 	done
 	echo "</tr>"
 	for p in ${SYN_LIST} rtl; do
 		echo "<tr><th>$p</th>"
-		for q in ${SYN_LIST} rtl ${SIM_LIST}; do
+		for q in ${SYN_LIST} ${SIM_LIST}; do
 			read result < result.${p}.${q}.txt
 			if ! test -f color_$result.txt; then
 				case $( ls color_*.txt | wc -l ) in
