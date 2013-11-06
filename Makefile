@@ -17,7 +17,7 @@
 #
 
 SYN_LIST     := vivado quartus xst yosys
-SIM_LIST     := isim modelsim icarus
+SIM_LIST     := isim modelsim icarus yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh

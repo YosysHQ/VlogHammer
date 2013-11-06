@@ -12,6 +12,7 @@ args.pop(0)
 #############################################################################
 
 data = { }
+cached_data_decimal = { }
 re_parse_pat = re.compile('\\+\\+PAT\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
 re_parse_val = re.compile('\\+\\+VAL\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
 for sim in args:
@@ -22,11 +23,16 @@ for sim in args:
       idx = int(m.group(1))
       if not idx in data:
         data[idx] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
-      data[idx]['inputs'][m.group(2)] = [ m.group(3), m.group(4) ]
+      if not m.group(2) in data[idx]['inputs'] or m.group(4) != "#":
+          data[idx]['inputs'][m.group(2)] = [ m.group(3), m.group(4) ]
     m = re_parse_val.search(line)
     if m:
       idx = int(m.group(1))
-      data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
+      if m.group(4) == "#" and m.group(3) in cached_data_decimal:
+          data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), cached_data_decimal[m.group(3)] ]
+      else:
+          data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
+          cached_data_decimal[m.group(3)] = m.group(4)
 
 #############################################################################
 # Group identical outputs in 'data' structure
@@ -120,10 +126,10 @@ def pretty_list(txt):
     len_rev = len(ordered_rev)
     if len_orig * 0.7 < min(len_fwd, len_rev):
         return txt
-    if len_fwd < len_rev-1:
-        txt = ",<br/>".join([ "%s.{%s}" % (i, ",".join(ordered_fwd[i])) for i in ordered_fwd ])
+    if len_fwd < len_rev/2:
+        txt = ",<br/>".join([ "%s.{%s}" % (i, ",".join(sorted(ordered_fwd[i]))) for i in ordered_fwd ])
     else:
-        txt = ",<br/>".join([ "{%s}.%s" % (",".join(ordered_rev[j]), j) for j in ordered_rev ])
+        txt = ",<br/>".join([ "{%s}.%s" % (",".join(sorted(ordered_rev[j])), j) for j in ordered_rev ])
     return txt
 
 for idx in sorted(data.keys()):

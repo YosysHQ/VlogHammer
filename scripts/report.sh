@@ -196,6 +196,26 @@ done
 } > testbench.v
 
 {
+	for p in ${SYN_LIST} rtl; do
+		sed "s/^module ${job}/module ${job}_${p}/; /^\`timescale/ d;" < syn_$p.v
+	done
+	cat ../../scripts/cells_cyclone_iii.v
+	cat ../../scripts/cells_xilinx_7.v
+} > testbench_yosys.v
+
+{
+	echo "read_verilog testbench_yosys.v"
+	echo "hierarchy; proc; clean"
+	for p in ${SYN_LIST} rtl; do
+		echo "flatten ${job}_${p}"
+	done
+	echo -n "eval -vloghammer_report ${job}_ "
+	echo ${SYN_LIST} rtl | tr ' ' , | tr '\n' ' '
+	echo $inputs | tr -d ' ' | tr '\n' ' '
+	echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ','
+} > testbench_yosys.ys
+
+{
 	echo "module ${job}_tb;"
 	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
 	sed -r "/^ *output / !d; s/output/wire/;" rtl.v
@@ -244,6 +264,10 @@ if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
 	else
 		echo -n > sim_icarus.log
 	fi
+fi
+
+if [[ " ${SIM_LIST} " == *" yosim "* ]]; then
+	yosys -q -l sim_yosim.log testbench_yosys.ys
 fi
 
 for p in ${SIM_LIST}; do
