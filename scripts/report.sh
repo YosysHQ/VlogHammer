@@ -170,13 +170,13 @@ done
 	for pattern in $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns; do
 		echo "    { $inputs } <= $pattern; #1;"
 		for p in ${inputs//,/}; do
-			echo "    \$display(\"++PAT++ %d %b $p %b %d\", $index, {$inputs}, uut_rtl.$p, uut_rtl.$p);"
+			echo "    \$display(\"++PAT++ %d $p %b %d\", $index, uut_rtl.$p, uut_rtl.$p);"
 		done
 		for p in ${SYN_LIST} rtl; do
 			echo "    \$display(\"++RPT++ %d $(echo $inputs | sed -r 's,[^ ]+,%b,g;') %b $p\", $index, $inputs, apply_rtl_undef(${p}_y));"
 		done
 		for p in ${SYN_LIST} rtl; do
-			echo "    \$display(\"++VAL++ %b $p %b %d\", {$inputs}, ${p}_y, ${p}_y);"
+			echo "    \$display(\"++VAL++ %d $p %b %d\", $index, ${p}_y, ${p}_y);"
 		done
 		echo "    \$display(\"++RPT++ ----\");"
 		index=$(( index + 1 ))

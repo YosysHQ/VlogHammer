@@ -12,34 +12,30 @@ args.pop(0)
 #############################################################################
 
 data = { }
-titles = { }
-sorted_keys = []
-re_parse_pat = re.compile('\\+\\+PAT\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+) +(\S+)')
+re_parse_pat = re.compile('\\+\\+PAT\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
 re_parse_val = re.compile('\\+\\+VAL\\+\\+ +(\S+) +(\S+) +(\S+) +(\S+)')
 for sim in args:
   sim_outfile = open("sim_"+sim+".log", "r")
   for line in sim_outfile:
     m = re_parse_pat.search(line)
     if m:
-      if not m.group(2) in data:
-        data[m.group(2)] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
-      data[m.group(2)]['inputs'][m.group(3)] = [ m.group(4), m.group(5) ]
-      titles[m.group(2)] = "Pattern #{}".format(int(m.group(1)))
-      while len(sorted_keys) <= int(m.group(1)):
-        sorted_keys.append("")
-      sorted_keys[int(m.group(1))] = m.group(2)
+      idx = int(m.group(1))
+      if not idx in data:
+        data[idx] = { 'inputs': { }, 'raw_outputs': { }, 'grouped_outputs': { }, 'split_outputs': { } }
+      data[idx]['inputs'][m.group(2)] = [ m.group(3), m.group(4) ]
     m = re_parse_val.search(line)
     if m:
-      data[m.group(1)]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
+      idx = int(m.group(1))
+      data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
 
 #############################################################################
 # Group identical outputs in 'data' structure
 #############################################################################
 
-for pat in data.keys():
+for idx in data.keys():
   reverse_map = { }
-  for entry in data[pat]['raw_outputs']:
-    rev_key = " ".join(data[pat]['raw_outputs'][entry])
+  for entry in data[idx]['raw_outputs']:
+    rev_key = " ".join(data[idx]['raw_outputs'][entry])
     if not rev_key in reverse_map:
       reverse_map[rev_key] = []
     reverse_map[rev_key].append(entry)
@@ -47,7 +43,7 @@ for pat in data.keys():
     reverse_map[rev_key].sort()
     d = str.split(rev_key, ' ')
     k = ", ".join(reverse_map[rev_key])
-    data[pat]['grouped_outputs'][k] = d
+    data[idx]['grouped_outputs'][k] = d
 
 #############################################################################
 # Split outputs as indicated in rtl code
@@ -78,27 +74,27 @@ for line in f:
     bitcounter = bitcounter + int(m.group(2)) + 1
 f.close()
 
-for pat in data.keys():
-  for lst in data[pat]['grouped_outputs']:
-    data[pat]['split_outputs'][lst] = { }
+for idx in data.keys():
+  for lst in data[idx]['grouped_outputs']:
+    data[idx]['split_outputs'][lst] = { }
     if len(bitpartitions) == 0:
-      data[pat]['split_outputs'][lst]['y'] = data[pat]['grouped_outputs'][lst]
+      data[idx]['split_outputs'][lst]['y'] = data[idx]['grouped_outputs'][lst]
     else:
       for part in bitpartitions:
-        data[pat]['split_outputs'][lst][part[2]] = [
-            data[pat]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]],
-            binary2decimal(data[pat]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]], part[3])
+        data[idx]['split_outputs'][lst][part[2]] = [
+            data[idx]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]],
+            binary2decimal(data[idx]['grouped_outputs'][lst][0][part[0]:part[0]+part[1]], part[3])
         ]
   if len(bitpartitions) != 0:
     for part in bitpartitions:
       vars_found_diff = False
-      ref_lst = data[pat]['split_outputs'].keys()[0]
-      for lst in data[pat]['split_outputs'].keys():
-        if data[pat]['split_outputs'][lst][part[2]] != data[pat]['split_outputs'][ref_lst][part[2]]:
+      ref_lst = data[idx]['split_outputs'].keys()[0]
+      for lst in data[idx]['split_outputs'].keys():
+        if data[idx]['split_outputs'][lst][part[2]] != data[idx]['split_outputs'][ref_lst][part[2]]:
           vars_found_diff = True
       if not vars_found_diff:
-        for lst in data[pat]['split_outputs'].keys():
-          del data[pat]['split_outputs'][lst][part[2]]
+        for lst in data[idx]['split_outputs'].keys():
+          del data[idx]['split_outputs'][lst][part[2]]
 
 #############################################################################
 # Generate HTML table for each data record
@@ -130,10 +126,10 @@ def pretty_list(txt):
         txt = ",<br/>".join([ "{%s}.%s" % (",".join(ordered_rev[j]), j) for j in ordered_rev ])
     return txt
 
-for pat in sorted_keys:
-  d = data[pat];
+for idx in sorted(data.keys()):
+  d = data[idx]
   if len(d['split_outputs']) > 1:
-    print '<table class="valuestab" border><tr><th colspan="2" align="left">{}</th><th>binary</th><th>decimal</th></tr>'.format(titles[pat])
+    print '<table class="valuestab" border><tr><th colspan="2" align="left">Pattern #{}</th><th>binary</th><th>decimal</th></tr>'.format(idx)
     for key in sorted(d['inputs'].keys()):
       print '<tr><td colspan="2">{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
     for lst in sorted(d['split_outputs'].keys()):
