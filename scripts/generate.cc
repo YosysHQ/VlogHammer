@@ -23,7 +23,7 @@
 #define GENERATE_REPEAT_OPS
 #define GENERATE_EXPRESSIONS
 
-// Use 'make generate ONLY_SAMPLES=1'
+// Use 'make gen_samples'
 // #define ONLY_SAMPLES
 
 #include <sys/stat.h>

@@ -35,7 +35,9 @@ help:
 	@echo "  make mrproper  ...........................  remove output files"
 	@echo "  make purge  ..............................  remove output files and rtl"
 	@echo ""
-	@echo "  make generate  ...........................  generate rtl files"
+	@echo "  make gen_issues  .........................  generate rtl files for known issues"
+	@echo "  make gen_samples  ........................  generate small set of rtl files"
+	@echo "  make generate  ...........................  generate all rtl files"
 	@echo ""
 	@echo "  make syn  ................................  run all synthesis"
 	@echo "  make syn_vivado  .........................  run only vivado"
@@ -53,7 +55,8 @@ help:
 	@echo ""
 	@echo ""
 	@echo "Example usage:"
-	@echo "  make purge generate ONLY_SAMPLES=1"
+	@echo "  make purge"
+	@echo "  make generate
 	@echo "  make -j4 -l6 syn"
 	@echo "  make -j4 -l6 check"
 	@echo "  make -j4 -l6 report"
@@ -92,13 +95,20 @@ purge: mrproper
 
 # -------------------------------------------------------------------------------------------
 
-generate:
-ifdef ONLY_SAMPLES
+gen_issues:
+	mkdir -p rtl
+	perl -e 'while (<>) { open(F, ">rtl/$$1.v") if /module ([a-z0-9_]*)/; print F $$_; }' < scripts/issues.v
+
+gen_samples: gen_issues
 	clang -DONLY_SAMPLES -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
-else
-	clang -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
-endif
 	./scripts/generate
+
+generate: gen_issues
+	clang -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
+	./scripts/generate
+
+pack_issues:
+	cat rtl/issue_*.v > scripts/issues.v
 
 # -------------------------------------------------------------------------------------------
 
