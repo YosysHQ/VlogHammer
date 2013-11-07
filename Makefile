@@ -24,7 +24,7 @@ ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh
 MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
 VIVADO_BIN   := /opt/Xilinx/Vivado/2013.2/bin/vivado
-MAKE_JOBS    := -j4 -l6
+MAKE_JOBS    := -j4 -l8
 REPORT_OPTS  :=
 
 export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
