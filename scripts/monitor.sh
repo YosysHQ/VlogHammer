@@ -92,15 +92,15 @@
 
 {
 	echo '<html>'
-	echo '<meta http-equiv="refresh" content="10"/>'
+	echo '<meta http-equiv="refresh" content="60"/>'
 	echo '<script language="JavaScript"><!--'
 	echo 'var bgfadecount = 0;'
 	echo 'function bgfade() {'
 	echo '	if (bgfadecount++ < 30) {'
-	echo '		var k = 1 - Math.exp(-bgfadecount*0.3);'
+	echo '		var k = (1+Math.cos(bgfadecount*2*Math.PI/30)) * 0.3 + 0.4;'
 	echo '		var s = (255*k+256).toString(16).slice(1, 3);'
 	echo '		document.bgColor = "#" + s + s + s;'
-	echo '		window.setTimeout(bgfade, 30);'
+	echo '		window.setTimeout(bgfade, 10);'
 	echo '	} else'
 	echo '		document.bgColor = "#ffffff";'
 	echo '}'
