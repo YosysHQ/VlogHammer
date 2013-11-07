@@ -117,6 +117,7 @@ uint32_t xorshift32(uint32_t seed = 0) {
 
 void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool avoid_signed, bool in_param)
 {
+	bool avoid_mult_div_mod = false;
 	int num_binary_ops = SIZE(binary_ops);
 	int num_unary_ops = SIZE(unary_ops);
 	int num_arg_types = SIZE(arg_types);
@@ -130,7 +131,7 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 			goto print_constant;
 		char var_char;
 		int var_index;
-		if ((xorshift32() % 256) > (mask >> 24)) {
+		if (!avoid_undef && (xorshift32() % 256) > (mask >> 24)) {
 			var_char = 'p';
 			var_index = xorshift32() % (3*num_arg_types);
 		} else {
@@ -145,6 +146,10 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 
 	while ((mask & ~((~0) << num_modes)) == 0)
 		mask = xorshift32() & (in_param ? ~1 : ~0);
+
+	if ((mask & 3) != 0)
+		avoid_mult_div_mod = true;
+
 	do {
 		mode = xorshift32() % num_modes;
 	} while (((1 << mode) & mask) == 0);
@@ -153,6 +158,22 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 	switch (mode)
 	{
 	case 0:
+		i = 1 + xorshift32() % 3;
+		fprintf(f, "{");
+		for (j = 0; j < i; j++) {
+			if (j)
+				fprintf(f, ",");
+			print_expression(f, budget / i, mask, avoid_undef, avoid_signed, in_param);
+		}
+		fprintf(f, "}");
+		break;
+	case 1:
+		i = (xorshift32() % 4) + 1;
+		fprintf(f, "{%d{", i);
+		print_expression(f, budget / i, mask, avoid_undef, avoid_signed, in_param);
+		fprintf(f, "}}");
+		break;
+	case 2:
 		if (avoid_signed)
 			fprintf(f, "$unsigned(");
 		else
@@ -161,13 +182,14 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		print_expression(f, budget, mask, avoid_undef, false, in_param);
 		fprintf(f, ")");
 		break;
-	case 1:
-	case 2:
 	case 3:
+	case 4:
+	case 5:
 		fprintf(f, "(");
 		do {
 			p = binary_ops[xorshift32() % num_binary_ops];
-		} while (avoid_undef && (!strcmp(p, "/") || !strcmp(p, "%")));
+		} while ((avoid_mult_div_mod && (!strcmp(p, "*") || !strcmp(p, "/") || !strcmp(p, "%"))) ||
+				(avoid_undef && (!strcmp(p, "/") || !strcmp(p, "%"))));
 		if (!strcmp(p, "===") || !strcmp(p, "!=="))
 			avoid_undef = true;
 		if (!strcmp(p, "**")) {
@@ -187,27 +209,11 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		}
 		fprintf(f, ")");
 		break;
-	case 4:
-	case 5:
+	case 6:
+	case 7:
 		fprintf(f, "(%s", unary_ops[xorshift32() % num_unary_ops]);
 		print_expression(f, budget, mask, avoid_undef, avoid_signed, in_param);
 		fprintf(f, ")");
-		break;
-	case 6:
-		i = 1 + xorshift32() % 3;
-		fprintf(f, "{");
-		for (j = 0; j < i; j++) {
-			if (j)
-				fprintf(f, ",");
-			print_expression(f, budget / i, mask, avoid_undef, avoid_signed, in_param);
-		}
-		fprintf(f, "}");
-		break;
-	case 7:
-		i = (xorshift32() % 4) + 1;
-		fprintf(f, "{%d{", i);
-		print_expression(f, budget / i, mask, avoid_undef, avoid_signed, in_param);
-		fprintf(f, "}}");
 		break;
 	case 8:
 		fprintf(f, "(");
