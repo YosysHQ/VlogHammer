@@ -16,11 +16,11 @@
  *  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#define GENERATE_BINARY_OPS
-#define GENERATE_UNARY_OPS
-#define GENERATE_TERNARY_OPS
-#define GENERATE_CONCAT_OPS
-#define GENERATE_REPEAT_OPS
+#undef GENERATE_BINARY_OPS
+#undef GENERATE_UNARY_OPS
+#undef GENERATE_TERNARY_OPS
+#undef GENERATE_CONCAT_OPS
+#undef GENERATE_REPEAT_OPS
 #define GENERATE_EXPRESSIONS
 
 // Use 'make gen_samples'
@@ -145,7 +145,7 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 	}
 
 	while ((mask & ~((~0) << num_modes)) == 0)
-		mask = xorshift32() & (in_param ? ~1 : ~0);
+		mask = xorshift32() & (in_param ? ~4 : ~0);
 
 	if ((mask & 3) != 0)
 		avoid_mult_div_mod = true;
@@ -158,6 +158,7 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 	switch (mode)
 	{
 	case 0:
+		// this mode number is used to determine avoid_mult_div_mod
 		i = 1 + xorshift32() % 3;
 		fprintf(f, "{");
 		for (j = 0; j < i; j++) {
@@ -168,12 +169,14 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		fprintf(f, "}");
 		break;
 	case 1:
+		// this mode number is used to determine avoid_mult_div_mod
 		i = (xorshift32() % 4) + 1;
 		fprintf(f, "{%d{", i);
 		print_expression(f, budget / i, mask, avoid_undef, avoid_signed, in_param);
 		fprintf(f, "}}");
 		break;
 	case 2:
+		// this mode number is masked out if in_param is set during mask generation
 		if (avoid_signed)
 			fprintf(f, "$unsigned(");
 		else
