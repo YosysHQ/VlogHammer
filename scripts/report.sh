@@ -406,7 +406,8 @@ fi
 	done
 	echo "</table>"
 
-	echo "<pre class=\"testbench\"><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
+	echo "<pre class=\"testbench\"><small>$( perl -pe '@c = split//; $k=0; $p=0; for (my $i=0; $i<=$#c; $i++) { $p=$i if $c[$i] eq ")";
+			if ($k > 120 && $p > 0) { $c[$p] .= "\n    "; $k = $i-$p+4; $p=0; } $k++; } $_ = join "",@c' rtl.v <( echo ) simple_tb.v | perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' |
 			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?"|//.*)!$x = $1; $y = $2; sprintf("%s<span style=\"color:%s\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#633" : $y =~ /^\/\// ? "#606" :
 			$y =~ /^(module|input|wire|reg|localparam|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#080" : "#008", $y)!eg' )</small></pre>"
 

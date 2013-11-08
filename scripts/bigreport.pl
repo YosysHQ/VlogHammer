@@ -55,7 +55,7 @@ h3 { margin: 0.5em; }
 .note:before { content: "Error Note: "; font-weight:bold; }
 
 .overviewtab { margin: 0.7em; }
-.overviewtab th { width: 100px; }
+.overviewtab th { width: 90px; }
 
 .valuestab { border-collapse:collapse; border: 2px solid black; }
 
