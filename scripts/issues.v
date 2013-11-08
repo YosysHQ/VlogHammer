@@ -89,3 +89,114 @@ module issue_007(a, y);
   assign y2 = |(1/0);     // 4'b000x
   assign y3 = (|1)/(|0);  // 4'bxxxx
 endmodule
+module issue_008(a, y);
+  input [1:0] a;
+  output [127:0] y;
+
+  wire [7:0] y0;
+  wire [7:0] y1;
+  wire [7:0] y2;
+  wire [7:0] y3;
+  wire [7:0] y4;
+  wire [7:0] y5;
+  wire [7:0] y6;
+  wire [7:0] y7;
+  wire [7:0] y8;
+  wire [7:0] y9;
+  wire [7:0] y10;
+  wire [7:0] y11;
+  wire [7:0] y12;
+  wire [7:0] y13;
+  wire [7:0] y14;
+  wire [7:0] y15;
+  assign y = {y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13,y14,y15};
+
+  // constant evaluation of power operator (signed ** signed)
+  localparam [7:0] ss0  = +8'sd0 ** -8'sd1;
+  localparam [7:0] ss1  = +8'sd0 ** +8'sd1;
+  localparam [7:0] ss2  = -8'sd2 ** -8'sd2;
+  localparam [7:0] ss3  = -8'sd1 ** -8'sd2;
+  localparam [7:0] ss4  = +8'sd1 ** -8'sd2;
+  localparam [7:0] ss5  = +8'sd2 ** -8'sd2;
+  localparam [7:0] ss6  = -8'sd2 ** -8'sd3;
+  localparam [7:0] ss7  = -8'sd1 ** -8'sd3;
+  localparam [7:0] ss8  = +8'sd1 ** -8'sd3;
+  localparam [7:0] ss9  = +8'sd2 ** -8'sd3;
+  localparam [7:0] ss10 = +8'sd3 ** +8'sd2;
+  localparam [7:0] ss11 = -8'sd1 ** +8'sd1;
+  localparam [7:0] ss12 = -8'sd1 ** +8'sd3;
+  localparam [7:0] ss13 = -8'sd2 ** +8'sd1;
+  localparam [7:0] ss14 = -8'sd2 ** +8'sd3;
+  localparam [7:0] ss15 = -8'sd3 ** +8'sd3;
+
+  // constant evaluation of power operator (signed ** unsigned)
+  localparam [7:0] su0  = +8'sd0 ** -8'd1;
+  localparam [7:0] su1  = +8'sd0 ** +8'd1;
+  localparam [7:0] su2  = -8'sd2 ** -8'd2;
+  localparam [7:0] su3  = -8'sd1 ** -8'd2;
+  localparam [7:0] su4  = +8'sd1 ** -8'd2;
+  localparam [7:0] su5  = +8'sd2 ** -8'd2;
+  localparam [7:0] su6  = -8'sd2 ** -8'd3;
+  localparam [7:0] su7  = -8'sd1 ** -8'd3;
+  localparam [7:0] su8  = +8'sd1 ** -8'd3;
+  localparam [7:0] su9  = +8'sd2 ** -8'd3;
+  localparam [7:0] su10 = +8'sd3 ** +8'd2;
+  localparam [7:0] su11 = -8'sd1 ** +8'd1;
+  localparam [7:0] su12 = -8'sd1 ** +8'd3;
+  localparam [7:0] su13 = -8'sd2 ** +8'd1;
+  localparam [7:0] su14 = -8'sd2 ** +8'd3;
+  localparam [7:0] su15 = -8'sd3 ** +8'd3;
+
+  // constant evaluation of power operator (unsigned ** signed)
+  localparam [7:0] us0  = +8'd0 ** -8'sd1;
+  localparam [7:0] us1  = +8'd0 ** +8'sd1;
+  localparam [7:0] us2  = -8'd2 ** -8'sd2;
+  localparam [7:0] us3  = -8'd1 ** -8'sd2;
+  localparam [7:0] us4  = +8'd1 ** -8'sd2;
+  localparam [7:0] us5  = +8'd2 ** -8'sd2;
+  localparam [7:0] us6  = -8'd2 ** -8'sd3;
+  localparam [7:0] us7  = -8'd1 ** -8'sd3;
+  localparam [7:0] us8  = +8'd1 ** -8'sd3;
+  localparam [7:0] us9  = +8'd2 ** -8'sd3;
+  localparam [7:0] us10 = +8'd3 ** +8'sd2;
+  localparam [7:0] us11 = -8'd1 ** +8'sd1;
+  localparam [7:0] us12 = -8'd1 ** +8'sd3;
+  localparam [7:0] us13 = -8'd2 ** +8'sd1;
+  localparam [7:0] us14 = -8'd2 ** +8'sd3;
+  localparam [7:0] us15 = -8'd3 ** +8'sd3;
+
+  // constant evaluation of power operator (unsigned ** unsigned)
+  localparam [7:0] uu0  = +8'd0 ** -8'd1;
+  localparam [7:0] uu1  = +8'd0 ** +8'd1;
+  localparam [7:0] uu2  = -8'd2 ** -8'd2;
+  localparam [7:0] uu3  = -8'd1 ** -8'd2;
+  localparam [7:0] uu4  = +8'd1 ** -8'd2;
+  localparam [7:0] uu5  = +8'd2 ** -8'd2;
+  localparam [7:0] uu6  = -8'd2 ** -8'd3;
+  localparam [7:0] uu7  = -8'd1 ** -8'd3;
+  localparam [7:0] uu8  = +8'd1 ** -8'd3;
+  localparam [7:0] uu9  = +8'd2 ** -8'd3;
+  localparam [7:0] uu10 = +8'd3 ** +8'd2;
+  localparam [7:0] uu11 = -8'd1 ** +8'd1;
+  localparam [7:0] uu12 = -8'd1 ** +8'd3;
+  localparam [7:0] uu13 = -8'd2 ** +8'd1;
+  localparam [7:0] uu14 = -8'd2 ** +8'd3;
+  localparam [7:0] uu15 = -8'd3 ** +8'd3;
+
+  assign y0  = a == 0 ? ss0  : a == 1 ? su0  : a == 2 ? us0  : uu0;
+  assign y1  = a == 0 ? ss1  : a == 1 ? su1  : a == 2 ? us1  : uu1;
+  assign y2  = a == 0 ? ss2  : a == 1 ? su2  : a == 2 ? us2  : uu2;
+  assign y3  = a == 0 ? ss3  : a == 1 ? su3  : a == 2 ? us3  : uu3;
+  assign y4  = a == 0 ? ss4  : a == 1 ? su4  : a == 2 ? us4  : uu4;
+  assign y5  = a == 0 ? ss5  : a == 1 ? su5  : a == 2 ? us5  : uu5;
+  assign y6  = a == 0 ? ss6  : a == 1 ? su6  : a == 2 ? us6  : uu6;
+  assign y7  = a == 0 ? ss7  : a == 1 ? su7  : a == 2 ? us7  : uu7;
+  assign y8  = a == 0 ? ss8  : a == 1 ? su8  : a == 2 ? us8  : uu8;
+  assign y9  = a == 0 ? ss9  : a == 1 ? su9  : a == 2 ? us9  : uu9;
+  assign y10 = a == 0 ? ss10 : a == 1 ? su10 : a == 2 ? us10 : uu10;
+  assign y11 = a == 0 ? ss11 : a == 1 ? su11 : a == 2 ? us11 : uu11;
+  assign y12 = a == 0 ? ss12 : a == 1 ? su12 : a == 2 ? us12 : uu12;
+  assign y13 = a == 0 ? ss13 : a == 1 ? su13 : a == 2 ? us13 : uu13;
+  assign y14 = a == 0 ? ss14 : a == 1 ? su14 : a == 2 ? us14 : uu14;
+  assign y15 = a == 0 ? ss15 : a == 1 ? su15 : a == 2 ? us15 : uu15;
+endmodule
