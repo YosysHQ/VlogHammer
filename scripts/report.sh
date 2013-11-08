@@ -406,8 +406,8 @@ fi
 	echo "</table>"
 
 	echo "<pre class=\"testbench\"><small>$( perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' rtl.v <( echo ) simple_tb.v |
-			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?")!$x = $1; $y = $2; sprintf("%s<span style=\"color: %s;\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#663333;" :
-			$y =~ /^(module|input|wire|reg|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#008800;" : "#000088;", $y)!eg' )</small></pre>"
+			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?"|//.*)!$x = $1; $y = $2; sprintf("%s<span style=\"color:%s\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#633" : $y =~ /^\/\// ? "#606" :
+			$y =~ /^(module|input|wire|reg|localparam|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#080" : "#008", $y)!eg' )</small></pre>"
 
 	echo "<!-- VALUES:BEGIN -->"
 	python ../../scripts/valtab.py ${SIM_LIST}
