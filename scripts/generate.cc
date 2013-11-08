@@ -22,6 +22,7 @@
 #undef GENERATE_CONCAT_OPS
 #undef GENERATE_REPEAT_OPS
 #define GENERATE_EXPRESSIONS
+#define GENERATE_WIDEEXPR
 
 // Use 'make gen_samples'
 // #define ONLY_SAMPLES
@@ -237,6 +238,107 @@ print_constant:
 			fprintf(f, "%d'd%d", i, xorshift32() % (1 << i));
 		fprintf(f, ")");
 		break;
+	}
+}
+
+void print_wideexpr(FILE *f, bool is_signed, int max_depth)
+{
+	static const char *prefix_ops[] = { "+", "-", "!", "~", "&", "~&", "|", "~|", "^", "~^" };
+	static const char *combine_ops[] = { "+", "-", "&", "|", "^", "^~" };
+	static const char *shift_ops[] = { "<<", "<<<", ">>", ">>>" };
+	static const char *compare_ops[] = { "<", "<=", "==", "!=", ">=", ">" };
+	int mode, k;
+
+	if (max_depth <= 0)
+		mode = xorshift32() % 2;
+	else if (is_signed)
+		mode = xorshift32() % 7;
+	else
+		mode = xorshift32() % 10;
+
+	switch (mode)
+	{
+	/* block 1: terminal nodes */
+	case 0:
+		k = (xorshift32() % 6) + 1;
+		fprintf(f, "%d'%sb", k, is_signed || (xorshift32() % 2 == 0) ? "s" : "");
+		for (int i = 0; i < k; i++) {
+	#if 0
+			if (xorshift32() % 15)
+				fprintf(f, "%d", xorshift32() % 2);
+			else
+				fprintf(f, "x");
+	#else
+			fprintf(f, "%d", xorshift32() % 2);
+	#endif
+		}
+		break;
+	case 1:
+		fprintf(f, "%c%d", is_signed || (xorshift32() % 2 == 0) ? 's' : 'u', xorshift32() % 8);
+		break;
+
+	/* block 2: nodes for signed and unsigned expressions */
+	case 2:
+		fprintf(f, "%s(", prefix_ops[xorshift32() % (is_signed ? 2 : SIZE(prefix_ops))]);
+		print_wideexpr(f, xorshift32() % 2 == 0, max_depth-1);
+		fprintf(f, ")");
+		break;
+	case 3:
+		fprintf(f, "(");
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")%s(", combine_ops[xorshift32() % SIZE(combine_ops)]);
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")");
+		break;
+	case 4:
+		fprintf(f, "(");
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")%s(", shift_ops[xorshift32() % SIZE(shift_ops)]);
+		print_wideexpr(f, xorshift32() % 2 == 0, max_depth-1);
+		fprintf(f, ")");
+		break;
+	case 5:
+		fprintf(f, "(ctrl[%d]?", xorshift32() % 8);
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ":");
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")");
+		break;
+	case 6:
+		fprintf(f, "%s(", is_signed || (xorshift32() % 2 == 0) ? "$signed" : "$unsigned");
+		is_signed = xorshift32() % 2 == 0;
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")");
+		break;
+
+	/* block 3: nodes for unsigned expressions */
+	case 7:
+		is_signed = xorshift32() % 2 == 0;
+		fprintf(f, "(");
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")%s(", compare_ops[xorshift32() % SIZE(compare_ops)]);
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, ")");
+		break;
+	case 8:
+		k = (xorshift32() % 4) + 1;
+		for (int i = 0; i < k; i++) {
+			fprintf(f, i == 0 ? "{" : ",");
+			is_signed = xorshift32() % 2 == 0;
+			print_wideexpr(f, is_signed, max_depth-1);
+		}
+		fprintf(f, "}");
+		break;
+	case 9:
+		k = (xorshift32() % 4) + 1;
+		fprintf(f, "{%d{", k);
+		is_signed = xorshift32() % 2 == 0;
+		print_wideexpr(f, is_signed, max_depth-1);
+		fprintf(f, "}}");
+		break;
+
+	default:
+		abort();
 	}
 }
 
@@ -547,6 +649,56 @@ int main()
 		for (int j = 0; j < SIZE(arg_types)*3; j++) {
 			fprintf(f, "  assign y%d = ", j);
 			print_expression(f, 1 + xorshift32() % 20, 0, false, false, false);
+			fprintf(f, ";\n");
+		}
+
+		fprintf(f, "endmodule\n");
+		fclose(f);
+	}
+#endif
+
+#ifdef GENERATE_WIDEEXPR
+	for (int i = 0; i < 1000; i++)
+	{
+#ifdef ONLY_SAMPLES
+		if (i == 100)
+			break;
+#endif
+		xorshift32(2345 + i);
+		xorshift32();
+		xorshift32();
+		xorshift32();
+
+		char buffer[1024];
+		snprintf(buffer, 1024, "rtl/wideexpr_%05d.v", i);
+
+		FILE *f = fopen(buffer, "w");
+		fprintf(f, "module wideexpr_%05d(ctrl, ", i);
+
+		for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 8; j++)
+			fprintf(f, "%c%d, ", "us"[i], j);
+		fprintf(f, "y);\n");
+
+		fprintf(f, "  input [7:0] ctrl;\n");
+		for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 8; j++)
+			fprintf(f, "  input %s[%d:0] %c%d;\n", i ? "signed " : "", j, "us"[i], j);
+
+		fprintf(f, "  output [127:0] y;\n");
+
+		for (int j = 0; j < 8; j++)
+			fprintf(f, "  wire [15:0] y%d;\n", j);
+
+		fprintf(f, "  assign y = {");
+		for (int j = 0; j < 8; j++)
+			fprintf(f, "%sy%d", j ? "," : "", j);
+		fprintf(f, "};\n");
+
+		for (int j = 0; j < 8; j++) {
+			bool is_signed = xorshift32() % 2 == 0;
+			fprintf(f, "  assign y%d = ", j);
+			print_wideexpr(f, is_signed, 5 + (xorshift32() % 5));
 			fprintf(f, ";\n");
 		}
 

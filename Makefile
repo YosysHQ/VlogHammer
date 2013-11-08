@@ -99,13 +99,15 @@ gen_issues:
 	mkdir -p rtl
 	perl -e 'while (<>) { open(F, ">rtl/$$1.v") if /module ([a-z0-9_]*)/; print F $$_; }' < scripts/issues.v
 
-gen_samples: gen_issues
+gen_samples:
 	clang -DONLY_SAMPLES -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
 	./scripts/generate
 
-generate: gen_issues
+gen_full:
 	clang -Wall -Wextra -ggdb -O0 -o scripts/generate scripts/generate.cc -lstdc++
 	./scripts/generate
+
+generate: gen_issues gen_full
 
 pack_issues:
 	cat rtl/issue_*.v > scripts/issues.v

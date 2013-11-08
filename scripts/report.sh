@@ -244,7 +244,8 @@ if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
-	if iverilog -o testbench_icarus testbench.v; then
+	# if iverilog wants more than 1GB of memory then something went wrong..
+	if ( ulimit -v 1048576; iverilog -o testbench_icarus testbench.v ); then
 		timeout 120 ./testbench_icarus | tee sim_icarus.log
 	else
 		echo -n > sim_icarus.log
