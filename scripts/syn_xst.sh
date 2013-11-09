@@ -40,7 +40,7 @@ cat > $job.xst <<- EOT
 	-ifn $job.prj -ofn $job -p artix7 -top $job
 	-iobuf NO -ram_extract NO -rom_extract NO -use_dsp48 NO
 	-fsm_extract YES -fsm_encoding Auto
-	-change_error_to_warning "HDLCompiler:226"
+	-change_error_to_warning "HDLCompiler:226 HDLCompiler:1832"
 EOT
 
 cat > $job.prj <<- EOT
