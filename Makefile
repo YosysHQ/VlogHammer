@@ -20,10 +20,10 @@ SYN_LIST     := vivado quartus xst yosys
 SIM_LIST     := isim modelsim icarus yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
-ISE_SETTINGS := /opt/Xilinx/14.5/ISE_DS/settings64.sh
-MODELSIM_DIR := /opt/altera/13.0/modelsim_ase/bin
-QUARTUS_DIR  := /opt/altera/13.0/quartus/bin
-VIVADO_BIN   := /opt/Xilinx/Vivado/2013.2/bin/vivado
+ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
+MODELSIM_DIR := /opt/altera/13.1/modelsim_ase/bin
+QUARTUS_DIR  := /opt/altera/13.1/quartus/bin
+VIVADO_BIN   := /opt/Xilinx/Vivado/2013.3/bin/vivado
 MAKE_JOBS    := -j4 -l8
 REPORT_OPTS  :=
 

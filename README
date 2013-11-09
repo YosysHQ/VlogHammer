@@ -7,24 +7,24 @@ different synthesis tools for equivialence. The following tools are
 supported:
 
 	Yosys (no specific version)
-	Xilinx Vivado WebPack (2013.2)
-	Xilinx ISE (XST) WebPack (14.5)
-	Altera Quartus Web Edition (13.0)
+	Xilinx Vivado WebPack (2013.3)
+	Xilinx ISE (XST) WebPack (14.7)
+	Altera Quartus II Web Edition (13.1)
 
 The built-in SAT-solver in Yosis is used for formal equivalence checking.
 The test cases that fail this check and the found example pattern are
 then tried using the following Verilog simulators:
 
-	Xilinx ISIM (from Xilinx ISE 14.5)
-	Modelsim 10.1d (from Quartus 13.0)
+	Xilinx ISIM (from Xilinx ISE 14.7)
+	Modelsim 10.1d (from Quartus 13.1)
 	Icarus Verilog (no specific version)
 
 Instructions:
 
  * Install Yosys (yosys) and Icarus Verilog (iverilog)
- * Install Xilinx Vivado WebPack 2013.2 in /opt/Xilinx/Vivado/2013.2
- * Insatll Xilinx ISE WebPack 14.5 in /opt/Xilinx/14.5/
- * Install Altera Quartus Web Edition 13.0 in /opt/altera/13.0/
+ * Install Xilinx Vivado WebPack 2013.3 in /opt/Xilinx/Vivado/2013.3
+ * Insatll Xilinx ISE WebPack 14.7 in /opt/Xilinx/14.7/
+ * Install Altera Quartus Web Edition 13.1 in /opt/altera/13.1/
 
  * Generate Test Cases:
 
@@ -32,13 +32,13 @@ Instructions:
 
  * Synthesize Test Cases:
 
-	make -j4 -l6 syn
+	make -j4 -l8 syn
 
  * Check Individual Synthesis Results vs. Yosys RTL:
 
-	make -j4 -l6 check
+	make -j4 -l8 check
 
  * Generate Reports on Failed Test Cases:
 
-	make -j4 -l6 report
+	make -j4 -l8 report
 
