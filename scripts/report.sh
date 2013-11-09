@@ -82,6 +82,9 @@ done
 	echo "endmodule"
 } > top.v
 
+bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
+inputs=$( echo $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) | sed 's/, *$//;' )
+
 echo -n > fail_patterns.txt
 for p in ${SYN_LIST} rtl; do
 for q in ${SYN_LIST} rtl; do
@@ -130,7 +133,8 @@ for q in ${SYN_LIST} rtl; do
 			echo PASS > result.${p}.${q}.txt
 		fi
 	else
-		echo $( grep '^ *\\[a-xz][0-9]* ' test.$p.$q.log | gawk '{ print $4; }' | tr -d '\n' ) >> fail_patterns.txt
+		echo $( for input in $( echo $inputs | tr -d , ); do grep "^ * \\\\$input " test.${p}.${q}.log |
+				gawk '{ print $4; }'; done | tr -d '\n' ) >> fail_patterns.txt
 		echo FAIL > result.${p}.${q}.txt
 	fi
 
@@ -139,8 +143,6 @@ for q in ${SYN_LIST} rtl; do
 done; done
 
 extra_patterns="$( grep '^ *// *PATTERN:' rtl.v | cut -f2- -d: )"
-bits=$( echo $( grep '^ *input' rtl.v | sed 's/.*\[//; s/:.*/+1+/;' )0 | bc; )
-inputs=$( echo $( grep '^ *input' rtl.v | sed 's,.* ,,; y/;/,/; s/\n//;' ) | sed 's/, *$//;' )
 for x in 1 2 3 4 5 6 7 8 9 0; do
 	extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
 done
@@ -323,6 +325,10 @@ if test -f result.rtl.$goodsim.txt; then
 			in_lists="$in_lists yosim"
 		fi
 	done
+fi
+
+if [ $( echo $in_lists | tr ' ' '\n' | sort -u | wc -w ) -eq 1 ]; then
+	in_lists="$in_lists noerror"
 fi
 
 {
