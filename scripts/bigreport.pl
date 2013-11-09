@@ -98,7 +98,7 @@ h3 { margin: 0.5em; }
 
 </div>
 <div class=\"about\" id=\"about\" style=\"display: none;\">
-<h3>About this Vloghammer Report</h3>
+<h3>About this VlogHammer Report</h3>
 EOT
 
 if (open(F, "report.in")) {
