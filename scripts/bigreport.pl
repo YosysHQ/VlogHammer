@@ -102,7 +102,9 @@ h3 { margin: 0.5em; }
 EOT
 
 if (open(F, "report.in")) {
+	print "<div>";
 	print while <F>;
+	print "</div>";
 	close F;
 } else {
 	print "<div><b>WARNING:</b> No <tt>report.in</tt> file found. Please create this file\n";
