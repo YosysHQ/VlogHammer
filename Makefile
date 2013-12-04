@@ -27,6 +27,9 @@ VIVADO_BIN   := /opt/Xilinx/Vivado/2013.3/bin/vivado
 MAKE_JOBS    := -j4 -l8
 REPORT_OPTS  :=
 
+# uncomment this for full list of reports
+REPORT_LIST := $(RTL_LIST)
+
 export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 
 help:
@@ -56,7 +59,7 @@ help:
 	@echo ""
 	@echo "Example usage:"
 	@echo "  make purge"
-	@echo "  make generate
+	@echo "  make generate"
 	@echo "  make -j4 -l6 syn"
 	@echo "  make -j4 -l6 check"
 	@echo "  make -j4 -l6 report"
