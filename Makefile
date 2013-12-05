@@ -28,7 +28,7 @@ MAKE_JOBS    := -j4 -l8
 REPORT_OPTS  :=
 
 # uncomment this for full list of reports
-REPORT_LIST := $(RTL_LIST)
+#REPORT_LIST := $(RTL_LIST)
 
 export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 
