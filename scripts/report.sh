@@ -98,7 +98,7 @@ for q in ${SYN_LIST} rtl; do
 	fi
 
 	{
-		sat_proof="-prove y1 y2"
+		sat_proof="-ignore_div_by_zero -prove y1 y2"
 
 		if [ $p = rtl ]; then
 			echo "read_verilog rtl.v"
@@ -124,9 +124,9 @@ for q in ${SYN_LIST} rtl; do
 
 		ports=$( grep ^module top.v | tr '()' '::' | cut -f2 -d: | tr -d ' ' )
 		if $quick; then
-			echo "sat -ignore_div_by_zero -timeout 2 -verify-no-timeout -show $ports $sat_proof ${job}"
+			echo "sat -timeout 2 -verify-no-timeout -show $ports $sat_proof ${job}"
 		else
-			echo "sat -ignore_div_by_zero -timeout 20 -verify-no-timeout -show $ports $sat_proof ${job}"
+			echo "sat -timeout 20 -verify-no-timeout -show $ports $sat_proof ${job}"
 		fi
 	} > test.$p.$q.ys
 
