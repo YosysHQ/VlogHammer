@@ -25,6 +25,7 @@ MODELSIM_DIR := /opt/altera/13.1/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.1/quartus/bin
 VIVADO_BIN   := /opt/Xilinx/Vivado/2013.3/bin/vivado
 MAKE_JOBS    := -j4 -l8
+YOSYS_MODE   := default
 REPORT_OPTS  :=
 
 # uncomment this for full list of reports
@@ -153,7 +154,7 @@ syn_yosys/%.v:
 else
 syn_yosys/%.v: rtl/%.v
 endif
-	bash scripts/syn_yosys.sh $(notdir $(basename $@))
+	bash scripts/syn_yosys.sh $(notdir $(basename $@)) $(YOSYS_MODE)
 
 # -------------------------------------------------------------------------------------------
 

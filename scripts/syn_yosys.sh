@@ -17,27 +17,39 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-with_abc=false
-
-if [ $# -ne 1 ]; then
-	echo "Usage: $0 <job_name>" >&2
+if [ $# -ne 1 -a $# -ne 2 ]; then
+	echo "Usage: $0 <job_name> [<mode>]" >&2
 	exit 1
 fi
 
 job="$1"
+mode="${2:-default}"
 set -ex --
 
 rm -rf temp/syn_yosys_$job
 mkdir -p temp/syn_yosys_$job
 cd temp/syn_yosys_$job
 
-if $with_abc; then
-	yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
-	      -p 'hierarchy; proc; opt; techmap; opt; abc; opt' ../../rtl/$job.v
-else
-	yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
-	      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v
-fi
+case "$mode" in
+	0|default)
+		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
+		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
+	1|abc)
+		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
+		      -p 'hierarchy; proc; opt; techmap; opt; abc; opt' ../../rtl/$job.v ;;
+	2|lateopt)
+		yosys -q -l synth.log -b 'verilog -noattr' -f 'verilog -noopt' -o synth.v \
+		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
+	3|noopt)
+		yosys -q -l synth.log -b 'verilog -noattr' -f 'verilog -noopt' -o synth.v \
+		      -p 'hierarchy; proc; techmap' ../../rtl/$job.v ;;
+	4|nomap)
+		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
+		      -p 'hierarchy; proc; opt' ../../rtl/$job.v ;;
+	*)
+		echo "Unsupported mode: $mode" >&2
+		exit 1 ;;
+esac
 
 mkdir -p ../../syn_yosys
 cp synth.v ../../syn_yosys/$job.v
