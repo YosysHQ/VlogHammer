@@ -253,7 +253,7 @@ module issue_010(a, b, y);
   input [5:0] a;
   input [3:0] b;
 
-  // I have no clue why but Vivado 2013.3 generates a netlist containing:
+  // I have no clue why but Vivado 2013.4 generates a netlist containing:
   //
   //   assign \<const0>  = a[3];
   //   assign \<const0>  = a[2];
