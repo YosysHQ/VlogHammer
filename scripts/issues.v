@@ -63,7 +63,8 @@ module issue_005(a, y);
   assign y6 = |(a/a);
   assign y7 = (|a)/(|a);
 endmodule
-module issue_006(y);
+module issue_006(a, y);
+  input [4:0] a;
   output [4:0] y;
   // icarus verilog has a bug (git 336b299) that prevents it from
   // evaluating ^~ in parameters. This is just a quick test of all
@@ -106,7 +107,7 @@ module issue_006(y);
   assign y = pb00 ^ pb01 ^ pb02 ^ pb03 ^ pb04 ^ pb05 ^ pb06 ^ pb07 ^ pb08 ^
              pb09 ^ pb10 ^ pb11 ^ pb12 ^ pb13 ^ pb14 ^ pb15 ^ pb16 ^ pb17 ^
              pb18 ^ pb19 ^ pb20 ^ pb21 ^ pb22 ^ pb23 ^ pu00 ^ pu01 ^ pu02 ^
-             pu03 ^ pu04 ^ pu05 ^ pu06 ^ pu07 ^ pu08 ^ pu09 ^ pter;
+             pu03 ^ pu04 ^ pu05 ^ pu06 ^ pu07 ^ pu08 ^ pu09 ^ pter ^ a;
 endmodule
 module issue_007(a, y);
   input [3:0] a;
