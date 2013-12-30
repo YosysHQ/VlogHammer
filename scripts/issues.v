@@ -317,3 +317,10 @@ module issue_010(a, b, y);
   assign y1  = {4{{3{b}}}};
   assign y2  = 4'b1000 * a;
 endmodule
+module issue_011(a, y);
+  input [0:0] a;
+  output [0:0] y;
+  // icarus verilog vpp (git 336b299) asserts on this expression
+  //   Internal error: Input vector expected width=1, got bit=2'b00, base=0, vwid=2
+  assign y  = |(-a);
+endmodule
