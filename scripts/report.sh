@@ -250,11 +250,9 @@ if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
-	# set this to a non-empty string for testing with specific iverilog version
-	IVERILOG_BINDIR="" ## /home/clifford/Temp/iverilog-prefix/bin
 	# if iverilog wants more than 1GB of memory then something went wrong..
-	if ( ulimit -v 1048576; ${IVERILOG_BINDIR}${IVERILOG_BINDIR:+/}iverilog -o testbench_icarus testbench.v ); then
-		timeout 120 ${IVERILOG_BINDIR}${IVERILOG_BINDIR:+/}vvp testbench_icarus | tee sim_icarus.log
+	if ( ulimit -v 1048576; timeout 120 ${IVERILOG_DIR}${IVERILOG_DIR:+/}iverilog -o testbench_icarus testbench.v ); then
+		timeout 120 ${IVERILOG_DIR}${IVERILOG_DIR:+/}vvp testbench_icarus | tee sim_icarus.log
 	else
 		echo -n > sim_icarus.log
 	fi

@@ -21,6 +21,7 @@ SIM_LIST     := isim modelsim icarus yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
+IVERILOG_DIR := # /home/clifford/Work/iverilog/instdir/bin
 MODELSIM_DIR := /opt/altera/13.1/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.1/quartus/bin
 VIVADO_BIN   := /opt/Xilinx/Vivado/2013.4/bin/vivado
@@ -31,7 +32,7 @@ REPORT_OPTS  :=
 # uncomment this for full list of reports
 #REPORT_LIST := $(RTL_LIST)
 
-export SYN_LIST SIM_LIST ISE_SETTINGS MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
+export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_BIN
 
 help:
 	@echo ""
