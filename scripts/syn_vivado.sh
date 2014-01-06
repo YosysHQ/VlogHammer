@@ -48,6 +48,15 @@ then
 
 	mkdir -p ../../syn_vivado
 	cp vivado_failed.v ../../syn_vivado/$job.v
+elif egrep 'assign +\\<const0> += +[a-z]' synth.v
+then
+	{
+		echo '// [VLOGHAMMER_SYN_ERROR] Vivado created one of this 'assign to const0' netlists (see issue_010)!'
+		sed -e '/^ *assign/ s,^ *,//,;' ../../rtl/$job.v
+	} > vivado_failed.v
+
+	mkdir -p ../../syn_vivado
+	cp vivado_failed.v ../../syn_vivado/$job.v
 else
 	mkdir -p ../../syn_vivado
 	cp synth.v ../../syn_vivado/$job.v
