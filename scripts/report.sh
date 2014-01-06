@@ -237,10 +237,10 @@ if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	. ${ISE_SETTINGS}
 	set -x
 	vlogcomp testbench.v
-	fuse -o testbench_isim testbench
+	timeout 120 fuse -o testbench_isim testbench
 	{ echo "run all"; echo "exit"; } > run-all.tcl
 	timeout 120 ./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
-	)
+	) || { echo -n > sim_isim.log; }
 fi
 
 if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
