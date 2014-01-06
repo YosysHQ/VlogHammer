@@ -320,7 +320,14 @@ endmodule
 module issue_011(a, y);
   input [0:0] a;
   output [0:0] y;
-  // icarus verilog vpp (git 336b299) asserts on this expression
+  // icarus verilog vpp (fixed in git d1c9dd5) asserts on this expression
   //   Internal error: Input vector expected width=1, got bit=2'b00, base=0, vwid=2
   assign y  = |(-a);
+endmodule
+module issue_012(a, y);
+  input [3:0] a;
+  output [3:0] y;
+  // icarus verilog (git d1c9dd5) does not correctly propagate undef thru power
+  // operator (y should be 4'bx when a is zero, but iverilog returns 4'd1).
+  assign y = 4'd2 ** (4'd1/a);
 endmodule
