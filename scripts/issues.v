@@ -1,4 +1,5 @@
 module issue_000(a, y);
+  // http://forums.xilinx.com/t5/Synthesis/XST-14-7-sign-handling-bug-in-N-Verilog-operator/td-p/401399
   input signed [1:0] a;
   wire [4:0] y0;
   wire [4:0] y1;
@@ -10,6 +11,7 @@ module issue_000(a, y);
   assign y1 = {2{a}};
 endmodule
 module issue_001(a, b, y);
+  // http://forums.xilinx.com/t5/Synthesis/Bug-in-XST-handling-of-constant-first-argument-in-Verilog/td-p/401407
   input [2:0] a;
   input [3:0] b;
   output [0:0] y;
@@ -33,6 +35,7 @@ module issue_003(a, y);
   assign y = a << -2'sd1;
 endmodule
 module issue_004(a, b, y);
+  // http://forums.xilinx.com/t5/Synthesis/Strange-output-const-zero-bug-with-Vivado-gt-gt-gt-signedness/td-p/401411
   input [0:0] a;
   input [0:0] b;
   output signed [3:0] y;
@@ -318,6 +321,7 @@ module issue_010(a, b, y);
   assign y2  = 4'b1000 * a;
 endmodule
 module issue_011(a, y);
+  // https://github.com/steveicarus/iverilog/issues/6
   input [0:0] a;
   output [0:0] y;
   // icarus verilog vpp (fixed in git d1c9dd5) asserts on this expression
@@ -325,6 +329,7 @@ module issue_011(a, y);
   assign y  = |(-a);
 endmodule
 module issue_012(a, y);
+  // https://github.com/steveicarus/iverilog/issues/7
   input [3:0] a;
   output [3:0] y;
   // icarus verilog (git d1c9dd5) does not correctly propagate undef thru power
@@ -332,6 +337,7 @@ module issue_012(a, y);
   assign y = 4'd2 ** (4'd1/a);
 endmodule
 module issue_013(a, y);
+  // https://github.com/steveicarus/iverilog/issues/8
   input signed [3:0] a;
   output [1:0] y;
   // icarus verilog (git d1c9dd5) evaluates bit-wise operations of signed values
