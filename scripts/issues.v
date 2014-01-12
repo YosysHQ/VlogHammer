@@ -12,6 +12,7 @@ module issue_000(a, y);
 endmodule
 module issue_001(a, b, y);
   // http://forums.xilinx.com/t5/Synthesis/Bug-in-XST-handling-of-constant-first-argument-in-Verilog/td-p/401407
+  // http://www.alteraforum.com/forum/showthread.php?t=43517&p=179930
   input [2:0] a;
   input [3:0] b;
   output [0:0] y;
@@ -350,6 +351,7 @@ module issue_013(a, y);
   assign y[1] = (a | 4'sd0) > 4'sb1010;
 endmodule
 module issue_014(a, b, y);
+  // http://forums.xilinx.com/t5/Synthesis/Vivado-GDpGen-implementDivMod-DFNode-bool-Assertion-TBD-failed/td-p/401721
   input [1:0] a;
   input [2:0] b;
   output [3:0] y;
