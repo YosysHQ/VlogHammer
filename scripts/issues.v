@@ -12,7 +12,7 @@ module issue_000(a, y);
 endmodule
 module issue_001(a, b, y);
   // http://forums.xilinx.com/t5/Synthesis/Bug-in-XST-handling-of-constant-first-argument-in-Verilog/td-p/401407
-  // http://www.alteraforum.com/forum/showthread.php?t=43517&p=179930
+  // Altera Service Request # 11021734
   input [2:0] a;
   input [3:0] b;
   output [0:0] y;
