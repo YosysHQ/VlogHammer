@@ -359,6 +359,7 @@ module issue_014(a, b, y);
   assign y = $signed(a / b);
 endmodule
 module issue_015(a, y);
+  // http://forums.xilinx.com/t5/Synthesis/Vivado-bug-in-undef-handling-for-relational-operators/td-p/403469
   input [3:0] a;
   output [23:0] y;
 
