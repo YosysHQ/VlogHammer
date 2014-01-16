@@ -31,8 +31,8 @@ for sim in args:
       if m.group(4) == "#" and m.group(3) in cached_data_decimal:
           data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), cached_data_decimal[m.group(3)] ]
       else:
-          data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4) ]
-          cached_data_decimal[m.group(3)] = m.group(4)
+          data[idx]['raw_outputs'][sim+"."+m.group(2)] = [ m.group(3), m.group(4).upper() ]
+          cached_data_decimal[m.group(3)] = m.group(4).upper()
 
 #############################################################################
 # Group identical outputs in 'data' structure
