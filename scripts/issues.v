@@ -241,8 +241,8 @@ module issue_008(a, y);
   assign y15 = a == 0 ? ss15 : a == 1 ? su15 : a == 2 ? us15 : uu15;
 endmodule
 module issue_009(a, y);
-  input [3:0] a;
-  output [67:0] y;
+  input [2:0] a;
+  output [75:0] y;
 
   wire [3:0] y0;
   wire [3:0] y1;
@@ -266,9 +266,8 @@ module issue_009(a, y);
 
   assign y = {y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13,y14,y15,y16,y17,y18};
 
-  // bitwise operations must 0-extend their arguments (even with undef msb)
-  // (the arithmetic operations don't, but it does not matter because
-  // a single undef bit in the argument will cause the result to be undef)
+  // various tests for handling bit-extension of and operations with undef values
+  // e.g. bitwise operations must 0-extend their arguments (even with undef msb)
   assign y0  = a +  1'bx;
   assign y1  = a -  1'bx;
   assign y2  = a *  1'bx;
@@ -358,4 +357,26 @@ module issue_014(a, b, y);
   // Vivado 2013.4 asserts on this test case:
   // vivado: /.../gencore/dp/GDpGenDivMod.cc:324: void GDpGen::implementDivMod(DFNode*, bool): Assertion `TBD' failed.
   assign y = $signed(a / b);
+endmodule
+module issue_015(a, y);
+  input [3:0] a;
+  output [23:0] y;
+
+  wire [3:0] y0;
+  wire [3:0] y1;
+  wire [3:0] y2;
+  wire [3:0] y3;
+  wire [3:0] y4;
+  wire [3:0] y5;
+
+  assign y = {y0,y1,y2,y3,y4,y5};
+
+  // All this cases should evaluate to 4'b000x (regardless of the value of 'a').
+  // But Vivado 2013.4 returns 4'b0010 instead.
+  assign y0 = a >  4'bx;
+  assign y1 = a >= 4'bx;
+  assign y2 = a <  4'bx;
+  assign y3 = a <= 4'bx;
+  assign y4 = a == 4'bx;
+  assign y5 = a != 4'bx;
 endmodule
