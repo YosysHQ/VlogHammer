@@ -41,7 +41,8 @@ help:
 	@echo "  make purge  ..............................  remove output files and rtl"
 	@echo ""
 	@echo "  make gen_issues  .........................  generate rtl files for known issues"
-	@echo "  make gen_samples  ........................  generate small set of rtl files"
+	@echo "  make gen_samples  ........................  generate small set of autogen rtl files"
+	@echo "  make gen_full  ...........................  generate full set of autogen rtl files"
 	@echo "  make generate  ...........................  generate all rtl files"
 	@echo ""
 	@echo "  make syn  ................................  run all synthesis"
@@ -58,13 +59,16 @@ help:
 	@echo ""
 	@echo "  make report ..............................  generate reports"
 	@echo ""
+	@echo "  Run 'make world' as an alias for:"
+	@echo "    make $(MAKE_JOBS) syn"
+	@echo "    make $(MAKE_JOBS) check"
+	@echo "    make $(MAKE_JOBS) report"
+	@echo ""
 	@echo ""
 	@echo "Example usage:"
 	@echo "  make purge"
 	@echo "  make generate"
-	@echo "  make -j4 -l6 syn"
-	@echo "  make -j4 -l6 check"
-	@echo "  make -j4 -l6 report"
+	@echo "  make world"
 	@echo ""
 
 sh:
@@ -113,9 +117,6 @@ gen_full:
 	./scripts/generate
 
 generate: gen_issues gen_full
-
-pack_issues:
-	cat rtl/issue_*.v > scripts/issues.v
 
 # -------------------------------------------------------------------------------------------
 
