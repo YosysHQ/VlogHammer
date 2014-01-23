@@ -1,16 +1,19 @@
 #!/usr/bin/python
 
+# on ubuntu 12.4 LTS:
+# sudo apt-get install python-markdown
+# sudo pip install --upgrade pygments
+
+import os
 import sys
 import markdown
+import markdown.preprocessors
+import markdown.extensions
+import re
 
-f = open(sys.argv[1])
-mdtext = "".join(f)
-f.close()
-
-print """
-<style><!--
+style_decl = """<style><!--
 .codehilite .hll { background-color: #ffffcc }
-.codehilite  { background: #f8f8f8; }
+.codehilite  { background: #f0f0f0; margin-left: 3em; margin-right: 3em; }
 .codehilite .c { color: #408080; font-style: italic } /* Comment */
 .codehilite .err { border: 1px solid #FF0000 } /* Error */
 .codehilite .k { color: #008000; font-weight: bold } /* Keyword */
@@ -71,8 +74,86 @@ print """
 .codehilite .vg { color: #19177C } /* Name.Variable.Global */
 .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
---></style>
-"""
+.state { background: #333; color: #fff; margin-left: 1em; margin-right: 1em; padding: 4px; padding-left: 1em; }
+a { text-decoration: none; }
+--></style>"""
 
-html = markdown.markdown(mdtext, extensions=['codehilite'])
-print html
+# globqal state variables (hack! hack!)
+last_found_title = ""
+last_found_state = ""
+last_found_version = ""
+
+class VlogHammerExtension(markdown.extensions.Extension):
+
+    class OpenClosedPreprocessor(markdown.preprocessors.Preprocessor):
+        def run(self, lines):
+            global last_found_state
+            global last_found_version
+            new_lines = []
+            for line in lines:
+                m = re.match(r'^~OPEN~\s*(.*)', line)
+                if m:
+                    last_found_state = "OPEN"
+                    last_found_version = m.group(1)
+                    new_lines.append('<div class="state"><strong>OPEN:</strong> last verified in <strong>%s</strong></div>' % m.group(1));
+                    continue
+                m = re.match(r'^~CLOSED~\s*(.*)', line)
+                if m:
+                    last_found_state = "CLOSED"
+                    last_found_version = m.group(1)
+                    new_lines.append('<div class="state"><strong>CLOSED:</strong> fixed in <strong>%s</strong></div>' % m.group(1));
+                    continue
+                new_lines.append(line)
+            return new_lines
+
+    class TitleFinderPreprocessor(markdown.preprocessors.Preprocessor):
+        def run(self, lines):
+            global last_found_title
+            last_line = ''
+            for line in lines:
+                if re.match(r'^=+$', line):
+                    last_found_title = last_line
+                last_line = line
+            return lines
+
+    def extendMarkdown(self, md, md_globals):
+        md.preprocessors.add('OpenClosed', self.OpenClosedPreprocessor(md), '_begin')
+        md.preprocessors.add('TitleFinder', self.TitleFinderPreprocessor(md), '_begin')
+        pass
+
+input_dir = sys.argv[1]
+output_dir = sys.argv[2]
+
+open_bugs = {}
+closed_bugs = {}
+
+for filename in os.listdir(input_dir):
+    basename = re.sub(r'\.md$', '', filename)
+    if basename != filename:
+        f = open(input_dir + '/' + filename)
+        md_html = markdown.markdown(''.join(f), extensions=['codehilite', VlogHammerExtension()])
+        f.close()
+
+        bug = '<tr><td valign="top"><a href="vloghammer_bugs/%s.html">%s</a></td><td valign="top">%s</td><td valign="top">%s</td></tr>\n' % (basename, basename, last_found_version, last_found_title)
+        if last_found_state == "OPEN":
+            open_bugs[basename] = bug
+        if last_found_state == "CLOSED":
+            closed_bugs[basename] = bug
+
+        f = open(output_dir + '/' + basename + '.html', 'w')
+        f.write('<html><head><title>VlogHammer Bug Report: %s</title>\n' % last_found_title)
+        f.write(style_decl + '</head>\n<body>' + md_html)
+        f.write('\n\n<div><a href="../vloghammer.html">&larr; Back to VlogHammer Project Page</a></div>\n')
+        f.write('</body></html>\n')
+        f.close()
+
+f = open(output_dir + '/bugs_open.in', 'w')
+for bug in sorted(open_bugs.keys()):
+    f.write(open_bugs[bug])
+f.close()
+
+f = open(output_dir + '/bugs_closed.in', 'w')
+for bug in sorted(closed_bugs.keys()):
+    f.write(closed_bugs[bug])
+f.close()
+

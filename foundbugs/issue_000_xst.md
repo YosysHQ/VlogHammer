@@ -2,9 +2,7 @@
 XST sign handling bug in {N{...}} Verilog operator
 ==================================================
 
-**Present in XST Versions: 14.7**
-
-**Fixed in XST Version: --**
+~OPEN~ XST 14.7
 
 According to the Verilog standard (see sec. 5.1.14 of IEEE Std 1364-2005) the
 expressions for **y0** and **y1** in the following example are equivialent and should
@@ -30,4 +28,7 @@ This is with ISE 14.7 and the following XST settings:
     run -ifn issue_000.prj -ofn issue_000 -p artix7 -top issue_000 -iobuf NO
 
 Crosscheck: Vivado 2013.4, Quartus 13.1, Isim 14.7 and Modelsim 10.1d implement this correctly.
+
+**History:**  
+2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/XST-14-7-sign-handling-bug-in-N-Verilog-operator/td-p/401399) bug in Xilinx Support Forum
 

@@ -74,6 +74,10 @@ help:
 sh:
 	FORCE_PS1='<\[\e[1;31m\]VlogHammer\[\e[0m\]> \w\$$ ' bash
 
+update-web:
+	python scripts/foundbugs.py foundbugs ../yosys-web/vloghammer_bugs
+	cd ../yosys-web && make vloghammer.html
+
 world:
 	$(MAKE) $(MAKE_JOBS) syn
 	$(MAKE) $(MAKE_JOBS) check
