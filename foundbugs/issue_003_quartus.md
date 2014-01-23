@@ -26,6 +26,6 @@ In my tests I have synthesized the module with
 Crosscheck: Vivado 2013.4, XST 14.7, Isim 14.7 and Modelsim 10.1d implement this
 correctly.
 
-**History:**
+**History:**  
 2014-01-23 Reported via Altera mySupport (SR #11025074)
 
