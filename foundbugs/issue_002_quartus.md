@@ -7,6 +7,7 @@ Quartus Verilog bug in handling $signed in an unsigned expression
 The following module should output constant **0**, but quartus 13.1 generates a
 module that outputs constant **1** instead.
 
+    :::Verilog
     module issue_002(y);
       wire [1:0] a = 2'b  11;
       wire [2:0] b = 3'b 111;

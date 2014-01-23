@@ -11,6 +11,7 @@ two signed constants yield an unsigned constant.
 
 For example the following test case:
 
+    :::Verilog
     module issue_013(a, y);
       input signed [3:0] a;
       output [1:0] y;

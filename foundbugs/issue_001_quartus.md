@@ -6,6 +6,7 @@ Quartus handling of constant first argument in Verilog ?: operator
 
 Consider the following test case:
 
+    :::Verilog
     module issue_001(a, b, y);
         input [2:0] a;
         input [3:0] b;

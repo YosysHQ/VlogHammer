@@ -6,6 +6,7 @@ Bug in Quartus signed/unsigned handling in power operator
 
 The following module should return 0 for both outputs:
 
+    :::Verilog
     module issue016(y0, y1);
       output [3:0] y0;
       output [3:0] y1;

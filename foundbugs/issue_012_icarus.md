@@ -8,6 +8,7 @@ icarus verilog (git d1c9dd5) does not correctly propagate undef through the powe
 operator. For example, **y** should be **4'bx** when a is zero in the following test
 case, but iverilog returns **4'd1**:
 
+    :::Verilog
     module issue_012(a, y);
       input [3:0] a;
       output [3:0] y;
