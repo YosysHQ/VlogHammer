@@ -19,12 +19,17 @@ The output of this module should be constant zero. Here is a short analysis of w
 
 Sec. 5.1.13 of the Verilog Standard (IEEE Std 1364-2005), which describes the ?: statement, states:
 
-> [...] If the lengths of expression2 and expression3 are different, the shorter operand shall be
-lengthened to match the longer and zero-filled from the left (the high-order end).
+> [...] If the lengths of expression2 and expression3 are different, the
+shorter operand shall be lengthened to match the longer and zero-filled from
+the left (the high-order end).
 
-So with the condition being constant true, the expression in the parentheses must evaluate to **{1'b0, a}** and not simply **a** because of the size difference of **a** and **b**, thus the &-reduce operator should always see at least this one zero-bit and thus always return 0.
+So with the condition being constant true, the expression in the parentheses
+must evaluate to **{1'b0, a}** and not simply **a** because of the size
+difference of **a** and **b**, thus the &-reduce operator should always see at
+least this one zero-bit and thus always return 0.
 
-But Quartus II does not perform the zero filling and therefore produces an incorrect result, which is equivalent to **assign y = &a;**.
+But Quartus 13.1 does not perform the zero filling and therefore produces an
+incorrect result, which is equivalent to **assign y = &a;**.
 
 In my tests I have synthesized the module with
 
