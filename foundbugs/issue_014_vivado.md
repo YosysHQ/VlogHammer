@@ -27,4 +27,5 @@ This is the TCL script I was using to build the module:
     write_verilog -force issue_014_netlist.v
 
 **History:**  
-2014-01-12 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-GDpGen-implementDivMod-DFNode-bool-Assertion-TBD-failed/td-p/401721) bug in Xilinx Support Forum
+2014-01-12 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-GDpGen-implementDivMod-DFNode-bool-Assertion-TBD-failed/td-p/401721) bug in Xilinx Support Forum  
+2014-01-15 Xilinx prospected bugfix in future release

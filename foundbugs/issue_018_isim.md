@@ -32,6 +32,6 @@ Crosscheck: Vivado 2013.4, XST 14.7, Quartus 13.1 and Modelsim 10.1d implement
 this correctly.
 
 **History:**  
-2014-01-23 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/ISIM-handling-width-of-localparam-incorrectly/td-p/406335) bug in Xilinx Support Forum
+2014-01-23 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/ISIM-handling-width-of-localparam-incorrectly/td-p/406335) bug in Xilinx Support Forum  
 2014-01-24 WONTFIX-Notice from Xilinx
 
