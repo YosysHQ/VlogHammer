@@ -136,14 +136,19 @@ for idx in sorted(data.keys()):
   d = data[idx]
   if len(d['split_outputs']) > 1:
     print '<table class="valuestab" border><tr><th colspan="2" align="left">Pattern #{}</th><th>binary</th><th>decimal</th></tr>'.format(idx)
+    first_var = True
     for key in sorted(d['inputs'].keys()):
-      print '<tr><td colspan="2">{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
+      if first_var:
+        print '<tr><td rowspan="{}">input signals</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(len(d['inputs']), key, d['inputs'][key][0], d['inputs'][key][1])
+      else:
+        print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(key, d['inputs'][key][0], d['inputs'][key][1])
+      first_var = False
     for lst in sorted(d['split_outputs'].keys()):
       first_var = True
       for var in sorted(d['split_outputs'][lst].keys(), cmp=outvar_compare):
         if first_var:
-          print '<tr><td>{}</td><td class="valsimlist" rowspan="{}">{}</td><td>{}</td><td>{}</td></tr>'.format(var,
-                len(d['split_outputs'][lst].keys()), pretty_list(lst), d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
+          print '<tr><td class="valsimlist" rowspan="{}">{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                len(d['split_outputs'][lst].keys()), pretty_list(lst), var, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
         else:
           print '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(var, d['split_outputs'][lst][var][0], d['split_outputs'][lst][var][1])
         first_var = False
