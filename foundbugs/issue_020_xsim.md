@@ -15,10 +15,10 @@ with xsim 2013.4:
       initial #10 $display("%b", y);
     endmodule
 
-XSim 2013.4 seems to think that the expression for **p** is unsigned
-because the 2nd operand to the shift operator is unsigned. But sec. 5.1.12
-of IEEE Std 1364-2005 states that the right hand side of the right operand
-of a shift operation has no effect on the signedness of the result.
+XSim 2013.4 seems to think that the expression for **p** is unsigned because
+the 2nd operand to the shift operator is unsigned. But sec. 5.1.12 of IEEE Std
+1364-2005 states that the right operand of a shift operation has no effect on
+the signedness of the result.
 
 In my tests I have run this module with:
 
