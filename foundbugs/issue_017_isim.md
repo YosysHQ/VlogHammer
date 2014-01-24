@@ -2,7 +2,7 @@
 Bug in ISIM when combining reduce op and $signed/$unsigned
 ==========================================================
 
-~OPEN~ Isim 14.7
+~WONTFIX~ Isim 14.7
 
 The following module should return **3'b001**:
 
@@ -33,4 +33,5 @@ this correctly.
 
 **History:**  
 2014-01-23 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/Bug-in-ISIM-when-combining-reduce-op-and-signed-unsigned/td-p/406305) bug in Xilinx Support Forum
+2014-01-24 WONTFIX-Notice from Xilinx
 

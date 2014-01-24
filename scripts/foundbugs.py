@@ -97,6 +97,12 @@ class VlogHammerExtension(markdown.extensions.Extension):
                     last_found_version = m.group(1)
                     new_lines.append('<div class="state"><strong>OPEN:</strong> last verified in <strong>%s</strong></div>' % m.group(1));
                     continue
+                m = re.match(r'^~WONTFIX~\s*(.*)', line)
+                if m:
+                    last_found_state = "WONTFIX"
+                    last_found_version = m.group(1)
+                    new_lines.append('<div class="state"><strong>WONTFIX:</strong> last verified in <strong>%s</strong>, vendor said he would not fix it</div>' % m.group(1));
+                    continue
                 m = re.match(r'^~CLOSED~\s*(.*)', line)
                 if m:
                     last_found_state = "CLOSED"
@@ -125,6 +131,7 @@ input_dir = sys.argv[1]
 output_dir = sys.argv[2]
 
 open_bugs = {}
+wontfix_bugs = {}
 closed_bugs = {}
 
 for filename in os.listdir(input_dir):
@@ -137,6 +144,8 @@ for filename in os.listdir(input_dir):
         bug = '<tr><td valign="top"><a href="vloghammer_bugs/%s.html">%s</a></td><td valign="top">%s</td><td valign="top">%s</td></tr>\n' % (basename, basename, last_found_version, last_found_title)
         if last_found_state == "OPEN":
             open_bugs[basename] = bug
+        if last_found_state == "WONTFIX":
+            wontfix_bugs[basename] = bug
         if last_found_state == "CLOSED":
             closed_bugs[basename] = bug
 
@@ -150,6 +159,11 @@ for filename in os.listdir(input_dir):
 f = open(output_dir + '/bugs_open.in', 'w')
 for bug in sorted(open_bugs.keys()):
     f.write(open_bugs[bug])
+f.close()
+
+f = open(output_dir + '/bugs_wontfix.in', 'w')
+for bug in sorted(wontfix_bugs.keys()):
+    f.write(wontfix_bugs[bug])
 f.close()
 
 f = open(output_dir + '/bugs_closed.in', 'w')

@@ -2,7 +2,7 @@
 ISIM handling width of localparam incorrectly
 =============================================
 
-~OPEN~ Isim 14.7
+~WONTFIX~ Isim 14.7
 
 The following module should return **4'b1110**:
 
@@ -33,4 +33,5 @@ this correctly.
 
 **History:**  
 2014-01-23 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/ISIM-handling-width-of-localparam-incorrectly/td-p/406335) bug in Xilinx Support Forum
+2014-01-24 WONTFIX-Notice from Xilinx
 
