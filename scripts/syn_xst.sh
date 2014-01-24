@@ -47,12 +47,23 @@ cat > $job.prj <<- EOT
 	verilog work "../../rtl/$job.v"
 EOT
 
-xst -ifn $job.xst
-netgen -w -ofmt verilog $job.ngc $job
-sed -i '/^`ifndef/,/^`endif/ d; s/ *Timestamp: .*//;' $job.v
+if ! timeout 180 xst -ifn $job.xst > >( tee output.txt ) 2>&1
+then
+	{
+		echo '// [VLOGHAMMER_SYN_ERROR] XST failed, crashed or hung in endless loop!'
+		tail -n5 output.txt | sed -e 's,^,// ,;'
+		sed -e '/^ *assign/ s,^ *,//,;' ../../rtl/$job.v
+	} > xst_failed.v
 
-mkdir -p ../../syn_xst
-cp $job.v ../../syn_xst/$job.v
+	mkdir -p ../../syn_xst
+	cp xst_failed.v ../../syn_xst/$job.v
+else
+	netgen -w -ofmt verilog $job.ngc $job
+	sed -i '/^`ifndef/,/^`endif/ d; s/ *Timestamp: .*//;' $job.v
+
+	mkdir -p ../../syn_xst
+	cp $job.v ../../syn_xst/$job.v
+fi
 
 rm -rf ../syn_xst_$job
 echo READY.
