@@ -131,7 +131,7 @@ module issue_007(a, y);
 endmodule
 module issue_008(a, y);
   input [1:0] a;
-  output [127:0] y;
+  output [167:0] y;
 
   wire [7:0] y0;
   wire [7:0] y1;
@@ -149,7 +149,12 @@ module issue_008(a, y);
   wire [7:0] y13;
   wire [7:0] y14;
   wire [7:0] y15;
-  assign y = {y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13,y14,y15};
+  wire [7:0] y16;
+  wire [7:0] y17;
+  wire [7:0] y18;
+  wire [7:0] y19;
+  wire [7:0] y20;
+  assign y = {y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13,y14,y15,y16,y17,y18,y19,y20};
 
   // constant evaluation of power operator (signed ** signed)
   localparam [7:0] ss0  = +8'sd0 ** -8'sd1;
@@ -168,6 +173,11 @@ module issue_008(a, y);
   localparam [7:0] ss13 = -8'sd2 ** +8'sd1;
   localparam [7:0] ss14 = -8'sd2 ** +8'sd3;
   localparam [7:0] ss15 = -8'sd3 ** +8'sd3;
+  localparam [7:0] ss16 = -8'sd2 ** +8'sd0;
+  localparam [7:0] ss17 = -8'sd1 ** +8'sd0;
+  localparam [7:0] ss18 = +8'sd0 ** +8'sd0;
+  localparam [7:0] ss19 = +8'sd1 ** +8'sd0;
+  localparam [7:0] ss20 = +8'sd2 ** +8'sd0;
 
   // constant evaluation of power operator (signed ** unsigned)
   localparam [7:0] su0  = +8'sd0 ** -8'd1;
@@ -186,6 +196,11 @@ module issue_008(a, y);
   localparam [7:0] su13 = -8'sd2 ** +8'd1;
   localparam [7:0] su14 = -8'sd2 ** +8'd3;
   localparam [7:0] su15 = -8'sd3 ** +8'd3;
+  localparam [7:0] su16 = -8'sd2 ** +8'd0;
+  localparam [7:0] su17 = -8'sd1 ** +8'd0;
+  localparam [7:0] su18 = +8'sd0 ** +8'd0;
+  localparam [7:0] su19 = +8'sd1 ** +8'd0;
+  localparam [7:0] su20 = +8'sd2 ** +8'd0;
 
   // constant evaluation of power operator (unsigned ** signed)
   localparam [7:0] us0  = +8'd0 ** -8'sd1;
@@ -204,6 +219,11 @@ module issue_008(a, y);
   localparam [7:0] us13 = -8'd2 ** +8'sd1;
   localparam [7:0] us14 = -8'd2 ** +8'sd3;
   localparam [7:0] us15 = -8'd3 ** +8'sd3;
+  localparam [7:0] us16 = -8'd2 ** +8'sd0;
+  localparam [7:0] us17 = -8'd1 ** +8'sd0;
+  localparam [7:0] us18 = +8'd0 ** +8'sd0;
+  localparam [7:0] us19 = +8'd1 ** +8'sd0;
+  localparam [7:0] us20 = +8'd2 ** +8'sd0;
 
   // constant evaluation of power operator (unsigned ** unsigned)
   localparam [7:0] uu0  = +8'd0 ** -8'd1;
@@ -222,6 +242,11 @@ module issue_008(a, y);
   localparam [7:0] uu13 = -8'd2 ** +8'd1;
   localparam [7:0] uu14 = -8'd2 ** +8'd3;
   localparam [7:0] uu15 = -8'd3 ** +8'd3;
+  localparam [7:0] uu16 = -8'd2 ** +8'd0;
+  localparam [7:0] uu17 = -8'd1 ** +8'd0;
+  localparam [7:0] uu18 = +8'd0 ** +8'd0;
+  localparam [7:0] uu19 = +8'd1 ** +8'd0;
+  localparam [7:0] uu20 = +8'd2 ** +8'd0;
 
   assign y0  = a == 0 ? ss0  : a == 1 ? su0  : a == 2 ? us0  : uu0;
   assign y1  = a == 0 ? ss1  : a == 1 ? su1  : a == 2 ? us1  : uu1;
@@ -239,6 +264,11 @@ module issue_008(a, y);
   assign y13 = a == 0 ? ss13 : a == 1 ? su13 : a == 2 ? us13 : uu13;
   assign y14 = a == 0 ? ss14 : a == 1 ? su14 : a == 2 ? us14 : uu14;
   assign y15 = a == 0 ? ss15 : a == 1 ? su15 : a == 2 ? us15 : uu15;
+  assign y16 = a == 0 ? ss16 : a == 1 ? su16 : a == 2 ? us16 : uu16;
+  assign y17 = a == 0 ? ss17 : a == 1 ? su17 : a == 2 ? us17 : uu17;
+  assign y18 = a == 0 ? ss18 : a == 1 ? su18 : a == 2 ? us18 : uu18;
+  assign y19 = a == 0 ? ss19 : a == 1 ? su19 : a == 2 ? us19 : uu19;
+  assign y20 = a == 0 ? ss20 : a == 1 ? su20 : a == 2 ? us20 : uu20;
 endmodule
 module issue_009(a, y);
   input [2:0] a;
@@ -415,4 +445,17 @@ module issue_018(a, y);
   // but isim 14.1 does not do this correctly.
   localparam [3:0] p = ~1'b1;
   assign y = p;
+endmodule
+module issue_019(a, y);
+  input [0:0] a;
+  output [15:0] y;
+
+  wire [7:0] y0;
+  wire [7:0] y1;
+  assign y = {y0,y1};
+
+  // according to table 5-6 of IEEE Std 1364-2005, the following expressions
+  // should return 8'bx, but instead with ISIM 14.7 and XSIM 2013.4 they return 8'b0 instead.
+  assign y0  = 8'sd0 ** -8'sd1;
+  assign y1  = 8'd 0 ** -8'sd1;
 endmodule
