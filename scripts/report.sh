@@ -52,6 +52,7 @@ test -n "$SYN_LIST"
 test -n "$SIM_LIST"
 test -n "$ISE_SETTINGS"
 test -n "$MODELSIM_DIR"
+test -n "$VIVADO_DIR"
 
 rm -rf temp/report_${job}
 mkdir -p temp/report_${job}
@@ -241,6 +242,11 @@ if [[ " ${SIM_LIST} " == *" isim "* ]]; then
 	{ echo "run all"; echo "exit"; } > run-all.tcl
 	timeout 120 ./testbench_isim -tclbatch run-all.tcl | tee sim_isim.log
 	) || { echo -n > sim_isim.log; }
+fi
+
+if [[ " ${SIM_LIST} " == *" xsim "* ]]; then
+	${VIVADO_DIR}/xvlog testbench.v
+	${VIVADO_DIR}/xelab -R work.testbench | tee sim_xsim.log
 fi
 
 if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
