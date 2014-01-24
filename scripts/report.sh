@@ -148,7 +148,7 @@ for q in ${SYN_LIST} rtl; do
 done; done
 
 extra_patterns="$( grep '^ *// *PATTERN:' rtl.v | cut -f2- -d: )"
-for x in 1 2 3 4 5 6 7 8 9 0; do
+for ((i=0; i < 30; i=i+1)); do
 	extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
 done
 
