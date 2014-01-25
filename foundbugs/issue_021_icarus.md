@@ -15,7 +15,8 @@ Modules such as
 take forever to compile because the verinum pow() function (in [verinum.cc](https://github.com/steveicarus/iverilog/blob/master/verinum.cc)) is
 actually using a loop to evaluate the power:
 
-  for (long idx = 1 ;  idx < pow_count ;  idx += 1)
+    :::C
+    for (long idx = 1 ;  idx < pow_count ;  idx += 1)
         result = result * left;
 
 (For exponents that do not fit into a long long this would also return
