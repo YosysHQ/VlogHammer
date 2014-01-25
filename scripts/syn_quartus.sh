@@ -32,8 +32,12 @@ mkdir -p temp/syn_quartus_$job
 cd temp/syn_quartus_$job
 
 cp ../../rtl/$job.v .
-if ! ${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
+if ! timeout 120 ${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
 then
+	if test ! -f $job.map.rpt; then
+		echo "TIMEOUT" > $job.map.rpt
+	fi
+
 	{
 		echo '// [VLOGHAMMER_SYN_ERROR] Quartus failed!'
 		sed -e '/^Error/ ! d; s,^,// ,;' $job.map.rpt

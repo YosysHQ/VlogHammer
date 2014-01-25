@@ -246,7 +246,7 @@ fi
 
 if [[ " ${SIM_LIST} " == *" xsim "* ]]; then
 	${VIVADO_DIR}/xvlog testbench.v
-	${VIVADO_DIR}/xelab -R work.testbench | tee sim_xsim.log
+	timeout 120 ${VIVADO_DIR}/xelab -R work.testbench | tee sim_xsim.log
 fi
 
 if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
