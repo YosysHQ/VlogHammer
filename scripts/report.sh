@@ -149,7 +149,7 @@ done; done
 
 extra_patterns="$( grep '^ *// *PATTERN:' rtl.v | cut -f2- -d: )"
 for ((i=0; i < 30; i=i+1)); do
-	extra_patterns="$extra_patterns $( echo $job$x | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
+	extra_patterns="$extra_patterns $( echo $job$i | sha1sum | gawk "{ print \"160'h\" \$1; }" )"
 done
 
 {
