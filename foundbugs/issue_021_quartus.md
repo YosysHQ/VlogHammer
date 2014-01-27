@@ -24,5 +24,6 @@ Crosscheck: Modelsim 10.1d can simulate this module in an instant and Vivado
 2013.4 can synthesize it correctly.
 
 **History:**  
-2014-01-25 Reported via Altera mySupport (SR #11025546)
+2014-01-25 Reported via Altera mySupport (SR #11025546)  
+2014-01-27 Bugfix for Quartus II v14.1 prospected by Altera Support
 
