@@ -46,6 +46,12 @@ case "$mode" in
 	4|nomap)
 		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt' ../../rtl/$job.v ;;
+	5|simlib)
+		yosys -q -l synth.log -b 'verilog -noexpr -noattr' -o synth.v \
+		      -p 'hierarchy; proc; opt' ../../rtl/$job.v ;;
+	6|simgates)
+		yosys -q -l synth.log -b 'verilog -noexpr -noattr' -o synth.v \
+		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
 	*)
 		echo "Unsupported mode: $mode" >&2
 		exit 1 ;;
