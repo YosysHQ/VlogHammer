@@ -18,19 +18,20 @@
 #
 
 if [ $# -ne 1 -a $# -ne 2 ]; then
-	echo "Usage: $0 <job_name> [<mode>]" >&2
+	echo "Usage: $0 <job_name>" >&2
 	exit 1
 fi
 
 job="$1"
-mode="${2:-default}"
 set -ex --
+
+test -n "${YOSYS_MODE}"
 
 rm -rf temp/syn_yosys_$job
 mkdir -p temp/syn_yosys_$job
 cd temp/syn_yosys_$job
 
-case "$mode" in
+case "$YOSYS_MODE" in
 	0|default)
 		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
@@ -53,7 +54,7 @@ case "$mode" in
 		yosys -q -l synth.log -b 'verilog -noexpr -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
 	*)
-		echo "Unsupported mode: $mode" >&2
+		echo "Unsupported mode: $YOSYS_MODE" >&2
 		exit 1 ;;
 esac
 

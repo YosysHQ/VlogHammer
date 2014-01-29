@@ -19,7 +19,7 @@
 SYN_LIST     := vivado quartus xst yosys
 SIM_LIST     := xsim modelsim icarus yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
-REPORT_LIST  := $(shell ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
+REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
 IVERILOG_DIR := # /home/clifford/Work/iverilog/instdir/bin
 MODELSIM_DIR := /opt/altera/13.1/modelsim_ase/bin
@@ -32,7 +32,7 @@ REPORT_OPTS  :=
 # uncomment this for full list of reports
 #REPORT_LIST := $(RTL_LIST)
 
-export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_DIR
+export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_DIR YOSYS_MODE
 
 help:
 	@echo ""
@@ -46,16 +46,10 @@ help:
 	@echo "  make generate  ...........................  generate all rtl files"
 	@echo ""
 	@echo "  make syn  ................................  run all synthesis"
-	@echo "  make syn_vivado  .........................  run only vivado"
-	@echo "  make syn_quartus  ........................  run only quartus"
-	@echo "  make syn_xst  ............................  run only xst"
-	@echo "  make syn_yosys  ..........................  run only yosys"
+	@for x in $(SYN_LIST); do printf '  make syn_%s  %.*s  run only %s\n' $$x $$(expr 32 - $$( echo $$x | wc -c ) ) "................................." $$x; done
 	@echo ""
 	@echo "  make check  ..............................  check all"
-	@echo "  make check_vivado  .......................  check only vivado"
-	@echo "  make check_quartus  ......................  check only quartus"
-	@echo "  make check_xst  ..........................  check only xst"
-	@echo "  make check_yosys  ........................  check only yosys"
+	@for x in $(SYN_LIST); do printf '  make check_%s  %.*s  check only %s\n' $$x $$(expr 30 - $$( echo $$x | wc -c ) ) "..............................." $$x; done
 	@echo ""
 	@echo "  make report ..............................  generate reports"
 	@echo ""
@@ -88,9 +82,9 @@ world:
 backup:
 	mkdir -p ~/.vloghammer
 	tar czf ~/.vloghammer/backup_rtl.tar.gz rtl
-	tar czf ~/.vloghammer/backup_syn.tar.gz syn_*
-	tar czf ~/.vloghammer/backup_check.tar.gz check_*
-	tar czf ~/.vloghammer/backup_cache.tar.gz cache_*
+	tar czf ~/.vloghammer/backup_syn.tar.gz $(addprefix syn_,$(SYN_LIST))
+	tar czf ~/.vloghammer/backup_check.tar.gz $(addprefix check_,$(SYN_LIST))
+	tar czf ~/.vloghammer/backup_cache.tar.gz $(addprefix cache_,$(SYN_LIST))
 	tar czf ~/.vloghammer/backup_report.tar.gz report
 
 clean:
@@ -99,9 +93,9 @@ clean:
 
 mrproper: clean
 	rm -rf report report.html
-	rm -rf syn_vivado syn_quartus syn_xst syn_yosys
-	rm -rf check_vivado check_quartus check_xst check_yosys
-	rm -rf cache_vivado cache_quartus cache_xst cache_yosys
+	rm -rf $(addprefix syn_,$(SYN_LIST))
+	rm -rf $(addprefix check_,$(SYN_LIST))
+	rm -rf $(addprefix cache_,$(SYN_LIST))
 
 purge: mrproper
 	rm -rf rtl
@@ -126,81 +120,35 @@ generate: gen_issues gen_full
 
 syn: $(addprefix syn_,$(SYN_LIST))
 
-syn_vivado: $(addprefix syn_vivado/,$(addsuffix .v,$(RTL_LIST)))
+define syn_template
+syn_$(1): $$(addprefix syn_$(1)/,$$(addsuffix .v,$$(RTL_LIST)))
 
 ifndef DEPS
-syn_vivado/%.v:
+syn_$(1)/%.v:
 else
-syn_vivado/%.v: rtl/%.v
+syn_$(1)/%.v: rtl/%.v
 endif
-	bash scripts/syn_vivado.sh $(notdir $(basename $@))
+	bash scripts/syn_$(1).sh $$(notdir $$(basename $$@))
+endef
 
-syn_quartus: $(addprefix syn_quartus/,$(addsuffix .v,$(RTL_LIST)))
-
-ifndef DEPS
-syn_quartus/%.v:
-else
-syn_quartus/%.v: rtl/%.v
-endif
-	bash scripts/syn_quartus.sh $(notdir $(basename $@))
-
-syn_xst: $(addprefix syn_xst/,$(addsuffix .v,$(RTL_LIST)))
-
-ifndef DEPS
-syn_xst/%.v:
-else
-syn_xst/%.v: rtl/%.v
-endif
-	bash scripts/syn_xst.sh $(notdir $(basename $@))
-
-syn_yosys: $(addprefix syn_yosys/,$(addsuffix .v,$(RTL_LIST)))
-
-ifndef DEPS
-syn_yosys/%.v:
-else
-syn_yosys/%.v: rtl/%.v
-endif
-	bash scripts/syn_yosys.sh $(notdir $(basename $@)) $(YOSYS_MODE)
+$(foreach syn,$(SYN_LIST),$(eval $(call syn_template,$(syn))))
 
 # -------------------------------------------------------------------------------------------
 
 check: $(addprefix check_,$(SYN_LIST))
 
-check_vivado: $(addprefix check_vivado/,$(addsuffix .txt,$(RTL_LIST)))
+define check_template
+check_$(1): $$(addprefix check_$(1)/,$$(addsuffix .txt,$$(RTL_LIST)))
 
 ifndef DEPS
-check_vivado/%.txt:
+check_$(1)/%.txt:
 else
-check_vivado/%.txt: syn_vivado/%.v
+check_$(1)/%.txt: syn_$(1)/%.v
 endif
-	bash scripts/check.sh vivado $(notdir $(basename $@))
+	bash scripts/check.sh $(1) $$(notdir $$(basename $$@))
+endef
 
-check_quartus: $(addprefix check_quartus/,$(addsuffix .txt,$(RTL_LIST)))
-
-ifndef DEPS
-check_quartus/%.txt:
-else
-check_quartus/%.txt: syn_quartus/%.v
-endif
-	bash scripts/check.sh quartus $(notdir $(basename $@))
-
-check_xst: $(addprefix check_xst/,$(addsuffix .txt,$(RTL_LIST)))
-
-ifndef DEPS
-check_xst/%.txt:
-else
-check_xst/%.txt: syn_xst/%.v
-endif
-	bash scripts/check.sh xst $(notdir $(basename $@))
-
-check_yosys: $(addprefix check_yosys/,$(addsuffix .txt,$(RTL_LIST)))
-
-ifndef DEPS
-check_yosys/%.txt:
-else
-check_yosys/%.txt: syn_yosys/%.v
-endif
-	bash scripts/check.sh yosys $(notdir $(basename $@))
+$(foreach syn,$(SYN_LIST),$(eval $(call check_template,$(syn))))
 
 # -------------------------------------------------------------------------------------------
 
@@ -217,10 +165,10 @@ endif
 # -------------------------------------------------------------------------------------------
 
 .PHONY: help sh world backup clean purge generate report
-.PHONY: syn syn_vivado syn_quartus syn_xst syn_yosys
-.PHONY: check check_vivado check_quartus check_xst check_yosys
+.PHONY: syn $(addprefix syn_,$(SYN_LIST))
+.PHONY: check $(addprefix check_,$(SYN_LIST))
 
 .PRECIOUS: rtl/%.v report/%.html
-.PRECIOUS: syn_vivado/%.v syn_quartus/%.v syn_xst/%.v syn_yosys/%.v
-.PRECIOUS: check_vivado/%.txt check_quartus/%.txt check_xst/%.txt check_yosys/%.txt
+.PRECIOUS: $(addprefix syn_,$(addsuffix /%.v,$(SYN_LIST)))
+.PRECIOUS: $(addprefix check_,$(addsuffix /%.txt,$(SYN_LIST)))
 
