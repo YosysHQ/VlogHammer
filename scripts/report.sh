@@ -200,6 +200,8 @@ done
 
 	cat ../../scripts/cells_cyclone_iii.v
 	cat ../../scripts/cells_xilinx_7.v
+	cat $( yosys-config --datdir )/simlib.v;
+	cat $( yosys-config --datdir )/simcells.v;
 } > testbench.v
 
 {

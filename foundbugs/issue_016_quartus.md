@@ -32,5 +32,5 @@ Crosscheck: Vivado 2013.4, XST 14.7, Isim 14.7 and Modelsim 10.1d implement this
 correctly.
 
 **History:**  
-2014-01-23 Reported via Altera mySupport (SR #11025077)
-
+2014-01-23 Reported via Altera mySupport (SR #11025077)  
+2014-01-27 Bugfix for Quartus II v14.1 prospected by Altera Support
