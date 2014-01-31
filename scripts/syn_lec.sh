@@ -41,12 +41,10 @@ cat > $job.do <<- EOT
   exit -force
 EOT
 
-#if ! timeout 180 lec -gpgxl -64 -nogui $job.do > >( tee output.txt ) 2>&1
-#if ! lec -lpgxl -64 -nogui $job.do > >( tee output.txt ) 2>&1
 set +e
 # LEC returns exit code 2 because of "No equivalent points during comparison"
 # which is because we didn't do any comparison. So we check for exit code = 2.
-lec -lpgxl -64 -nogui $job.do > >( tee output.txt ) 2>&1
+timeout 180 lec -lpgxl -64 -nogui $job.do > >( tee output.txt ) 2>&1
 ExitCode=$?
 set -e
 if [ $ExitCode -ne 2 ] ; then
