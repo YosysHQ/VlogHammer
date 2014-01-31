@@ -32,16 +32,15 @@ rm -rf temp/syn_dc_$job
 mkdir -p temp/syn_dc_$job
 cd temp/syn_dc_$job
 
-ln -s ~/devel/yosys/techlibs/cmos/cmos_cells.lib demo.lib
+ln -s ../../scripts/cells_cmos.lib cells_cmos.lib
 
 # Design Compiler 2009.06 doesn't (yet?) support "===" and "!==" operators, but
 # in the testcases these don't differ from "==" and "!=", so just replace them.
 sed -r 's/===/==/g;s/!==/!=/g' "../../rtl/$job.v" > $job.v
 
 cat > $job.tcl <<- EOT
-  if { [read_lib demo.lib                     ] != 1 } then { exit 1 }
-  # write_lib -format db demo.db demo.db
-  set target_library "demo.db"
+  if { [read_lib cells_cmos.lib               ] != 1 } then { exit 1 }
+  set target_library "cells_cmos.db"
   set synthetic_library "dw_foundation.sldb"
   set link_library "* \$target_library \$synthetic_library"
   if { [analyze -format verilog $job.v        ] != 1 } then { exit 1 }

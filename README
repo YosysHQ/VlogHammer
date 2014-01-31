@@ -10,6 +10,8 @@ supported:
 	Xilinx Vivado WebPack (2013.4)
 	Xilinx ISE (XST) WebPack (14.7)
 	Altera Quartus II Web Edition (13.1)
+	Cadence Conformal LEC (8.1)
+	Synopsys Design Compiler (C-2009.06)
 
 The built-in SAT-solver in Yosys is used for formal equivalence checking.
 The test cases that fail this check and the found example patterns are
