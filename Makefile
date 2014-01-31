@@ -16,7 +16,7 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-SYN_LIST     := vivado quartus xst lec dc yosys
+SYN_LIST     := vivado quartus xst yosys
 SIM_LIST     := xsim modelsim icarus yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)

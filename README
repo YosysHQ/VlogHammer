@@ -13,6 +13,9 @@ supported:
 	Cadence Conformal LEC (8.1)
 	Synopsys Design Compiler (C-2009.06)
 
+Note: Cadence Conformal and Synopsys Design Compiler are disabled by
+default. Add "lec" and "dc" to SYN_LIST in the Makefile to enable them.
+
 The built-in SAT-solver in Yosys is used for formal equivalence checking.
 The test cases that fail this check and the found example patterns are
 then tried using the following Verilog simulators:
