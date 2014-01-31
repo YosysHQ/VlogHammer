@@ -11,8 +11,8 @@ supported:
 	Xilinx ISE (XST) WebPack (14.7)
 	Altera Quartus II Web Edition (13.1)
 
-The built-in SAT-solver in Yosis is used for formal equivalence checking.
-The test cases that fail this check and the found example pattern are
+The built-in SAT-solver in Yosys is used for formal equivalence checking.
+The test cases that fail this check and the found example patterns are
 then tried using the following Verilog simulators:
 
 	Xilinx ISIM (from Xilinx ISE 14.7)
