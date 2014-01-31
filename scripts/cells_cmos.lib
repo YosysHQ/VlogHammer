@@ -1,11 +1,11 @@
 /* test comment */
-library(demo) {
+library(cells_cmos) {
   technology(cmos);
 
-  delay_model     : generic_cmos /*table_lookup*/;
+  delay_model     : generic_cmos;
   date            : "30-JAN-2014";
   revision        : 1.0;     
-  comment         : "Yosys sample CMOS library";
+  comment         : "VlogHammer CMOS library";
 
   time_unit               : "1ns";
   capacitive_load_unit      (1000.000,ff);
