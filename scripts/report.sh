@@ -200,6 +200,7 @@ done
 
 	cat ../../scripts/cells_cyclone_iii.v
 	cat ../../scripts/cells_xilinx_7.v
+	cat ../../scripts/cells_cmos.v
 	cat $( yosys-config --datdir )/simlib.v;
 	cat $( yosys-config --datdir )/simcells.v;
 } > testbench.v
@@ -321,6 +322,10 @@ else
 			goodsim="$q"
 		fi
 	done
+fi
+if ! test -f result.rtl.$goodsim.txt && test -f result.rtl.yosim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.yosim.txt ).txt
+	goodsim="yosim"
 fi
 
 if test -f result.rtl.$goodsim.txt; then
