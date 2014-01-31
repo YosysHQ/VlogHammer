@@ -323,6 +323,10 @@ else
 		fi
 	done
 fi
+if ! test -f result.rtl.$goodsim.txt && test -f result.rtl.yosim.txt; then
+	echo "#00ff00" > color_$( cat result.rtl.yosim.txt ).txt
+	goodsim="yosim"
+fi
 
 if test -f result.rtl.$goodsim.txt; then
 	for q in ${SIM_LIST}; do
