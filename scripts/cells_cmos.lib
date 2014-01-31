@@ -1,0 +1,161 @@
+/* test comment */
+library(demo) {
+  technology(cmos);
+
+  delay_model     : generic_cmos /*table_lookup*/;
+  date            : "30-JAN-2014";
+  revision        : 1.0;     
+  comment         : "Yosys sample CMOS library";
+
+  time_unit               : "1ns";
+  capacitive_load_unit      (1000.000,ff);
+  pulling_resistance_unit : "1kohm";
+  voltage_unit            : "1V";
+  current_unit            : "1uA";
+  leakage_power_unit      : "1pW";
+
+  slew_lower_threshold_pct_rise : 10.0;
+  slew_upper_threshold_pct_rise : 90.0;
+  slew_lower_threshold_pct_fall : 10.0;
+  slew_upper_threshold_pct_fall : 90.0;
+  input_threshold_pct_rise      : 50.0;
+  output_threshold_pct_rise     : 50.0;
+  input_threshold_pct_fall      : 50.0;
+  output_threshold_pct_fall     : 50.0;
+
+  operating_conditions (typ) {
+    process     : 1.00
+    temperature : 25.0 
+    voltage     : 3.30
+    tree_type   : "balanced_tree"
+  }
+
+  default_operating_conditions : typ;
+
+  nom_voltage     : 3.300;
+  nom_temperature : 25.000;
+  nom_process     : 1.000;
+
+  default_intrinsic_fall          : 0.010;
+  default_inout_pin_fall_res      : 0.010;
+  default_fanout_load             : 0.010;
+  default_intrinsic_rise          : 0.010;
+  default_slope_rise              : 0.010;
+  default_output_pin_fall_res     : 0.010;
+  default_inout_pin_cap           : 0.000;
+  default_input_pin_cap           : 0.000;
+  default_slope_fall              : 0.010;
+  default_inout_pin_rise_res      : 0.010;
+  default_output_pin_cap          : 0.000;
+  default_output_pin_rise_res     : 0.010;
+  default_cell_leakage_power      : 0.000;
+
+  cell(BUF) {
+    area : 6;
+    pin(A) { direction : input;
+             capacitance : 0.020; }
+    pin(Y) { direction : output;
+              function : "A";
+              timing(A_Y) {
+                related_pin : "A";
+                intrinsic_rise : 0.010 ;
+              }
+           }
+  }
+  cell(NOT) {
+    area : 3;
+    pin(A) { direction : input;
+             capacitance : 0.020;  }
+    pin(Y) { direction : output;
+              function : "A'";
+              timing(A_Y) {
+                related_pin : "A";
+                intrinsic_rise : 0.010 ;
+              }
+            }
+  }
+  cell(NAND) {
+    area : 4;
+    pin(A) { direction : input;
+             capacitance : 0.020;  }
+    pin(B) { direction : input;
+             capacitance : 0.020;  }
+    pin(Y) { direction : output;
+             function : "(A*B)'";
+              timing(A_Y, B_Y) {
+                related_pin : "A B";
+                intrinsic_rise : 0.010 ;
+              }
+            }
+  }
+  cell(NOR) {
+    area : 4;
+    pin(A) { direction : input;
+             capacitance : 0.020;  }
+    pin(B) { direction : input;
+             capacitance : 0.020;  }
+    pin(Y) { direction : output;
+             function : "(A+B)'";
+              timing(A_Y, B_Y) {
+                related_pin : "A B";
+                intrinsic_rise : 0.010 ;
+              }
+            }
+  }
+  cell(DFF) {
+    area : 18;
+    ff(IQ, IQN) { clocked_on : C;
+                  next_state : D; }
+    pin(C) { direction : input;
+                 clock : true;
+             capacitance : 0.020;  }
+    pin(D) { direction : input;
+             capacitance : 0.020;  }
+    pin(Q) { direction : output;
+              function : "IQ";
+              timing() {
+                timing_type : rising_edge;
+                related_pin : "C";
+                intrinsic_rise : 0.010 ;
+              }
+            }
+  }
+  cell(DFFSR) {
+    area : 18;
+    ff(IQ, IQN) { clocked_on : C;
+                  next_state : D;
+                      preset : S;
+                       clear : R;
+                  clear_preset_var1 : "L";
+                  clear_preset_var2 : "L"; }
+    pin(C) { direction : input;
+                 clock : true;
+             capacitance : 0.020;  }
+    pin(D) { direction : input;
+             capacitance : 0.020;  }
+    pin(Q) { direction : output;
+              function : "IQ";
+              timing() {
+                timing_type : rising_edge;
+                related_pin : "C";
+                intrinsic_rise : 0.010 ;
+              }
+              timing() {
+                timing_type : clear;
+                timing_sense : positive_unate;
+                related_pin : "R";
+                intrinsic_rise : 0.010 ;
+              }
+              timing() {
+                timing_type : preset;
+                timing_sense : positive_unate;
+                related_pin : "S";
+                intrinsic_rise : 0.010 ;
+              }
+           }
+    pin(S) { direction : input;
+             capacitance : 0.020;  }
+    pin(R) { direction : input;
+             capacitance : 0.020;  }
+  }
+}
