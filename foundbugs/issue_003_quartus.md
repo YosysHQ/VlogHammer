@@ -28,5 +28,5 @@ correctly.
 
 **History:**  
 2014-01-23 Reported via Altera mySupport (SR #11025074)  
-2014-01-27 Answer from Altera: Synplify is behaving the same as Quartus II. Altera will investigate.
-
+2014-01-27 Answer from Altera: Synplify is behaving the same as Quartus II. Altera will investigate.  
+2014-02-06 Bugfix for Quartus II v14.1 prospected by Altera Support
