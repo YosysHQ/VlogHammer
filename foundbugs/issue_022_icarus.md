@@ -4,7 +4,7 @@ Icarus Verilog: internal error: lval-rval width mismatch
 
 ~OPEN~ Icarus GIT 68f8de2
 
-The following module fails to build with icarus verilog:
+The following module fails to build with icarus verilog (git 68f8de2):
 
     :::Verilog
     module issue_022(a, y);

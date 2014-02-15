@@ -2,7 +2,7 @@
 Icarus Verilog signedness handling in binary bitwise operations of constants
 ============================================================================
 
-~CLOSED~ Icarus GIT d1c9dd5
+~CLOSED~ Icarus GIT ac3aee0
 
 Bitwise operations of signed values should yield a signed value (see sec. 5.5.1
 of IEEE Std 1365-2005). This is implemented correctly in Icarus Verilog for

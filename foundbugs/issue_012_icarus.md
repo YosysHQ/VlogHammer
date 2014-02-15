@@ -2,7 +2,7 @@
 Icarus Verilog undef propagation bug in power operator
 ======================================================
 
-~CLOSED~ Icarus GIT d1c9dd5
+~CLOSED~ Icarus GIT 68f8de2
 
 icarus verilog (git d1c9dd5) does not correctly propagate undef through the power
 operator. For example, **y** should be **4'bx** when a is zero in the following test
