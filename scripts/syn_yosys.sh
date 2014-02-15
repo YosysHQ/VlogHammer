@@ -43,7 +43,7 @@ case "$YOSYS_MODE" in
 		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
 	3|noopt)
 		yosys -q -l synth.log -b 'verilog -noattr' -f 'verilog -noopt' -o synth.v \
-		      -p 'hierarchy; proc; techmap' ../../rtl/$job.v ;;
+		      -p 'hierarchy; proc; techmap; opt_const t:$pow %ci*' ../../rtl/$job.v ;;
 	4|nomap)
 		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt' ../../rtl/$job.v ;;
