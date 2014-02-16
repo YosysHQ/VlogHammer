@@ -2,7 +2,7 @@
 Icarus Verilog: internal error: lval-rval width mismatch
 ========================================================
 
-~OPEN~ Icarus GIT 68f8de2
+~CLOSED~ Icarus GIT ecce1d2
 
 The following module fails to build with icarus verilog (git 68f8de2):
 
@@ -20,4 +20,5 @@ the error message produced is:
 
 **History:**  
 2014-02-15 [Reported](https://github.com/steveicarus/iverilog/issues/12) bug on GitHub  
+2014-02-16 Fixed in GIT commit [ecce1d2](https://github.com/steveicarus/iverilog/commit/ecce1d25bc4e034423584a9386dcf4d8b30d58c0)  
 

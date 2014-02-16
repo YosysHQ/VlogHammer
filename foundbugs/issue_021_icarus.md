@@ -2,7 +2,7 @@
 Icarus Verilog efficiency of verinum and vpp_net pow() functions
 ================================================================
 
-~OPEN~ Icarus GIT d1c9dd5
+~CLOSED~ Icarus GIT 66bdbb7
 
 Modules such as
 
@@ -43,4 +43,5 @@ PS: the examples above should evaluate to
 
 **History:**  
 2014-01-06 [Reported](https://github.com/steveicarus/iverilog/issues/9) bug on GitHub  
+2014-02-16 Fixed in GIT commit [66bdbb7](https://github.com/steveicarus/iverilog/commit/66bdbb77eca799a4e3762f4ae1ea420dd4269bf4)  
 
