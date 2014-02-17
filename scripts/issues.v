@@ -487,3 +487,23 @@ module issue_022(a, y);
   //     assert: elaborate.cc:150: failed assertion rval->vector_width() >= lval->vector_width()
   assign y = 'bx ? 2'b0 : a;
 endmodule
+module issue_023(a, y);
+  input [1:0] a;
+  output [9:0] y;
+
+  // icarus verilog (git b1ef099) allocates 16GB of memory to process this line
+  localparam [4:0] p1 = 1'b1 << ~30'b0;
+
+  // icarus verilog (git b1ef099) fails with an assert when trying to process this line:
+  // ivl: verinum.cc:370: verinum::V verinum::set(unsigned int, verinum::V): Assertion 'idx < nbits_' failed.
+  localparam [4:0] p2 = 1'b1 << ~40'b0;
+
+  assign y = {p1, p2};
+endmodule
+module issue_024(a, y);
+  input [0:0] a;
+  output [0:0] y;
+
+  // icarus verilog (git b1ef099) returns 1'b1 for this expression. it should be 1'bx.
+  assign y = 1'b1 >= |1'bx;
+endmodule
