@@ -40,34 +40,34 @@ process_job()
 	echo "end" >> testbench.v
 	echo "endmodule" >> testbench.v
 
-	iverilog -o iverilog_testbench rtl.v testbench.v
-	./iverilog_testbench > output_iverilog.txt
+	( ulimit -v 1048576; timeout 120 iverilog -o iverilog_testbench rtl.v testbench.v; )
+	( ulimit -v 1048576; timeout 120 ./iverilog_testbench > output_iverilog.txt; )
 	yosys -ql output_yosys.txt rtl.v testbench.ys
 
 	grep '^Eval result:' output_iverilog.txt > results_iverilog.txt
 	grep '^Eval result:' output_yosys.txt > results_yosys.txt
 
 	if ! diff -u results_iverilog.txt results_yosys.txt; then
-		echo "$job ERROR" >> ../../validate_iverilog.txt
+		echo "$job ERROR" >> ../../hammer_iverilog.txt
 		rm -rf ${job}_files; mkdir -p ${job}_files
 		mv rtl.v testbench.* output_* results_* ${job}_files
 	else
-		echo "$job OK" >> ../../validate_iverilog.txt
+		echo "$job OK" >> ../../hammer_iverilog.txt
 	fi
 }
 
 if [ $# = 0 ]; then
-	rm -f validate_iverilog.txt
-	rm -rf temp/validate_iverilog
-	mkdir -p temp/validate_iverilog
-	cd temp/validate_iverilog
+	rm -f hammer_iverilog.txt
+	rm -rf temp/hammer_iverilog
+	mkdir -p temp/hammer_iverilog
+	cd temp/hammer_iverilog
 
 	while read job; do
 		process_job $job
 	done < <( cd ../../rtl; ls *.v | sed 's,\.v$,,' )
 else
-	mkdir -p temp/validate_iverilog
-	cd temp/validate_iverilog
+	mkdir -p temp/hammer_iverilog
+	cd temp/hammer_iverilog
 
 	for job; do
 		process_job $1
