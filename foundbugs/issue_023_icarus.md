@@ -2,7 +2,7 @@
 Icarus Verilog creates huge in-memory arrays for shifts with large rhs
 ======================================================================
 
-~OPEN~ Icarus GIT b1ef099
+~CLOSED~ Icarus GIT 5dcd2e8
 
 Icarus Verilog (git b1ef099) allocates 16 GB of memory when processing the following statement:
 
@@ -22,4 +22,5 @@ failed`:
 
 **History:**  
 2014-02-17 [Reported](https://github.com/steveicarus/iverilog/issues/13) bug on GitHub  
+2014-02-25 Fixed in GIT commit [5dcd2e8](https://github.com/steveicarus/iverilog/commit/5dcd2e89570a7704027f17238ddced9bc710aa28)
 

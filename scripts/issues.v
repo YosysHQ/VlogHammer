@@ -549,3 +549,10 @@ module issue_028(a, y);
   // icarus verilog (git a3450bf) returns 4'b0000 instead of 4'bxxxx.
   assign y = 4'b0 * 4'bx;
 endmodule
+module issue_029(a, y);
+  input [3:0] a;
+  output [3:0] y;
+
+  // icarus verilog (git ed2e339) returns 4'b0010 instead of 4'b0000.
+  assign y = 4'b1 << 33'h100000000;
+endmodule
