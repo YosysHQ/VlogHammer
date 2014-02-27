@@ -511,10 +511,41 @@ module issue_025(a, y);
   input [1:0] a;
   output [7:0] y;
 
-  wire [3:0] y1, y2;
+  wire [3:0] y1;
+  wire [3:0] y2;
 
   // icarus verilog (git 5a06602) returns 4'bxx00 instead of 4'bxxxx for the first expression.
   assign y1 = 4'bxx00 + 2'b00;
   assign y2 = 4'bxx00 + a;
   assign y = { y1, y2 };
+endmodule
+module issue_026(a, b, y);
+  input [1:0] a;
+  input [1:0] b;
+  output [3:0] y;
+  wire [1:0] y1;
+  wire [1:0] y2;
+  wire u = 1'bx;
+
+  // Yosys prior to git commit ae5032a used to output 2'bxx instead of 2'b0x when a is active.
+  assign y1 = a ? 1'bx : b;
+  assign y2 = a ? u : b;
+  assign y = { y1, y2 };
+endmodule
+module issue_027(a, b, c, y);
+  input [0:0] a;
+  input signed [2:0] b;
+  input signed [3:0] c;
+  output [5:0] y;
+
+  // Yosys prior to git commit 9e99984 had a bug in sign extend for const_eval of this
+  // expression, which showed up as a 'yosim' bug in vloghammer.
+  assign y = a ? b : c;
+endmodule
+module issue_028(a, y);
+  input [3:0] a;
+  output [3:0] y;
+
+  // icarus verilog (git a3450bf) returns 4'b0000 instead of 4'bxxxx.
+  assign y = 4'b0 * 4'bx;
 endmodule

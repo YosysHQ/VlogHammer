@@ -4,7 +4,7 @@ Icarus does undef propagation of const adds incorrectly
 
 ~CLOSED~ Icarus GIT a3450bf
 
-The following module should set both outputs to constant **4'bxxx**:
+The following module should set both outputs to constant **4'bxxxx**:
 
     :::Verilog
     module test(a, y1, y2);
