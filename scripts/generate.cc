@@ -16,6 +16,9 @@
  *  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#define BIG_N  1000
+#define SMALL_N 100
+
 #undef GENERATE_BINARY_OPS
 #undef GENERATE_UNARY_OPS
 #undef GENERATE_TERNARY_OPS
@@ -589,10 +592,10 @@ int main()
 #endif
 
 #ifdef GENERATE_EXPRESSIONS
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < BIG_N; i++)
 	{
 #ifdef ONLY_SAMPLES
-		if (i == 100)
+		if (i == SMALL_N)
 			break;
 #endif
 		xorshift32(1234 + i);
@@ -658,10 +661,10 @@ int main()
 #endif
 
 #ifdef GENERATE_WIDEEXPR
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < BIG_N; i++)
 	{
 #ifdef ONLY_SAMPLES
-		if (i == 100)
+		if (i == SMALL_N)
 			break;
 #endif
 		xorshift32(2345 + i);
