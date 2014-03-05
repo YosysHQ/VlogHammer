@@ -551,8 +551,18 @@ module issue_028(a, y);
 endmodule
 module issue_029(a, y);
   input [3:0] a;
+  output [7:0] y;
+  wire [4:0] y1;
+  wire [4:0] y2;
+
+  assign y1 = 4'b1 << 33'h100000000;
+  assign y2 = 1 >> {a, 64'b0};
+  assign y = { y1, y2 };
+endmodule
+module issue_030(a, y);
+  input [3:0] a;
   output [3:0] y;
 
-  // icarus verilog (git ed2e339) returns 4'b0010 instead of 4'b0000.
-  assign y = 4'b1 << 33'h100000000;
+  // Yosys (git 9e99984) thinks this is 4'bxxxx instead of 4'b000x for a=0.
+  assign y = 1'bx >>> a;
 endmodule
