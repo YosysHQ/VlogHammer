@@ -48,29 +48,36 @@ process_job()
 	grep '^Eval result:' output_yosys.txt > results_yosys.txt
 
 	if ! diff -u results_iverilog.txt results_yosys.txt; then
-		echo "$job ERROR" >> ../../hammer_iverilog.txt
+		if [ "$job" != "test" ]; then echo "$job ERROR" >> ../../hammer_iverilog.txt; fi
 		rm -rf ${job}_files; mkdir -p ${job}_files
 		mv rtl.v testbench.* output_* results_* ${job}_files
 	else
-		echo "$job OK" >> ../../hammer_iverilog.txt
+		if [ "$job" != "test" ]; then echo "$job OK" >> ../../hammer_iverilog.txt; fi
 	fi
 }
 
 if [ $# = 0 ]; then
-	rm -f hammer_iverilog.txt
-	rm -rf temp/hammer_iverilog
+	touch hammer_iverilog.txt
 	mkdir -p temp/hammer_iverilog
 	cd temp/hammer_iverilog
 
 	while read job; do
-		process_job $job
-	done < <( cd ../../rtl; ls *.v | sed 's,\.v$,,' )
+		if grep -q "^$job " ../../hammer_iverilog.txt; then
+			echo "Skipping $job."
+		else
+			process_job $job
+		fi
+	done < <( cd ../../rtl; ls *.v | sed 's,\.v$,,' | sort -R )
 else
 	mkdir -p temp/hammer_iverilog
 	cd temp/hammer_iverilog
 
 	for job; do
-		process_job $1
+		if grep -q "^$job " ../../hammer_iverilog.txt; then
+			echo "Skipping $job."
+		else
+			process_job $job
+		fi
 	done
 fi
 
