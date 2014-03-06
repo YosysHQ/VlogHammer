@@ -561,8 +561,30 @@ module issue_029(a, y);
 endmodule
 module issue_030(a, y);
   input [3:0] a;
-  output [3:0] y;
+  output [31:0] y;
 
-  // Yosys (git 9e99984) thinks this is 4'bxxxx instead of 4'b000x for a=0.
-  assign y = 1'bx >>> a;
+  wire [3:0] y0;
+  wire [3:0] y1;
+  wire [3:0] y2;
+  wire [3:0] y3;
+  wire [3:0] y4;
+  wire [3:0] y5;
+  wire [3:0] y6;
+  wire [3:0] y7;
+
+  assign y = {y0,y1,y2,y3,y4,y5,y6,y7};
+
+  assign y0 = 1'bx >> a;
+  assign y1 = 1'bx << a;
+  assign y2 = 1'bx >>> a;
+  assign y3 = 1'bx <<< a;
+  assign y4 = 1'sbx >> a;
+  assign y5 = 1'sbx << a;
+  assign y6 = 1'sbx >>> a;
+  assign y7 = 1'sbx <<< a;
+endmodule
+module issue_031(a, y);
+  input [2:0] a;
+  output [2:0] y;
+  assign y = { &{a,1'bx}, |{a,1'bx}, ^{a,1'bx} };
 endmodule
