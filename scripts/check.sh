@@ -38,6 +38,7 @@ read_verilog syn.v;
 read_verilog ../../scripts/cells_cyclone_iii.v;
 read_verilog ../../scripts/cells_xilinx_7.v;
 read_verilog ../../scripts/cells_cmos.v;
+read_verilog ../../scripts/cells_verific.v;
 read_verilog $( yosys-config --datdir )/simlib.v;
 read_verilog $( yosys-config --datdir )/simcells.v;
 hierarchy -check -top $job;
