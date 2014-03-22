@@ -10,7 +10,7 @@ Consider the following module:
     module issue_033(a, y);
         input [1:0] a;
         output y;
-	assign y = a == 1'bx;
+        assign y = a == 1'bx;
     endmodule
 
 For **a[1] == 1** this module should output zero. (The **1'bx** is zero
@@ -20,7 +20,7 @@ arguments is **1'bx**. Instead it must only output **1'bx** if the
 result is ambiguous. See also 5.1.8 in IEE Std 1364-2005.)
 
 However, Verific optimizes all logic out of this module and sets the output
-to constanc **1'bx**.
+to constant **1'bx**.
 
 **History:**  
 2014-03-22 Reported bug to Verific support
