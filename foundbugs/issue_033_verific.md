@@ -24,4 +24,5 @@ to constant **1'bx**.
 
 **History:**  
 2014-03-22 Reported bug to Verific support
+2014-03-26 Bug added to issue tracker: VIPER Issue #8535
 

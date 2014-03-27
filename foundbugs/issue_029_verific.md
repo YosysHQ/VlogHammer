@@ -21,5 +21,6 @@ Crosscheck: Quartus 13.1 and XST 14.7 inherit this bug from Verific. Xsim
 this correctly.
 
 **History:**  
-2014-03-22 Reported bug to Verific support
+2014-03-22 Reported bug to Verific support  
+2014-03-26 Bug added to issue tracker: VIPER Issue #8534
 

@@ -24,5 +24,6 @@ However, Verific handles **{a,a}** as an unsigned and **{2{a}}** as a signed exp
 In other words, Verific connects the MSB of **y0** to GND and the MSB of **y1** to the MSB of **a**, but it should set the MSB of **y1** to zero as well.
 
 **History:**  
-2014-03-08 Reported bug to Verific support
+2014-03-08 Reported bug to Verific support  
+2014-03-18 Bug added to issue tracker: VIPER Issue #8510
 
