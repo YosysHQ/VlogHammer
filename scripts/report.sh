@@ -287,6 +287,42 @@ if [[ " ${SIM_LIST} " == *" yosim "* ]]; then
 	fi
 fi
 
+if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
+	{
+		echo -n "module testbench($inputs"
+		for p in ${SYN_LIST} rtl; do
+			echo -n ", ${p}_y"
+		done
+		echo ");"
+		grep '^ *input ' rtl.v
+		for p in ${SYN_LIST} rtl; do
+			sed -r "/^ *output / !d; s/ y;/ ${p}_y;/;" rtl.v
+			sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
+		done
+		echo "endmodule"
+
+		for p in ${SYN_LIST} rtl; do
+			sed "s/^module ${job}/module ${job}_${p}/; /^\`timescale/ d;" < syn_$p.v
+		done
+
+		cat ../../scripts/cells_cyclone_iii.v
+		cat ../../scripts/cells_xilinx_7.v
+		cat ../../scripts/cells_cmos.v
+		cat ../../scripts/cells_verific.v
+		cat $( yosys-config --datdir )/simlib.v;
+		cat $( yosys-config --datdir )/simcells.v;
+	} > sim_verilator.v
+	if ! verilator -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v; then
+		echo -n > sim_verilator.log
+	else
+		bash ../../scripts/verilator_tb.sh ${job} $( echo rtl ${SYN_LIST} | tr ' ' , ) $( echo $inputs | tr -d ' ' ) \
+				$( echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ',' ) > sim_verilator.cc
+		make -C obj_dir -f Vtestbench.mk
+		g++ -I "${VERILATOR_ROOT:-/usr/share/verilator}/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a
+		./sim_verilator > sim_verilator.log
+	fi
+fi
+
 for p in ${SIM_LIST}; do
 	if ! grep -q '\+\+OK\+\+' sim_$p.log; then
 		html_notes="$html_notes
