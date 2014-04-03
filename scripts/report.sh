@@ -315,8 +315,14 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 	if ! verilator -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v; then
 		echo -n > sim_verilator.log
 	else
+		undef_ref=""
+		for f in sim_yosim.log sim_modelsim.log sim_icarus.log; do
+			test -f $f || continue
+			undef_ref=$( grep '^++VAL++ [0-9]\+ rtl ' $f | awk '{ printf("%s%s", NR == 1 ? "" : ",", $4); }' )
+			break
+		done
 		bash ../../scripts/verilator_tb.sh ${job} $( echo rtl ${SYN_LIST} | tr ' ' , ) $( echo $inputs | tr -d ' ' ) \
-				$( echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ',' ) > sim_verilator.cc
+				$( echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ',' ) $undef_ref > sim_verilator.cc
 		make -C obj_dir -f Vtestbench.mk
 		g++ -I "${VERILATOR_ROOT:-/usr/share/verilator}/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a
 		./sim_verilator > sim_verilator.log

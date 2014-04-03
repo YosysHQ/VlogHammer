@@ -4,6 +4,7 @@ rtl=$1
 syn_list=$( echo $2 | tr , ' ' )
 inp_list=$( echo $3 | tr , ' ' )
 pat_list=$( echo $4 | tr , ' ' )
+und_list=$( echo $5 | tr , ' ' )
 
 cat << EOT
 #include "obj_dir/Vtestbench.h"
@@ -16,6 +17,7 @@ cat << EOT
 // syn_list=$syn_list
 // inp_list=$inp_list
 // pat_list=$pat_list
+// und_list=$und_list
 
 int main() {
 EOT
@@ -39,6 +41,8 @@ for pat in $pat_list; do
 	echo "	print_input_patterns();"
 	echo "	tb.eval();"
 	bits=$( expr $( sed "/output.* y;/ !d; s/.*\[//; s/:.*//;" rtl.v ) + 1 )
+	echo "	set_undef(\"${und_list%% *}\");"
+	und_list="${und_list#* }"
 	for syn in $syn_list; do
 		if [ $bits -le 8 ]; then
 			echo "	get_output8(\"$syn\", tb.${syn}_y, $bits);"

@@ -1,8 +1,9 @@
 #ifndef VERILATOR_TB_H
 #define VERILATOR_TB_H
 
-#include <string>
+#include <set>
 #include <vector>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,6 +15,7 @@ int pattern_cursor, pattern_idx;
 
 std::string input_pat_list;
 std::vector<string> input_patterns_buf;
+std::set<int> undef_bits;
 
 static inline void set_pattern(const char *pattern)
 {
@@ -33,20 +35,32 @@ static inline void set_pattern(const char *pattern)
 	if (*pattern == '\'')
 		pattern++;
 
-	int pattern_len = strlen(pattern);
-	for (int i = pattern_len - 1; i >= 0; i--) {
-		char ch = pattern[i];
-		if ('a' <= ch && ch <= 'f')
-			ch = ch - 'a' + 10;
-		else if ('A' <= ch && ch <= 'F')
-			ch = ch - 'A' + 10;
-		else
-			ch = ch - '0';
-		pattern_bits[pattern_cursor++] = (ch & 1) ? val1 : val0;
-		pattern_bits[pattern_cursor++] = (ch & 2) ? val1 : val0;
-		pattern_bits[pattern_cursor++] = (ch & 4) ? val1 : val0;
-		pattern_bits[pattern_cursor++] = (ch & 8) ? val1 : val0;
+	if (*pattern == 'b')
+	{
+		int pattern_len = strlen(++pattern);
+		for (int i = pattern_len - 1; i >= 0; i--)
+			pattern_bits[pattern_cursor++] = (pattern[i] == '1') ? val1 : val0;
 	}
+	else
+	if (*pattern == 'h')
+	{
+		int pattern_len = strlen(++pattern);
+		for (int i = pattern_len - 1; i >= 0; i--) {
+			char ch = pattern[i];
+			if ('a' <= ch && ch <= 'f')
+				ch = ch - 'a' + 10;
+			else if ('A' <= ch && ch <= 'F')
+				ch = ch - 'A' + 10;
+			else
+				ch = ch - '0';
+			pattern_bits[pattern_cursor++] = (ch & 1) ? val1 : val0;
+			pattern_bits[pattern_cursor++] = (ch & 2) ? val1 : val0;
+			pattern_bits[pattern_cursor++] = (ch & 4) ? val1 : val0;
+			pattern_bits[pattern_cursor++] = (ch & 8) ? val1 : val0;
+		}
+	}
+	else
+		abort();
 
 	while (pattern_cursor < PATTERN_BITS_N)
 		pattern_bits[pattern_cursor++] = val0;
@@ -54,6 +68,7 @@ static inline void set_pattern(const char *pattern)
 	pattern_cursor = 0;
 	input_pat_list.clear();
 	input_patterns_buf.clear();
+	undef_bits.clear();
 }
 
 static inline void print_input_patterns()
@@ -76,7 +91,7 @@ static inline void set_input(const char *name, int bits)
 	cursor += snprintf(buffer+cursor, 1024-cursor, " #\n");
 	input_patterns_buf.push_back(buffer);
 
-	input_pat_list = patbuf + " " + input_pat_list;
+	input_pat_list = patbuf + (input_pat_list.empty() ? "" : " ") + input_pat_list;
 }
 
 static inline void set_input8(const char *name, CData &data, int bits)
@@ -125,11 +140,19 @@ static inline void set_inputW(const char *name, WData data[], int bits)
 			data[i/32] |= WData(1) << (i % 32);
 }
 
+static inline void set_undef(const char *pattern)
+{
+	int pattern_len = strlen(pattern);
+	for (int i = 0; i < pattern_len; i++)
+		if (pattern[pattern_len-1-i] == 'x' || pattern[pattern_len-1-i] == 'X')
+			undef_bits.insert(i);
+}
+
 static inline void get_output(const char *name, std::vector<bool> &vec)
 {
 	std::string result;
 	for (int i = int(vec.size())-1; i >= 0; i--)
-		result += vec[i] ? "1" : "0";
+		result += undef_bits.count(i) ? "x" : vec[i] ? "1" : "0";
 	printf("++VAL++ %d %s %s #\n", pattern_idx, name, result.c_str());
 	printf("++RPT++ %d %s %s %s\n", pattern_idx, input_pat_list.c_str(), result.c_str(), name);
 }
