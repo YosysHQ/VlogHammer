@@ -26,4 +26,4 @@ Crosscheck: Vivado 2013.4, XST 14.7, Isim 14.7 and Modelsim 10.1d implement this
 correctly.
 
 **History:**  
-2014-04-03 Reported as (Issue #730)[http://www.veripool.org/issues/730-Verilator-Bug-in-Verilator-signed-unsigned-handling-in-power-operator]
+2014-04-03 Reported as [Issue #730](http://www.veripool.org/issues/730-Verilator-Bug-in-Verilator-signed-unsigned-handling-in-power-operator)
