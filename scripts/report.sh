@@ -312,8 +312,12 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		cat $( yosys-config --datdir )/simlib.v;
 		cat $( yosys-config --datdir )/simcells.v;
 	} > sim_verilator.v
-	if ! verilator -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v; then
-		echo -n > sim_verilator.log
+	if ! verilator -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v 2> >( tee sim_verilator.msg ); then
+		if grep -q "Unsupported: Shifting of by over 32-bit number isn't supported." sim_verilator.msg; then
+			echo "++SKIP++" > sim_verilator.log
+		else
+			echo -n > sim_verilator.log
+		fi
 	else
 		undef_ref=""
 		for f in sim_yosim.log sim_modelsim.log sim_icarus.log; do
@@ -330,7 +334,11 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 fi
 
 for p in ${SIM_LIST}; do
-	if ! grep -q '\+\+OK\+\+' sim_$p.log; then
+	if grep -q '\+\+SKIP\+\+' sim_$p.log; then
+		html_notes="$html_notes
+<div class=\"note\">Simulation of $job using <i>$p</i> skipped!</div>"
+		SIM_LIST="$( echo " ${SIM_LIST} " | sed "s, $p , ,; s,^ ,,; s, \$,,;" )"
+	elif ! grep -q '\+\+OK\+\+' sim_$p.log; then
 		html_notes="$html_notes
 <div class=\"note\">Simulation of $job using <i>$p</i> failed!</div>"
 		in_lists="$in_lists $p"
