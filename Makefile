@@ -28,6 +28,7 @@ IVERILOG_DIR := # /home/clifford/Work/iverilog/instdir/bin
 MODELSIM_DIR := /opt/altera/13.1/modelsim_ase/bin
 QUARTUS_DIR  := /opt/altera/13.1/quartus/bin
 VIVADO_DIR   := /opt/Xilinx/Vivado/2013.4/bin
+VERILATOR    := /usr/local/bin/verilator
 MAKE_JOBS    := -j4 -l8
 YOSYS_MODE   := default
 REPORT_OPTS  :=
@@ -35,7 +36,7 @@ REPORT_OPTS  :=
 # uncomment this for full list of reports
 #REPORT_LIST := $(RTL_LIST)
 
-export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_DIR YOSYS_MODE
+export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_DIR VERILATOR YOSYS_MODE
 
 help:
 	@echo ""

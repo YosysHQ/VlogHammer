@@ -312,7 +312,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		cat $( yosys-config --datdir )/simlib.v;
 		cat $( yosys-config --datdir )/simcells.v;
 	} > sim_verilator.v
-	if ! verilator -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v 2> >( tee sim_verilator.msg ); then
+	if ! ${VERILATOR:-verilator} -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v 2> >( tee sim_verilator.msg ); then
 		if grep -q "Unsupported: Shifting of by over 32-bit number isn't supported." sim_verilator.msg; then
 			echo "++SKIP++" > sim_verilator.log
 		else
@@ -328,7 +328,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		bash ../../scripts/verilator_tb.sh ${job} $( echo rtl ${SYN_LIST} | tr ' ' , ) $( echo $inputs | tr -d ' ' ) \
 				$( echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ',' ) $undef_ref > sim_verilator.cc
 		make -C obj_dir -f Vtestbench.mk
-		g++ -I "${VERILATOR_ROOT:-/usr/share/verilator}/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a
+		g++ -I "$( grep 'VERILATOR_ROOT *=' obj_dir/Vtestbench.mk | sed 's,.*= *,,' )/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a
 		./sim_verilator > sim_verilator.log
 	fi
 fi
