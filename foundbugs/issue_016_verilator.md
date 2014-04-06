@@ -2,7 +2,7 @@
 Bug in Verilator signed/unsigned handling in power operator
 ===========================================================
 
-~OPEN~ Verilator 3.856
+~CLOSED~ Verilator GIT ff19dd9
 
 The following module should return 0 for both outputs:
 
@@ -27,3 +27,4 @@ correctly.
 
 **History:**  
 2014-04-03 Reported as [Issue #730](http://www.veripool.org/issues/730-Verilator-Bug-in-Verilator-signed-unsigned-handling-in-power-operator)
+2014-04-06 Fixed in GIT commit ff19dd9

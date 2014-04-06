@@ -2,7 +2,7 @@
 Verilator bug in handling $signed in an unsigned expression
 ===========================================================
 
-~OPEN~ Verilator 3.856
+~CLOSED~ Verilator GIT 14fcfd8
 
 The following module should output **0** for **a = 2'b11** and **b = 3'b111**.
 But Verilator 3.856 outputs **1** instead.
@@ -25,5 +25,5 @@ Crosscheck: Vivado 2013.4, XST 14.7, Isim 14.7 and Modelsim 10.1d implement this
 correctly.
 
 **History:**  
-2014-04-03 Reported as [Issue #729](http://www.veripool.org/issues/729-Verilator-Verilator-bug-in-handling-signed-in-an-unsigned-expression)
-
+2014-04-03 Reported as [Issue #729](http://www.veripool.org/issues/729-Verilator-Verilator-bug-in-handling-signed-in-an-unsigned-expression)  
+2014-04-06 Fixed in GIT commit 14fcfd8
