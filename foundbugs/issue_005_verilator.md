@@ -2,7 +2,7 @@
 Verilator bug in extending $signed
 ==================================
 
-~OPEN~ Verilator GIT 14fcfd8
+~CLOSED~ Verilator GIT 5c39420
 
 The following module should output **4'b1111** but Verilator GIT 14fcfd8
 outputs **4'b0001** instead.
@@ -17,3 +17,4 @@ outputs **4'b0001** instead.
 
 **History:**  
 2014-04-06 Reported as [Issue #733](http://www.veripool.org/issues/733-Verilator-Verilator-bug-in-extending-signed)  
+2014-04-08 Fixed in GIT commit 5c39420
