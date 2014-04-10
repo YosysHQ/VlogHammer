@@ -2,7 +2,7 @@
 Verilator thinks ~|a and ~(|a) are the same thing
 =================================================
 
-~OPEN~ Verilator GIT fb4928b
+~CLOSED~ Verilator GIT d04eb97
 
 The following module should return **4'b0000** or **4'b0001** but Verilator
 GIT fb4928b returns **4'b1111** or **4'b1110** instead.
@@ -26,4 +26,5 @@ Self-contained test case:
 [test005.sh](http://svn.clifford.at/handicraft/2014/verilatortest/test005.sh)
 
 **History:**  
-2014-04-09 Reported as [Issue #736](http://www.veripool.org/issues/736-Verilator-Verilator-thinks-a-and-a-are-the-same-thing)
+2014-04-09 Reported as [Issue #736](http://www.veripool.org/issues/736-Verilator-Verilator-thinks-a-and-a-are-the-same-thing)  
+2014-04-06 Fixed in GIT commit d04eb97
