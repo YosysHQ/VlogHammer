@@ -54,6 +54,10 @@ test -n "$ISE_SETTINGS"
 test -n "$MODELSIM_DIR"
 test -n "$VIVADO_DIR"
 
+unset MAKEFLAGS
+unset MAKELEVEL
+unset MAKEOVERRIDES
+
 rm -rf temp/report_${job}
 mkdir -p temp/report_${job}
 cd temp/report_${job}
