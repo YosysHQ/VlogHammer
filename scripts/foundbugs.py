@@ -161,10 +161,10 @@ for bug in sorted(open_bugs.keys()):
     f.write(open_bugs[bug])
 f.close()
 
-f = open(output_dir + '/bugs_wontfix.in', 'w')
-for bug in sorted(wontfix_bugs.keys()):
-    f.write(wontfix_bugs[bug])
-f.close()
+# f = open(output_dir + '/bugs_wontfix.in', 'w')
+# for bug in sorted(wontfix_bugs.keys()):
+#     f.write(wontfix_bugs[bug])
+# f.close()
 
 f = open(output_dir + '/bugs_closed.in', 'w')
 for bug in sorted(closed_bugs.keys()):
