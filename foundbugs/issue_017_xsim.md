@@ -2,7 +2,7 @@
 Bug in XSIM when combining reduce op and $signed/$unsigned
 ==========================================================
 
-~OPEN~ XSim 2013.4
+~OPEN~ XSim 2014.1
 
 The following module should return **3'b001**:
 
@@ -32,4 +32,5 @@ Isim 14.7 has [the same bug](issue_017_isim.html).
 
 **History:**  
 2014-01-25 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/Bug-in-XSIM-when-combining-reduce-op-and-signed-unsigned/td-p/406801) bug in Xilinx Support Forum  
+2014-04-16 [Still broken in XSim 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
 

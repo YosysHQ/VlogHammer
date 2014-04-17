@@ -2,7 +2,7 @@
 Vivado bug in undef handling for relational operators
 =====================================================
 
-~OPEN~ Vivado 2013.4
+~OPEN~ Vivado 2014.1
 
 Consider the following test case with Vivado 2013.4:
 
@@ -35,5 +35,6 @@ Crosscheck: XST 14.7, Quartus 13.1, Isim 14.7 and Modelsim 10.1d implement this
 correctly.
 
 **History:**  
-2014-01-16 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-bug-in-undef-handling-for-relational-operators/td-p/403469) bug in Xilinx Support Forum
+2014-01-16 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-bug-in-undef-handling-for-relational-operators/td-p/403469) bug in Xilinx Support Forum  
+2014-04-16 [Still broken in Vivado 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
 
