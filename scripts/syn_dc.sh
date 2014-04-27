@@ -34,7 +34,7 @@ cd temp/syn_dc_$job
 
 ln -s ../../scripts/cells_cmos.lib cells_cmos.lib
 
-# Design Compiler 2009.06 doesn't (yet?) support "===" and "!==" operators, but
+# Design Compiler (2009.06) doesn't support "===" and "!==" operators, but
 # in the testcases these don't differ from "==" and "!=", so just replace them.
 sed -r 's/===/==/g;s/!==/!=/g' "../../rtl/$job.v" > $job.v
 
@@ -53,7 +53,7 @@ cat > $job.tcl <<- EOT
   exit 0
 EOT
 
-if ! timeout 180 dc_shell-t -64bit -no_gui -f $job.tcl > >( tee output.txt ) 2>&1
+if ! timeout 180 dc_shell-t -no_gui -f $job.tcl > >( tee output.txt ) 2>&1
 then
 	{
 		echo '// [VLOGHAMMER_SYN_ERROR] dc failed, crashed or hung in endless loop!'

@@ -624,3 +624,14 @@ module issue_035(a, y);
   localparam signed [3:0] p2 = 0;
   assign y = a + (p1 + p2);
 endmodule
+module issue_036(a, b, c, d, y);
+  input [3:0] a;
+  input [3:0] b;
+  input [3:0] c;
+  input [3:0] d;
+  output [3:0] y;
+
+  // This should return y=15 for a=15, b=15, c=15, d=15.
+  // But Design Compiler G-2012.06-SP4 returns y=7 instead.
+  assign y = a >>> ((b == c) >>> d);
+endmodule
