@@ -2,7 +2,7 @@
 Verilator bug with shift, expression width and signedness
 =========================================================
 
-~OPEN~ Verilator GIT adb39ce
+~CLOSED~ Verilator GIT b631b59
 
 Verilator adb39ce seems to have troubles with the following expressions. It seems
 to correctly interpret **-2'sd1** as the value 3, but then has problems identifying the
@@ -28,4 +28,5 @@ Verilog testbench for comparison:
 [test007_tb.v](http://svn.clifford.at/handicraft/2014/verilatortest/test007_tb.v)
 
 **History:**  
-2014-04-30 Reported as [Issue #754](http://www.veripool.org/issues/754-Verilator-Verilator-bug-with-shift-expression-width-and-signedness)
+2014-04-30 Reported as [Issue #754](http://www.veripool.org/issues/754-Verilator-Verilator-bug-with-shift-expression-width-and-signedness)  
+2014-04-30 Fixed in GIT commit b631b59

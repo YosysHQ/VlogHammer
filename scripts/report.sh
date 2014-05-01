@@ -306,7 +306,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		echo "endmodule"
 
 		for p in ${SYN_LIST} rtl; do
-			sed "s/^module ${job}/module ${job}_${p}/; /^\`timescale/ d;" < syn_$p.v
+			sed "s/^module ${job}\([^A-Za-z0-9_]\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
 		done
 
 		cat ../../scripts/cells_cyclone_iii.v
