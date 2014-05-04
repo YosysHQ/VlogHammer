@@ -2,7 +2,7 @@
 Verilator bug in signdness of {..}
 ==================================
 
-~OPEN~ Verilator GIT a985a1f
+~CLOSED~ Verilator GIT 4a58e85
 
 Verilator a985a1f returns 11001 instead of 01001, i.e. verilator
 performs sign extension even though the result of `{ .. }` is unsigned.
@@ -19,4 +19,5 @@ Self-contained test case:
 [test010.sh](http://svn.clifford.at/handicraft/2014/verilatortest/test010.sh)
 
 **History:**  
-2014-05-03 Reported as [Issue #759](www.veripool.org/issues/759-Verilator-Verilator-bug-in-signdness-of-)
+2014-05-03 Reported as [Issue #759](http://www.veripool.org/issues/759-Verilator-Verilator-bug-in-signdness-of-)  
+2014-05-03 Fixed in GIT commit 4a58e85
