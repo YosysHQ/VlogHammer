@@ -35,6 +35,7 @@ REPORT_OPTS  :=
 
 # uncomment this for full list of reports
 #REPORT_LIST := $(RTL_LIST)
+#REPORT_FILTER := 1
 
 export SYN_LIST SIM_LIST ISE_SETTINGS IVERILOG_DIR MODELSIM_DIR QUARTUS_DIR VIVADO_DIR VERILATOR YOSYS_MODE
 
@@ -157,7 +158,11 @@ $(foreach syn,$(SYN_LIST),$(eval $(call check_template,$(syn))))
 # -------------------------------------------------------------------------------------------
 
 report: $(addprefix report/,$(addsuffix .html,$(REPORT_LIST)))
+ifdef REPORT_FILTER
+	-perl scripts/bigreport.pl `grep -Lr 'LISTS:.* noerror ' report/` > report.html
+else
 	-perl scripts/bigreport.pl report/* > report.html
+endif
 
 ifndef DEPS
 report/%.html:
