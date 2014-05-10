@@ -677,3 +677,10 @@ module issue_040(a, y);
   // -- Verilator 621c515 creates code that uses the undeclared function VL_POW_WWI()
   assign y = 65'd2 ** a;
 endmodule
+module issue_041(a, y);
+  input [2:0] a;
+  output [3:0] y;
+
+  // This should effectively be y=0, but verilator 1f56312 evaluates y=a instead.
+  assign y = (a >> 2'b11) >> 1;
+endmodule
