@@ -319,6 +319,8 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 	if ! ${VERILATOR:-verilator} -cc -Wno-fatal -DSIMLIB_NOMEM -DSIMLIB_NOSR -DSIMLIB_NOLUT --top-module testbench sim_verilator.v 2> >( tee sim_verilator.msg ); then
 		if grep -q "Unsupported: Shifting of by over 32-bit number isn't supported." sim_verilator.msg; then
 			echo "++SKIP++" > sim_verilator.log
+		elif grep -q "Unsupported: Large >64bit \*\* power operator not implemented." sim_verilator.msg; then
+			echo "++SKIP++" > sim_verilator.log
 		else
 			echo -n > sim_verilator.log
 		fi
