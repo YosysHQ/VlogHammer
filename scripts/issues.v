@@ -699,3 +699,10 @@ module issue_043(a, y);
   // -- Verilator 5f5a3db creates C code that segfaults for a=128.
   assign y = {3{{~22'd0}}} <<< {4{a}};
 endmodule
+module issue_044(a, y);
+  input [3:0] a;
+  output [3:0] y;
+
+  // Yosys f69b580 returns y=1 instead of y=0 for a=15.
+  assign y = &(0 ? 0 : (&a));
+endmodule
