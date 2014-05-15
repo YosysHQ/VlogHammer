@@ -706,3 +706,11 @@ module issue_044(a, y);
   // Yosys f69b580 returns y=1 instead of y=0 for a=15.
   assign y = &(0 ? 0 : (&a));
 endmodule
+module issue_045(a, y);
+  input signed [15:0] a;
+  output [15:0] y;
+
+  // -- Verilator d7e4bc1 fails on this code:
+  // %Error: Verilator internal fault, sorry.  Consider trying --debug --gdbbt
+  assign y = (a >> 16) >>> 32'h7ffffff1;
+endmodule

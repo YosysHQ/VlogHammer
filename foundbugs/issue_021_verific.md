@@ -19,6 +19,6 @@ It seems as if Verific tries to calculate the power by simply performing
 of course be implemented using a proper power-modulus algorithm.
 
 **History:**  
-2014-03-22 Reported bug to Verific support
+2014-03-22 Reported bug to Verific support  
 2014-03-26 Bug added to issue tracker: VIPER Issue #8533
 
