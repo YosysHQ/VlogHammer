@@ -137,6 +137,7 @@ closed_bugs = {}
 for filename in os.listdir(input_dir):
     basename = re.sub(r'\.md$', '', filename)
     if basename != filename:
+        print("Processing %s.." % filename)
         f = open(input_dir + '/' + filename)
         md_html = markdown.markdown(''.join(f), extensions=['codehilite', VlogHammerExtension()])
         f.close()
