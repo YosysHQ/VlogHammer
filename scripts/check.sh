@@ -58,7 +58,7 @@ cp syn.il ../../cache_${syn}/$job.il
 
 {
 	echo "read_verilog rtl.v"
-	echo "proc_clean"
+	echo "proc"
 	echo "rename $job ${job}_rtl"
 
 	echo "read_ilang syn.il"

@@ -68,7 +68,7 @@ def binary2decimal(bits, signed):
     current_val = current_val * 2
   return str(total_val)
 
-re_parse_y_wire = re.compile('^\s*wire(\s+signed|)\s*\[(\d+):0\]\s*(y\d+)\s*;\s*$')
+re_parse_y_wire = re.compile('^\s*(wire|reg)(\s+signed|)\s*\[(\d+):0\]\s*(y\d+)\s*;\s*$')
 
 f = open('rtl.v', 'r')
 bitcounter = 0
@@ -76,8 +76,8 @@ bitpartitions = []
 for line in f:
   m = re_parse_y_wire.search(line)
   if m:
-    bitpartitions.append([ bitcounter, int(m.group(2)) + 1, m.group(3), m.group(1) != "" ])
-    bitcounter = bitcounter + int(m.group(2)) + 1
+    bitpartitions.append([ bitcounter, int(m.group(3)) + 1, m.group(4), m.group(2) != "" ])
+    bitcounter = bitcounter + int(m.group(3)) + 1
 f.close()
 
 for idx in data.keys():

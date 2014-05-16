@@ -13,6 +13,12 @@ input  I;
 assign O = I;
 endmodule
 
+module OBUFT(O, I, T);
+output O;
+input  I, T;
+assign O = T ? 1'bz : I;
+endmodule
+
 module GND(G);
 output G;
 assign G = 0;

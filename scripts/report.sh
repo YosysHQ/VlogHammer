@@ -199,7 +199,7 @@ done
 	echo "endmodule"
 
 	for p in ${SYN_LIST} rtl; do
-		sed "s/^module ${job}\([^A-Za-z0-9_]\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
+		sed "s/^module ${job}\([^A-Za-z0-9_]\|$\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
 	done
 
 	cat ../../scripts/cells_cyclone_iii.v
@@ -306,7 +306,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		echo "endmodule"
 
 		for p in ${SYN_LIST} rtl; do
-			sed "s/^module ${job}\([^A-Za-z0-9_]\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
+			sed "s/^module ${job}\([^A-Za-z0-9_]\|$\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
 		done
 
 		cat ../../scripts/cells_cyclone_iii.v
@@ -489,7 +489,7 @@ fi
 	echo "<pre class=\"testbench\"><small>$( perl -pe '@c = split//; $k=0; $p=0; for (my $i=0; $i<=$#c; $i++) { $p=$i if $c[$i] eq ")";
 			if ($k > 120 && $p > 0) { $c[$p] .= "\n    "; $k = $i-$p+4; $p=0; } $k++; } $_ = join "",@c' rtl.v <( echo ) simple_tb.v | perl -pe 's/([<>&])/"&#".ord($1).";"/eg;' |
 			perl -pe 's!([^\w#]|^)([\w'\'']+|\$(display|unsigned|signed)|".*?"|//.*)!$x = $1; $y = $2; sprintf("%s<span style=\"color:%s\">%s</span>", $x, $y =~ /^[0-9"]/ ? "#633" : $y =~ /^\/\// ? "#606" :
-			$y =~ /^(module|input|wire|reg|localparam|output|assign|signed|begin|end|task|endtask|initial|endmodule|\$(display|unsigned|signed))$/ ? "#080" : "#008", $y)!eg' )</small></pre>"
+			$y =~ /^(module|input|wire|reg|integer|localparam|output|assign|signed|if|else|for|begin|end|case|endcase|task|endtask|function|endfunction|always|initial|endmodule|\$(display|unsigned|signed))$/ ? "#080" : "#008", $y)!eg' )</small></pre>"
 
 	echo "<!-- VALUES:BEGIN -->"
 	python ../../scripts/valtab.py ${SIM_LIST}
