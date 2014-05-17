@@ -1,8 +1,13 @@
 
 TESTS := $(shell ls rtl/ | sed 's,\.v$$,,' )
-CHECKERS := yosys iverilog
+CHECKERS := yosys iverilog modelsim
 
-all: $(addprefix check_$(1),$(CHECKERS))
+help:
+	@echo; echo "Running checks:"
+	@for mode in $(addprefix check_$(1),$(CHECKERS)); do echo "   make $$mode"; done
+	@echo; echo "Creating reports:"; echo "   make report"; echo
+
+report:
 	@grep -L ++OK++ check_*/*.txt | sed 's,^,Failed: ,'
 
 ENABLE_PREPARE := 0
@@ -33,6 +38,6 @@ $(foreach checker,$(CHECKERS),$(eval $(call check_template,$(checker))))
 clean:
 	rm -rf temp $(addprefix check_$(1),$(CHECKERS))
 
-.PHONY: all prepare clean
+.PHONY: help report prepare clean
 .PRECIOUS: spec/%_spec.v refdat/%_refdat.txt
 
