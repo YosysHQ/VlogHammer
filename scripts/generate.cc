@@ -19,6 +19,8 @@
 #define BIG_N  1000
 #define SMALL_N 100
 
+#define XORSHIFT_SEED 20140518
+
 #undef GENERATE_BINARY_OPS
 #undef GENERATE_UNARY_OPS
 #undef GENERATE_TERNARY_OPS
@@ -110,9 +112,12 @@ void strsubst(std::string &str, const std::string &match, const std::string &rep
 }
 
 uint32_t xorshift32(uint32_t seed = 0) {
-	static uint32_t x = 314159265;
-	if (seed)
-		x = seed;
+	static uint32_t x = 314159265 + XORSHIFT_SEED;
+	if (seed) {
+		x = (seed << 16) + XORSHIFT_SEED;
+		for (int i = 0; i < 10; i++)
+			xorshift32();
+	}
 	x ^= x << 13;
 	x ^= x >> 17;
 	x ^= x << 5;
@@ -598,10 +603,7 @@ int main()
 		if (i == SMALL_N)
 			break;
 #endif
-		xorshift32(1234 + i);
-		xorshift32();
-		xorshift32();
-		xorshift32();
+		xorshift32(i);
 
 		char buffer[1024];
 		snprintf(buffer, 1024, "rtl/expression_%05d.v", i);
@@ -667,10 +669,7 @@ int main()
 		if (i == SMALL_N)
 			break;
 #endif
-		xorshift32(2345 + i);
-		xorshift32();
-		xorshift32();
-		xorshift32();
+		xorshift32(BIG_N + i);
 
 		char buffer[1024];
 		snprintf(buffer, 1024, "rtl/wideexpr_%05d.v", i);
