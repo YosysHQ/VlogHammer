@@ -20,7 +20,7 @@
 # All supported SIM_LIST tags: xsim modelsim icarus yosim verilator
 
 SYN_LIST     := vivado quartus xst yosys
-SIM_LIST     := xsim modelsim icarus yosim
+SIM_LIST     := xsim modelsim icarus yosim verilator
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
