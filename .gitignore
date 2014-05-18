@@ -9,3 +9,8 @@
 /monitor.dat
 /temp
 /rtl
+/testbench/rtl
+/testbench/spec
+/testbench/refdat
+/testbench/temp
+/testbench/check_*
