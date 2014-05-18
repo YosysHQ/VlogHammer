@@ -749,3 +749,11 @@ module issue_047(a, y);
       y2[i1 + 3*i2 + 9*i3 + 27*i4] <= { int_to_bit(i1), int_to_bit(i2) } == { int_to_bit(i3), int_to_bit(i4) };
   end
 endmodule
+module issue_048(a, b, y);
+  input [1:0] a;
+  input [2:0] b;
+  output [3:0] y;
+
+  // For "b != 0" this should return "y[3:2] == 0". But iverilog 020e280 returns "y[3:2] == y[1:0]" instead.
+  assign y = {a >> {22{b}}, a << (0 <<< b)};
+endmodule
