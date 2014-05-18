@@ -13,4 +13,6 @@ cat ../../spec/${1}_spec.v ../../scripts/update_refdat.v ../../rtl/$1.v > runme.
 iverilog -s update_refdat -o runme runme.v
 ./runme
 
-cp refdat.txt ../../refdat/${1}_refdat.txt
+cp refdat.txt ${1}_refdat.txt
+mv ${1}_refdat.txt ../../refdat/
+

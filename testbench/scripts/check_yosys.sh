@@ -14,5 +14,7 @@ yosys -q -l synth.log -p 'proc; opt; techmap; opt; abc;;' -o synth.v ../../rtl/$
 cat ../../spec/${1}_spec.v ../../scripts/check.v synth.v > runme.v
 cp ../../refdat/${1}_refdat.txt refdat.txt
 iverilog -s check -o runme runme.v
-./runme > ../../check_yosys/${1}_yosys.txt
+./runme > ${1}_yosys.txt
+
+mv ${1}_yosys.txt ../../check_yosys/
 

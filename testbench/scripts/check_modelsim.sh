@@ -17,5 +17,7 @@ cp ../../refdat/${1}_refdat.txt refdat.txt
 	$MODELSIM_DIR/vlib work
 	$MODELSIM_DIR/vlog +define+MATCH_DC runme.v
 	$MODELSIM_DIR/vsim -c -do "run -all; exit" work.check
-} > ../../check_modelsim/${1}_modelsim.txt
+} > ${1}_modelsim.txt
+
+mv ${1}_modelsim.txt ../../check_modelsim/
 
