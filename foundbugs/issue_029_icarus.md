@@ -2,7 +2,7 @@
 Icarus only using the lowest 32 bits of right shift operand
 ===========================================================
 
-~OPEN~ Icarus GIT ed2e339
+~CLOSED~ Icarus GIT 020e280
 
 The following modules should set the output to constant **4'b0000**:
 
@@ -23,4 +23,4 @@ But Icarus Verilog (git ed2e339) assigns **4'b0001** instead.
 
 **History:**  
 2014-02-27 [Reported](https://github.com/steveicarus/iverilog/issues/19) bug on GitHub  
-
+2014-05-04 Fixed in GIT commit 020e280
