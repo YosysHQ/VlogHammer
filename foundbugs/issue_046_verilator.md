@@ -2,7 +2,7 @@
 Verilator bug in sign extending special boolean expression
 ==========================================================
 
-~OPEN~ Verilator GIT d7e4bc1
+~CLOSED~ Verilator GIT 06744b6
 
 This should set y=4'b1111 but Verilator d7e4bc1 sets y=4'b0001 instead.
 
@@ -21,4 +21,5 @@ Self-contained test case:
 [test015.sh](http://svn.clifford.at/handicraft/2014/verilatortest/test015.sh)
 
 **History:**  
-2014-05-15 Reported as [Issue #768](http://www.veripool.org/issues/768-Verilator-Verilator-bug-in-sign-extending-special-boolean-expression)
+2014-05-15 Reported as [Issue #768](http://www.veripool.org/issues/768-Verilator-Verilator-bug-in-sign-extending-special-boolean-expression)  
+2014-05-16 Fixed in GIT commit 06744b6
