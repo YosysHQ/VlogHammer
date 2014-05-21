@@ -1,6 +1,6 @@
 
 TESTS := $(shell ls rtl/ | sed 's,\.v$$,,' )
-CHECKERS := yosys iverilog modelsim
+CHECKERS := yosys iverilog modelsim verilator
 
 help:
 	@echo; echo "Running checks:"
