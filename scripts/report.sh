@@ -274,7 +274,7 @@ fi
 
 if [[ " ${SIM_LIST} " == *" yosim "* ]]; then
 	{
-		echo "read_verilog rtl.v"
+		echo "read_verilog rtl.v; proc;;"
 		echo "rename ${job} ${job}_rtl"
 		for p in ${SYN_LIST}; do
 			echo "read_ilang syn_${p}.il"
