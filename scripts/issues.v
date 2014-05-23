@@ -757,3 +757,11 @@ module issue_048(a, b, y);
   // For "b != 0" this should return "y[3:2] == 0". But iverilog 020e280 returns "y[3:2] == y[1:0]" instead.
   assign y = {a >> {22{b}}, a << (0 <<< b)};
 endmodule
+module issue_049(a, y);
+  input [3:0] a;
+  output [3:0] y;
+
+  // -- Verilator 06744b6 creates the following error:
+  // %Error: Internal Error: ../V3Number.cpp:521: toUInt with 4-state 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  assign y = a << 1 <<< 0/0;
+endmodule
