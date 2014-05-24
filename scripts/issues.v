@@ -781,3 +781,11 @@ module issue_051(a, b, y);
   // For a=5, b=35 this should return y=0, but Verilator f705f9b returns y=8 instead
   assign y = 64'd0 | (a << b);
 endmodule
+module issue_052(a, y);
+  input [0:0] a;
+  output [3:0] y;
+
+  // Verilator f705f9b prints "%Error: rtl.v:4: Unsupported: 4-state numbers in this context"
+  // for the following line. But if any bit in 8'b10101010 is changed then Verilator accepts the code.
+  assign y = ((0/0) ? 1 : 2) % ^8'b10101010;
+endmodule
