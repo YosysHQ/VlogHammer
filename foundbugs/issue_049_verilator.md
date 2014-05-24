@@ -2,7 +2,7 @@
 Another Verilator Internal Error for shift by undef value
 =========================================================
 
-~OPEN~ Verilator GIT 06744b6
+~CLOSED~ Verilator GIT f705f9b
 
 Verilator 06744b6 creates the following error:  
 `%Error: Internal Error: ../V3Number.cpp:521: toUInt with 4-state 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
@@ -15,4 +15,5 @@ Verilator 06744b6 creates the following error:
     endmodule
 
 **History:**  
-2014-05-23 Reported as [Issue #772](http://www.veripool.org/issues/772-Verilator-Another-Verilator-Internal-Error-for-shift-by-undef-value)
+2014-05-23 Reported as [Issue #772](http://www.veripool.org/issues/772-Verilator-Another-Verilator-Internal-Error-for-shift-by-undef-value)  
+2014-05-24 Fixed in GIT commit f705f9b

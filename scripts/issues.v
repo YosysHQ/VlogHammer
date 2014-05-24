@@ -772,3 +772,12 @@ module issue_050(a, y);
   // This should return y=0 for a=31, but Verilator 06744b6 returns y=31 instead
   assign y = a >> ((a ? 1 : 2) << a);
 endmodule
+module issue_051(a, b, y);
+  // PATTERN: 10'h163
+  input [3:0] a;
+  input [5:0] b;
+  output [3:0] y;
+
+  // For a=5, b=35 this should return y=0, but Verilator f705f9b returns y=8 instead
+  assign y = 64'd0 | (a << b);
+endmodule
