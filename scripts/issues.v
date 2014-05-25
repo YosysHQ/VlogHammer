@@ -789,3 +789,10 @@ module issue_052(a, y);
   // for the following line. But for example "(0/0) % 0" is accepted.
   assign y = ((0/0) ? 1 : 2) % 0;
 endmodule
+module issue_053(a, y);
+  input [3:0] a;
+  output [3:0] y;
+
+  // This should always return y=4'b1111, but Verilator f705f9b only does this for a=0.
+  assign y = (a >> a) ^~ (a >> a);
+endmodule
