@@ -28,8 +28,6 @@ In my tests I have run this module with:
 Crosscheck: Vivado 2013.4, XST 14.7, Quartus 13.1 and Modelsim 10.1d implement
 this correctly.
 
-Isim 14.7 has [the same bug](issue_017_isim.html).
-
 **History:**  
 2014-01-25 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/Bug-in-XSIM-when-combining-reduce-op-and-signed-unsigned/td-p/406801) bug in Xilinx Support Forum  
 2014-04-16 [Still broken in XSim 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
