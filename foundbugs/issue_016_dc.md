@@ -18,7 +18,7 @@ IEEE Std 1364-2005). But DC G-2012.06-SP4 sets y0=1 and y1=15.
     endmodule
 
 A script that does synthesis and pre/post simulation can be found here:  
-http://svn.clifford.at/handicraft/2014/vlogdctests/test002.sh
+[http://svn.clifford.at/handicraft/2014/vlogdctests/test002.sh](http://svn.clifford.at/handicraft/2014/vlogdctests/test002.sh)
 
 Crosscheck: Vivado 2014.4, XST 14.7, Verific 35_463_32_140306,
 XSim 2014.4, Modelsim 10.1d, Iacrus GIT 6547fde and Verilator GIT f705f9b

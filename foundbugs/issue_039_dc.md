@@ -17,7 +17,7 @@ ELAB-922 (Constant value required) error message:
 But other expression that evaluate to `4'bx` (such as `a + 4'bx) are accepted.
 
 A script that triggers this error can be found here:  
-http://svn.clifford.at/handicraft/2014/vlogdctests/test003.sh
+[http://svn.clifford.at/handicraft/2014/vlogdctests/test003.sh](http://svn.clifford.at/handicraft/2014/vlogdctests/test003.sh)
 
 Crosscheck: Vivado 2014.4, Quartus II 13.1, XST 14.7, Verific 35_463_32_140306,
 XSim 2014.4, Modelsim 10.1d, Iacrus GIT 6547fde and Verilator GIT f705f9b
