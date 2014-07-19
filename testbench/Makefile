@@ -35,7 +35,7 @@ clean:
 
 ifdef PREPARE
 prepare: $(addprefix refdat/,$(addsuffix _refdat.txt,$(TESTS)))
-	tar --transform 's,^,vloghammer_tb/,S' --owner=0 --group=0 -cjf vloghammer_tb.tar.bz2 rtl spec refdat scripts
+	tar --transform 's,^,vloghammer_tb/,S' --owner=0 --group=0 -cjf vloghammer_tb.tar.bz2 Makefile rtl spec refdat scripts
 	@du -sh vloghammer_tb.tar.bz2
 
 spec/%_spec.v: rtl/%.v
