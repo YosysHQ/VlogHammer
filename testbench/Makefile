@@ -19,6 +19,9 @@ check_$(1)/%_$(1).txt: rtl/%.v spec/%_spec.v refdat/%_refdat.txt
 	@printf "%-15s %s %s %s\n" "check_$(1)" "$$(basename $$(notdir $$<))" \
 	        "`printf "%20s" "$$(basename $$(notdir $$<))" | tr -d a-zA-Z0-9_ | tr ' ' .`" \
 		"`grep -q ++OK++ check_$(1)/$$(basename $$(notdir $$<))_$(1).txt && echo pass. || echo FAIL.`"
+ifdef EXIT_ON_ERROR
+	@grep -q ++OK++ check_$(1)/$$(basename $$(notdir $$<))_$(1).txt
+endif
 
 .PHONY: check_$(1)
 endef
