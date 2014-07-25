@@ -4,11 +4,11 @@ Verific uses incorrect width for self-determined division
 
 ~OPEN~ Verific 35_463_32_140722
 
-The self determined size of a division is max(SIZE(left), SIZE(right)).
+The self determined size of a division is max(SIZE(left), SIZE(right)).  
 (see IEEE Std. 1364-2005 table 5-22 or IEEE Std. 1800-2012 table 11-21)
 
 Because of this the following module returns constant 0: The division returns
-a selft-determined expression that is 4 bits in size and has the two MSB set
+a self-determined expression that is 4 bits in size and has the two MSB set
 to constant zero.
 
     :::Verilog
