@@ -22,7 +22,8 @@ to constant zero.
 
 It looks like Verific 35_463_32_140722 uses only SIZE(left), thus evaluating
 **a=2'b11** and **b=2'b01** to **y=4'b0001**.
-    
+
 **History:**  
 2014-07-25 Reported bug to Verific support  
+2014-07-26 Bug added to issue tracker: VIPER Issue #8861  
 

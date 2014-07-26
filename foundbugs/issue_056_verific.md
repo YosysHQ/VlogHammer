@@ -21,4 +21,5 @@ But Verific 35_463_32_140722 thinks that for example **a=0** yields **y=1**.
 
 **History:**  
 2014-07-25 Reported bug to Verific support  
+2014-07-26 Bug added to issue tracker: VIPER Issue #8862  
 
