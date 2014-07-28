@@ -41,6 +41,9 @@ prepare: $(addprefix refdat/,$(addsuffix _refdat.txt,$(TESTS)))
 	tar --transform 's,^,vloghammer_tb/,S' --owner=0 --group=0 -cjf vloghammer_tb.tar.bz2 Makefile rtl spec refdat scripts
 	@du -sh vloghammer_tb.tar.bz2
 
+push: prepare
+	scp vloghammer_tb.tar.bz2 clifford@clifford.at:htdocs/clifford/yosys/nogit/
+
 spec/%_spec.v: rtl/%.v
 	bash scripts/update_spec.sh $(basename $(notdir $<))
 	@rm -rf temp/update_spec_$(basename $(notdir $<))
