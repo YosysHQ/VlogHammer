@@ -51,8 +51,8 @@ cp syn.il ../../cache_${syn}/$job.il
 
 {
 	egrep '^ *(module|input|output)' rtl.v | sed 's/ y/ y_rtl, y_syn/'
-	sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\0_rtl)/g; s/^/  ${job}_rtl ${job}_rtl (/;" rtl.v
-	sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\0_syn)/g; s/^/  ${job}_syn ${job}_syn (/;" rtl.v
+	sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\0_rtl)/g; s/^/  ${job}_rtl ${job}_rtl (/;" rtl.v
+	sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\0_syn)/g; s/^/  ${job}_syn ${job}_syn (/;" rtl.v
 	echo "endmodule"
 } > top.v
 

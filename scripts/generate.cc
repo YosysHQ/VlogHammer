@@ -19,7 +19,7 @@
 #define BIG_N  1000
 #define SMALL_N 100
 
-#define XORSHIFT_SEED 20140518
+#define XORSHIFT_SEED 20140728
 
 #undef GENERATE_BINARY_OPS
 #undef GENERATE_UNARY_OPS
@@ -28,6 +28,7 @@
 #undef GENERATE_REPEAT_OPS
 #define GENERATE_EXPRESSIONS
 #define GENERATE_WIDEEXPR
+#define GENERATE_PARTSEL
 
 // Use 'make gen_samples'
 // #define ONLY_SAMPLES
@@ -345,6 +346,70 @@ void print_wideexpr(FILE *f, bool is_signed, int max_depth)
 		fprintf(f, "}}");
 		break;
 
+	default:
+		abort();
+	}
+}
+
+void print_partsel(FILE *f, int max_var, int depth)
+{
+	char var_name[16];
+	if (xorshift32() % 2)
+		snprintf(var_name, 16, "x%d", xorshift32() % max_var);
+	else
+		snprintf(var_name, 16, "p%d", xorshift32() % 4);
+
+	switch (xorshift32() % (depth > 4 ? 5 : 10))
+	{
+	case 0:
+		fprintf(f, "%s", var_name);
+		break;
+	case 1:
+		if (xorshift32() % 2)
+			fprintf(f, "%s[%d]", var_name, 10 + xorshift32() % 12);
+		else
+			fprintf(f, "%s[12 + s%d]", var_name, xorshift32() % 4);
+		break;
+	case 2:
+		fprintf(f, "%s[%d + s%d %c: %d]", var_name,
+				14 + xorshift32() % 4, xorshift32() % 4,
+				"+-"[xorshift32() % 2], xorshift32() % 4 + 1);
+		break;
+	case 3:
+		fprintf(f, "%s[%d %c: %d]", var_name, 14 + xorshift32() % 4,
+				"+-"[xorshift32() % 2], xorshift32() % 4 + 1);
+		break;
+	case 4:
+	case 5:
+	case 6:
+		fprintf(f, "(");
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, " %c ", "+-|&^"[xorshift32() % 5]);
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, ")");
+		break;
+	case 7:
+		fprintf(f, "{");
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, ", ");
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, "}");
+		break;
+	case 8:
+		fprintf(f, "{2{");
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, "}}");
+		break;
+	case 9:
+		fprintf(f, "(%sctrl[%d] %s %sctrl[%d] %s %sctrl[%d] ? ",
+			xorshift32() % 2 ? "!" : "", xorshift32() % 4, xorshift32() % 2 ? "||" : "&&",
+			xorshift32() % 2 ? "!" : "", xorshift32() % 4, xorshift32() % 2 ? "||" : "&&",
+			xorshift32() % 2 ? "!" : "", xorshift32() % 4);
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, " : ");
+		print_partsel(f, max_var, depth+1);
+		fprintf(f, ")");
+		break;
 	default:
 		abort();
 	}
@@ -701,6 +766,70 @@ int main()
 			bool is_signed = xorshift32() % 2 == 0;
 			fprintf(f, "  assign y%d = ", j);
 			print_wideexpr(f, is_signed, 5 + (xorshift32() % 5));
+			fprintf(f, ";\n");
+		}
+
+		fprintf(f, "endmodule\n");
+		fclose(f);
+	}
+#endif
+
+#ifdef GENERATE_PARTSEL
+	for (int i = 0; i < BIG_N; i++)
+	{
+#ifdef ONLY_SAMPLES
+		if (i == SMALL_N)
+			break;
+#endif
+		xorshift32(2*BIG_N + i);
+
+		char buffer[1024];
+		snprintf(buffer, 1024, "rtl/partsel_%05d.v", i);
+
+		FILE *f = fopen(buffer, "w");
+		fprintf(f, "module partsel_%05d(ctrl, s0, s1, s2, s3, ", i);
+
+		for (int i = 0; i < 4; i++)
+			fprintf(f, "x%d, ", i);
+		fprintf(f, "y);\n");
+
+		fprintf(f, "  input [3:0] ctrl;\n");
+		fprintf(f, "  input [2:0] s0;\n");
+		fprintf(f, "  input [2:0] s1;\n");
+		fprintf(f, "  input [2:0] s2;\n");
+		fprintf(f, "  input [2:0] s3;\n");
+
+		for (int i = 0; i < 4; i++)
+			fprintf(f, "  input %s[31:0] x%d;\n", xorshift32() % 2 ? "signed " : "", i);
+
+		for (int i = 4; i < 16; i++)
+			if (xorshift32() % 2)
+				fprintf(f, "  wire %s[%d:%d] x%d;\n", xorshift32() % 2 ? "signed " : "",
+						xorshift32() % 3, 31 - xorshift32() % 3, i);
+			else
+				fprintf(f, "  wire %s[%d:%d] x%d;\n", xorshift32() % 2 ? "signed " : "",
+						31 - xorshift32() % 3, xorshift32() % 3, i);
+
+		fprintf(f, "  output [127:0] y;\n");
+		for (int i = 0; i < 4; i++)
+			fprintf(f, "  wire %s[31:0] y%d;\n", xorshift32() % 2 ? "signed " : "", i);
+
+		fprintf(f, "  assign y = {");
+		for (int i = 0; i < 4; i++)
+			fprintf(f, "%sy%d", i ? "," : "", i);
+		fprintf(f, "};\n");
+
+		for (int i = 0; i < 4; i++)
+			if (xorshift32() % 2)
+				fprintf(f, "  localparam %s[%d:%d] p%d = %d;\n", xorshift32() % 2 ? "signed " : "",
+						xorshift32() % 3, 31 - xorshift32() % 3, i, xorshift32() % 1000000000);
+			else
+				fprintf(f, "  localparam %s[%d:%d] p%d = %d;\n", xorshift32() % 2 ? "signed " : "",
+						31 - xorshift32() % 3, xorshift32() % 3, i, xorshift32() % 1000000000);
+
+		for (int i = 4; i < 20; i++) {
+			fprintf(f, "  assign %c%d = ", i < 16 ? 'x' : 'y', i < 16 ? i : i - 16);
+			print_partsel(f, i < 16 ? i : 16, 0);
 			fprintf(f, ";\n");
 		}
 

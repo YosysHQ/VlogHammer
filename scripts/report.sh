@@ -82,8 +82,8 @@ done
 
 {
 	egrep '^ *(module|input|output)' rtl.v | sed 's/ y/ y1, y2/'
-	sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\01)/g; s/^/  ${job}_1 ${job}_1 (/;" rtl.v
-	sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\02)/g; s/^/  ${job}_2 ${job}_2 (/;" rtl.v
+	sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\01)/g; s/^/  ${job}_1 ${job}_1 (/;" rtl.v
+	sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(\02)/g; s/^/  ${job}_2 ${job}_2 (/;" rtl.v
 	echo "endmodule"
 } > top.v
 
@@ -162,7 +162,7 @@ done
 	sed -r '/^ *input / !d; s/input/reg/;' rtl.v
 	for p in ${SYN_LIST} rtl; do
 		sed -r "/^ *output / !d; s/output/wire/; s/ y;/ ${p}_y;/;" rtl.v
-		sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
+		sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
 	done
 
 	y_type=$( grep '^ *output ' rtl.v | sed 's,^ *output ,,; s, y;.*,,;' )
@@ -301,7 +301,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		grep '^ *input ' rtl.v
 		for p in ${SYN_LIST} rtl; do
 			sed -r "/^ *output / !d; s/ y;/ ${p}_y;/;" rtl.v
-			sed "/^ *module/ ! d; s/.*(//; s/[a-w0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
+			sed "/^ *module/ ! d; s/.*(//; s/[a-x0-9]\+/.\0(\0)/g; s/y[0-9]*/.\0(${p}_\0)/g; s/^/  ${job}_$p uut_$p (/;" rtl.v
 		done
 		echo "endmodule"
 
