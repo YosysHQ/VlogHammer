@@ -10,7 +10,11 @@ integer count = 0;
 reg found_error = 0;
 
 initial begin
+`ifdef REFDAT_FN
+  file = $fopen(`REFDAT_FN, "r");
+`else
   file = $fopen("refdat.txt", "r");
+`endif
 
   for (r = $fscanf(file, "%x %x %x\n", in_v, out_bits, out_dc); r == 3; r = $fscanf(file, "%x %x %x\n", in_v, out_bits, out_dc)) begin
     #1000;
