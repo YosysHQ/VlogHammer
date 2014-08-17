@@ -258,9 +258,11 @@ if [[ " ${SIM_LIST} " == *" xsim "* ]]; then
 fi
 
 if [[ " ${SIM_LIST} " == *" modelsim "* ]]; then
+	(
 	${MODELSIM_DIR}/vlib work
 	${MODELSIM_DIR}/vlog testbench.v
 	${MODELSIM_DIR}/vsim -c -do "run; exit" work.testbench | tee sim_modelsim.log
+	) || { echo -n > sim_modelsim.log; }
 fi
 
 if [[ " ${SIM_LIST} " == *" icarus "* ]]; then
