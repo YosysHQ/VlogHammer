@@ -366,18 +366,20 @@ void print_partsel(FILE *f, int max_var, int depth)
 		break;
 	case 1:
 		if (xorshift32() % 2)
-			fprintf(f, "%s[%d]", var_name, 10 + xorshift32() % 12);
+			fprintf(f, "%s[%d]", var_name, 8 + xorshift32() % 16);
 		else
-			fprintf(f, "%s[12 + s%d]", var_name, xorshift32() % 4);
+			fprintf(f, "%s[%d + s%d]", var_name, 4 + xorshift32() % 16, xorshift32() % 4);
 		break;
 	case 2:
-		fprintf(f, "%s[%d + s%d %c: %d]", var_name,
-				14 + xorshift32() % 4, xorshift32() % 4,
-				"+-"[xorshift32() % 2], xorshift32() % 4 + 1);
+		fprintf(f, "%s[%d + s%d %c: %d]", var_name, xorshift32() % 32, xorshift32() % 4,
+				"+-"[xorshift32() % 2], xorshift32() % 8 + 1);
 		break;
 	case 3:
-		fprintf(f, "%s[%d %c: %d]", var_name, 14 + xorshift32() % 4,
-				"+-"[xorshift32() % 2], xorshift32() % 4 + 1);
+		// avoid constant out-of-bounds part select: most tools will produce an error
+		if (xorshift32() % 2)
+			fprintf(f, "%s[%d +: %d]", var_name, 8 + xorshift32() % 12, 1 + xorshift32() % 4);
+		else
+			fprintf(f, "%s[%d -: %d]", var_name, 12 + xorshift32() % 12, 1 + xorshift32() % 4);
 		break;
 	case 4:
 	case 5:
@@ -805,10 +807,10 @@ int main()
 		for (int i = 4; i < 16; i++)
 			if (xorshift32() % 2)
 				fprintf(f, "  wire %s[%d:%d] x%d;\n", xorshift32() % 2 ? "signed " : "",
-						xorshift32() % 3, 31 - xorshift32() % 3, i);
+						xorshift32() % 8, 31 - xorshift32() % 8, i);
 			else
 				fprintf(f, "  wire %s[%d:%d] x%d;\n", xorshift32() % 2 ? "signed " : "",
-						31 - xorshift32() % 3, xorshift32() % 3, i);
+						31 - xorshift32() % 8, xorshift32() % 8, i);
 
 		fprintf(f, "  output [127:0] y;\n");
 		for (int i = 0; i < 4; i++)
@@ -822,10 +824,10 @@ int main()
 		for (int i = 0; i < 4; i++)
 			if (xorshift32() % 2)
 				fprintf(f, "  localparam %s[%d:%d] p%d = %d;\n", xorshift32() % 2 ? "signed " : "",
-						xorshift32() % 3, 31 - xorshift32() % 3, i, xorshift32() % 1000000000);
+						xorshift32() % 8, 31 - xorshift32() % 8, i, xorshift32() % 1000000000);
 			else
 				fprintf(f, "  localparam %s[%d:%d] p%d = %d;\n", xorshift32() % 2 ? "signed " : "",
-						31 - xorshift32() % 3, xorshift32() % 3, i, xorshift32() % 1000000000);
+						31 - xorshift32() % 8, xorshift32() % 8, i, xorshift32() % 1000000000);
 
 		for (int i = 4; i < 20; i++) {
 			fprintf(f, "  assign %c%d = ", i < 16 ? 'x' : 'y', i < 16 ? i : i - 16);
