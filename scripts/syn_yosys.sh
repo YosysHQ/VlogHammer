@@ -33,8 +33,7 @@ cd temp/syn_yosys_$job
 
 case "$YOSYS_MODE" in
 	0|default)
-		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
-		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
+		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v -S ../../rtl/$job.v ;;
 	1|abc)
 		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt; techmap; opt; abc; opt' ../../rtl/$job.v ;;
