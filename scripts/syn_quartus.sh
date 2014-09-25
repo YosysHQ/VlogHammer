@@ -31,8 +31,8 @@ rm -rf temp/syn_quartus_$job
 mkdir -p temp/syn_quartus_$job
 cd temp/syn_quartus_$job
 
-cp ../../rtl/$job.v .
-if ! timeout 120 ${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone III"
+sed 's/^module/(* multstyle = "logic" *) module/;' < ../../rtl/$job.v > $job.v
+if ! timeout 120 ${QUARTUS_DIR}/quartus_map $job --source=$job.v --family="Cyclone V"
 then
 	if test ! -f $job.map.rpt; then
 		echo "TIMEOUT" > $job.map.rpt
@@ -47,13 +47,13 @@ then
 	mkdir -p ../../syn_quartus
 	cp quartus_failed.v ../../syn_quartus/$job.v
 else
-	${QUARTUS_DIR}/quartus_fit $job
-	${QUARTUS_DIR}/quartus_eda $job --formal_verification --tool=conformal
+	${QUARTUS_DIR}/quartus_fit $job --part=5CGXFC7D6F27C6
+	${QUARTUS_DIR}/quartus_eda $job --simulation --tool=vcs
 
-	sed -i 's,^// DATE.*,,;' fv/conformal/$job.vo
+	sed -ri 's,^// DATE.*,,; s,^tri1 (.*);,wire \1 = 1;,' simulation/vcs/$job.vo
 
 	mkdir -p ../../syn_quartus
-	cp fv/conformal/$job.vo ../../syn_quartus/$job.v
+	cp simulation/vcs/$job.vo ../../syn_quartus/$job.v
 fi
 
 rm -rf ../syn_quartus_$job

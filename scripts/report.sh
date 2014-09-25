@@ -202,7 +202,7 @@ done
 		sed "s/^module ${job}\([^A-Za-z0-9_]\|$\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
 	done
 
-	cat ../../scripts/cells_cyclone_iii.v
+	cat ../../scripts/cells_cyclone_v.v
 	cat ../../scripts/cells_xilinx_7.v
 	cat ../../scripts/cells_cmos.v
 	cat ../../scripts/cells_verific.v
@@ -311,7 +311,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 			sed "s/^module ${job}\([^A-Za-z0-9_]\|$\)/module ${job}_${p}\1/; /^\`timescale/ d;" < syn_$p.v
 		done
 
-		cat ../../scripts/cells_cyclone_iii.v
+		cat ../../scripts/cells_cyclone_v.v
 		cat ../../scripts/cells_xilinx_7.v
 		cat ../../scripts/cells_cmos.v
 		cat ../../scripts/cells_verific.v

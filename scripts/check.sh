@@ -35,7 +35,7 @@ cp ../../syn_$syn/$job.v syn.v
 
 yosys -p "
 read_verilog syn.v;
-read_verilog ../../scripts/cells_cyclone_iii.v;
+read_verilog ../../scripts/cells_cyclone_v.v;
 read_verilog ../../scripts/cells_xilinx_7.v;
 read_verilog ../../scripts/cells_cmos.v;
 read_verilog ../../scripts/cells_verific.v;
