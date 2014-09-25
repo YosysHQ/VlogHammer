@@ -9,7 +9,7 @@ supported:
 	Yosys (no specific version)
 	Xilinx Vivado WebPack (2014.2)
 	Xilinx ISE (XST) WebPack (14.7)
-	Altera Quartus II Web Edition (13.1)
+	Altera Quartus II Web Edition (14.0)
 	Cadence Conformal LEC (8.1)
 	Synopsys Design Compiler (C-2009.06)
 
@@ -22,7 +22,7 @@ then tried using the following Verilog simulators:
 
 	Xilinx ISIM (from Xilinx ISE 14.7)
 	Xilinx XSIM (from Xilinx Vivado 2014.2)
-	Modelsim 10.1d (from Quartus 13.1)
+	Modelsim 10.1e (from Quartus 14.0)
 	Icarus Verilog (no specific version)
 
 Note: ISIM is disabled by default as Xilinx won't fix bugs in it.
@@ -32,7 +32,7 @@ Instructions:
  * Install Yosys (yosys) and Icarus Verilog (iverilog)
  * Install Xilinx Vivado WebPack 2014.2 in /opt/Xilinx/Vivado/2014.2
  * Insatll Xilinx ISE WebPack 14.7 in /opt/Xilinx/14.7/
- * Install Altera Quartus Web Edition 13.1 in /opt/altera/13.1/
+ * Install Altera Quartus Web Edition 14.0 in /opt/altera/14.0/
 
  * Generate Test Cases:
 
