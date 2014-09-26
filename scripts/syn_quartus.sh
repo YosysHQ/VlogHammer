@@ -50,7 +50,7 @@ else
 	${QUARTUS_DIR}/quartus_fit $job --part=5CGXFC7D6F27C6
 	${QUARTUS_DIR}/quartus_eda $job --simulation --tool=vcs
 
-	sed -ri 's,^// DATE.*,,; s,^tri1 (.*);,wire \1 = 1;,' simulation/vcs/$job.vo
+	sed -ri 's,^// DATE.*,,; s,^tri1 (.*);,wire \1 = 1;,; /^\/\/ +synopsys/ d;' simulation/vcs/$job.vo
 
 	mkdir -p ../../syn_quartus
 	cp simulation/vcs/$job.vo ../../syn_quartus/$job.v

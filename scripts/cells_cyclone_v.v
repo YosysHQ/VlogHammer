@@ -1,7 +1,5 @@
 // Based on cyclonev_atoms.v from Quartus II 14.0.0 Build 200 06/17/2014
 
-`timescale 1 ps/1 ps
-
 // ==========================================================================================
 
 module cyclonev_lcell_comb (
