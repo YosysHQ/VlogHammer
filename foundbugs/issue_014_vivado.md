@@ -2,7 +2,7 @@
 Vivado GDpGen::implementDivMod(DFNode*, bool): Assertion `TBD' failed.
 ======================================================================
 
-~OPEN~ Vivado 2014.1
+~CLOSED~ Vivado 2014.2
 
 When I try to synthesize the following module with Vivado 2013.4
 
@@ -30,4 +30,4 @@ This is the TCL script I was using to build the module:
 2014-01-12 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-GDpGen-implementDivMod-DFNode-bool-Assertion-TBD-failed/td-p/401721) bug in Xilinx Support Forum  
 2014-01-15 Xilinx prospected bugfix in future release  
 2014-04-16 [Still broken in Vivado 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
-
+2014-09-27 Fixed in Vivado 2014.2  

@@ -2,7 +2,7 @@
 Vivado creates netlist with inputs shorted together
 ===================================================
 
-~OPEN~ Vivado 2014.1
+~OPEN~ Vivado 2014.2
 
 Vivado 2013.4 creates a netlist containing shorted together inputs for the following design:
 
@@ -47,4 +47,4 @@ This netlist was generated using the following TCL script:
 **History:**  
 2013-12-29 [Reported](http://forums.xilinx.com/t5/Synthesis/Vivado-creates-netlist-with-inputs-shorted-together/td-p/397161) bug in Xilinx Support Forum  
 2014-04-16 [Still broken in Vivado 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
-
+2014-09-27 Still broken in Vivado 2014.2  

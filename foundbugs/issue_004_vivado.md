@@ -2,7 +2,7 @@
 Strange output-const-zero bug with Vivado + >>> + signedness
 ============================================================
 
-~OPEN~ Vivado 2014.1
+~OPEN~ Vivado 2014.2
 
 The following test case is synthesized to a constant zero output by Vivado:
  
@@ -28,4 +28,4 @@ This is with Vivado 2013.4 and the following TCL script:
 **History:**  
 2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/Strange-output-const-zero-bug-with-Vivado-gt-gt-gt-signedness/td-p/401411) bug in Xilinx Support Forum  
 2014-04-16 [Still broken in Vivado 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
-
+2014-09-27 Still broken in Vivado 2014.2
