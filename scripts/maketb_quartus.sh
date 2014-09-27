@@ -17,7 +17,7 @@ cp ../../rtl/$1.v .
 	echo '    $display("%b %b", a, y);'
 	echo "  end"
 	echo "endmodule"
-} > ${1}_tb.vx
+} > ${1}_tb.v
 
 {
 	echo "/opt/altera/14.0/quartus/bin/quartus_map $1 --source=$1.v --family='Cyclone V'"
