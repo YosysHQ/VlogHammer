@@ -2,7 +2,7 @@
 Vivado bug in undef handling for relational operators
 =====================================================
 
-~OPEN~ Vivado 2014.2
+~CLOSED~ Vivado 2014.2
 
 Consider the following test case with Vivado 2013.4:
 
