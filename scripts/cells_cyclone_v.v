@@ -189,6 +189,7 @@ begin
     // sumout & cout
     sumout = cin ^ f0_out ^ adder_input2;
     cout = (cin & f0_out) | (cin & adder_input2) | (f0_out & adder_input2);
+    shareout = f2_out;
 end
 
 endmodule
