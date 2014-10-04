@@ -12,6 +12,6 @@
 MODELSIM_DIR=$( grep ^MODELSIM_DIR Makefile | cut -f2 -d= )
 $MODELSIM_DIR/vlib work
 $MODELSIM_DIR/vlog rtl/$1.v
-$MODELSIM_DIR/vsim -c -do "run; exit" work.$1
+$MODELSIM_DIR/vsim -c -do "run -all; exit" work.$1
 rm -rf work transcript
 
