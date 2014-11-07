@@ -173,7 +173,7 @@ EOT
 my $first = 1;
 for my $list (sort keys %lists) {
 	print ",\n" unless $first;
-	print "  '$list': [ '" . (join "', '", @{$lists{$list}}) . "' ]";
+	print "  '$list': [ '" . (join "', '", sort @{$lists{$list}}) . "' ]";
 	$first = 0;
 }
 print "\n";
