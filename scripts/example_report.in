@@ -3,10 +3,10 @@
 
 <ul>
 <li>Yosys 0.4</li>
-<li>Xilinx Vivado WebPack 2014.3</li>
+<li>Xilinx Vivado WebPack 2014.4</li>
 <li>Xilinx ISE (XST) WebPack 14.7</li>
 <li>Altera Quartus II Web Edition 14.0</li>
-<li>Xilinx XSIM (from Xilinx Vivado 2014.3)</li>
+<li>Xilinx XSIM (from Xilinx Vivado 2014.4)</li>
 <li>Modelsim 10.1e (from Quartus 14.0)</li>
 <li>Icarus Verilog (git 1572dcd)</li>
 </ul>
