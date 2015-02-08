@@ -39,7 +39,7 @@ read_verilog ../../scripts/cells_cyclone_v.v;
 read_verilog ../../scripts/cells_xilinx_7.v;
 read_verilog ../../scripts/cells_cmos.v;
 read_verilog ../../scripts/cells_verific.v;
-read_verilog $( yosys-config --datdir )/simlib.v;
+read_verilog -D SIMLIB_NOMEM $( yosys-config --datdir )/simlib.v;
 read_verilog $( yosys-config --datdir )/simcells.v;
 hierarchy -check -top $job;
 proc;; flatten;;
