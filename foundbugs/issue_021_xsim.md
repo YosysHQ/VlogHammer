@@ -2,7 +2,7 @@
 XSim hangs on power operations with large exponents
 ===================================================
 
-~OPEN~ XSim 2014.1
+~OPEN~ XSim 2015.1
 
 The following module should return **6'b110011**, but instead it just hangs xsim 2013.4:
 
@@ -28,4 +28,5 @@ a similar problem.
 **History:**  
 2014-01-25 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/XSim-hangs-on-power-operations-with-large-exponents/td-p/406887) bug in Xilinx Support Forum  
 2014-04-16 [Still broken in XSim 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
+2015-05-15 Still broken in XSim 2015.1
 
