@@ -27,4 +27,4 @@ Crosscheck: Vivado 2015.1, Modelsim 10.3d, Icarus Verilog (git 02ee387), and
 Verilator (git e5af46d) implement this correctly.
 
 **History:**  
-2015-05-15 Reported via Altera mySupport (SR #?)  
+2015-05-15 Reported via Altera mySupport (SR #11146970)  

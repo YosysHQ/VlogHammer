@@ -24,6 +24,6 @@ sets the output to constant **1'bx**.
 
 **History:**  
 2014-03-22 Reported bug to Verific support  
-2014-03-26 Bug added to issue tracker: VIPER Issue #8535
+2014-03-26 Bug added to issue tracker: VIPER Issue #8535  
 2014-07-23 Still broken in Verific 35_463_32_140722
 

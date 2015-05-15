@@ -27,4 +27,4 @@ Verilator (git e5af46d) implement this correctly. Vivado 2015.1 gets y1
 right but has a bug regarding y2.
 
 **History:**  
-2015-05-15 Reported via Altera mySupport (SR #?)  
+2015-05-15 Reported via Altera mySupport (SR #11146970)  
