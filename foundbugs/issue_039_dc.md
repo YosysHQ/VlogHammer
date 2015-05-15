@@ -2,7 +2,7 @@
 Design Compiler refuses input with ELAB-922 error
 =================================================
 
-~OPEN~ DC G-2012.06-SP4
+~WONTFIX~ DC G-2012.06-SP4
 
 DC G-2012.06-SP4 refuses to elaborate the following module with an
 ELAB-922 (Constant value required) error message:

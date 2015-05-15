@@ -2,7 +2,7 @@
 Design Compiler bug regarding shift operations and bit width
 ============================================================
 
-~OPEN~ DC G-2012.06-SP4
+~WONTFIX~ DC G-2012.06-SP4
 
 The following test case demonstrates that there is a bug in DC G-2012.06-SP4
 regarding shift operations and bit width:

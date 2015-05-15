@@ -2,7 +2,7 @@
 XST sign handling bug in {N{...}} Verilog operator
 ==================================================
 
-~OPEN~ XST 14.7
+~WONTFIX~ XST 14.7
 
 According to the Verilog standard (see sec. 5.1.14 of IEEE Std 1364-2005) the
 expressions for **y0** and **y1** in the following example are equivialent and should

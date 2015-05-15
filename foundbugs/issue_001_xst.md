@@ -2,7 +2,7 @@
 XST handling of constant first argument in Verilog ?: operator
 ==============================================================
 
-~OPEN~ XST 14.7
+~WONTFIX~ XST 14.7
 
 In the following test case the output should be constant zero:
 

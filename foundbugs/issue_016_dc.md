@@ -2,7 +2,7 @@
 Design Compiler bug in power operator
 =====================================
 
-~OPEN~ DC G-2012.06-SP4
+~WONTFIX~ DC G-2012.06-SP4
 
 The following module should set y0=0 and y1=0 (see for example table 5-5 of
 IEEE Std 1364-2005). But DC G-2012.06-SP4 sets y0=1 and y1=15.
