@@ -2,7 +2,7 @@
 Quartus handling of constant first argument in Verilog ?: operator
 ==================================================================
 
-~OPEN~ Quartus 14.0
+~OPEN~ Quartus 15.0
 
 Consider the following test case:
 
@@ -45,3 +45,4 @@ correctly. Interestingly XST 14.7 suffers from [the same bug](issue_001_xst.html
 2014-01-13 Reported via Altera mySupport (SR #11021734)  
 2014-01-22 Bugfix for Quartus II v14.1 prospected by Altera Support  
 2014-09-28 Verified that bug is still present in Quartus II v14.0  
+2015-05-15 Still broken in Quartus II 15.0  

@@ -2,7 +2,7 @@
 Quartus Verilog bug in signdness handling of 2nd shift operand
 ==============================================================
 
-~OPEN~ Quartus 14.0
+~OPEN~ Quartus 15.0
 
 The following module should output **5'b11000**, but quartus 13.1 generates a 
 module that outputs **5'b00000** instead.
@@ -31,3 +31,4 @@ correctly.
 2014-01-27 Answer from Altera: Synplify is behaving the same as Quartus II. Altera will investigate.  
 2014-02-06 Bugfix for Quartus II v14.1 prospected by Altera Support  
 2014-09-28 Verified that bug is still present in Quartus II v14.0  
+2015-05-15 Still broken in Quartus II 15.0  

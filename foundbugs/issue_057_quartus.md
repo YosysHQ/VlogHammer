@@ -2,7 +2,7 @@
 Quartus handling of partly out-of-bounds parts select
 =====================================================
 
-~OPEN~ Quartus 14.0
+~OPEN~ Quartus 15.0
 
 Consider the following test case:
 
@@ -57,3 +57,4 @@ Crosscheck: Verific 35_463_32_140722, Modelsim 10.1e, XSim 2014.2 and Icarus Ver
 
 **History:**  
 2014-09-27 Reported via Altera mySupport (SR #11090526)  
+2015-05-15 Still broken in Quartus II 15.0  
