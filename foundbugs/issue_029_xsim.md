@@ -26,4 +26,4 @@ Crosscheck: Vivado 2015.1, Modelsim 10.3d, Icarus Verilog (git 02ee387), and
 Verilator (git e5af46d) implement this correctly.
 
 **History:**  
-2015-05-15 [Reported](?) bug in Xilinx Support Forum  
+2015-05-15 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/Old-and-new-XSim-bug-reports/td-p/602984) bug in Xilinx Support Forum  

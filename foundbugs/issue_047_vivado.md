@@ -34,4 +34,4 @@ Crosscheck: Quartus 15.0 implements this correctly. XSim 2015.1, Modelsim
 correctly.
 
 **History:**  
-2015-05-15 [Reported](?) bug in Xilinx Support Forum  
+2015-05-15 [Reported](http://forums.xilinx.com/t5/Synthesis/Old-and-new-Vivado-Synthesis-Bugs/td-p/602988) bug in Xilinx Support Forum  

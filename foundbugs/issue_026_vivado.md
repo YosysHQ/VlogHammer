@@ -27,4 +27,4 @@ Verilator (git e5af46d) implement this correctly. Quartus 15.0 gets y2
 right but has a bug regarding y1.
 
 **History:**  
-2015-05-15 [Reported](?) bug in Xilinx Support Forum  
+2015-05-15 [Reported](http://forums.xilinx.com/t5/Synthesis/Old-and-new-Vivado-Synthesis-Bugs/td-p/602988) bug in Xilinx Support Forum  
