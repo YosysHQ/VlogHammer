@@ -17,17 +17,17 @@
 #
 
 # All supported SYN_LIST tags: vivado quartus xst yosys verific dc lec
-# All supported SIM_LIST tags: xsim modelsim icarus yosim verilator
+# All supported SIM_LIST tags: xsim isim modelsim icarus verilator yosim
 
-SYN_LIST     := vivado quartus xst yosys
-SIM_LIST     := xsim modelsim icarus yosim verilator
+SYN_LIST     := vivado quartus yosys
+SIM_LIST     := xsim modelsim icarus verilator yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
 IVERILOG_DIR := # /home/clifford/Work/iverilog/instdir/bin
-MODELSIM_DIR := /opt/altera/14.0/modelsim_ase/bin
-QUARTUS_DIR  := /opt/altera/14.0/quartus/bin
-VIVADO_DIR   := /opt/Xilinx/Vivado/2014.4/bin
+MODELSIM_DIR := /opt/altera/15.0/modelsim_ase/bin
+QUARTUS_DIR  := /opt/altera/15.0/quartus/bin
+VIVADO_DIR   := /opt/Xilinx/Vivado/2015.1/bin
 VERILATOR    := /usr/local/bin/verilator
 MAKE_JOBS    := -j4 -l8
 YOSYS_MODE   := default

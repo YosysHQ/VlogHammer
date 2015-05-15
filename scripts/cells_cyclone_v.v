@@ -39,11 +39,11 @@ function lut4;
     begin
         lut4 = datad ? ( datac ? ( datab ? ( dataa ? mask[15] : mask[14])
                                          : ( dataa ? mask[13] : mask[12]))
-                               : ( datab ? ( dataa ? mask[11] : mask[10]) 
+                               : ( datab ? ( dataa ? mask[11] : mask[10])
                                          : ( dataa ? mask[ 9] : mask[ 8])))
-                     : ( datac ? ( datab ? ( dataa ? mask[ 7] : mask[ 6]) 
+                     : ( datac ? ( datab ? ( dataa ? mask[ 7] : mask[ 6])
                                          : ( dataa ? mask[ 5] : mask[ 4]))
-                               : ( datab ? ( dataa ? mask[ 3] : mask[ 2]) 
+                               : ( datab ? ( dataa ? mask[ 3] : mask[ 2])
                                          : ( dataa ? mask[ 1] : mask[ 0])));
     end
 endfunction
@@ -127,11 +127,11 @@ function lut6;
     end
 endfunction
 
-always @(datag or dataf or datae or datad or datac or 
+always @(datag or dataf or datae or datad or datac or
          datab or dataa or cin or sharein)
 begin
     // check for extended LUT mode
-    if (iextended_lut == 1) 
+    if (iextended_lut == 1)
         f2_input3 = datag;
     else
         f2_input3 = datac;
@@ -178,7 +178,7 @@ begin
         combout = lut6(lut_mask, dataa, datab, datac, datad, datae, dataf);
 
     // check for shareed arithmetic mode
-    if (ishared_arith == 1) 
+    if (ishared_arith == 1)
         adder_input2 = sharein;
     else
     begin
@@ -205,7 +205,7 @@ parameter lpm_type = 0;
 
 input i;
 input ibar;
-inout dynamicterminationcontrol; 
+input dynamicterminationcontrol;
 output o;
 
 assign o = i;
@@ -223,9 +223,9 @@ parameter sim_dynamic_termination_control_is_connected = 0;
 parameter lpm_type = 0;
 
 input i;
-inout oe;
-inout devoe;
-inout dynamicterminationcontrol; 
+input oe;
+input devoe;
+input dynamicterminationcontrol;
 input [15:0] seriesterminationcontrol;
 input [15:0] parallelterminationcontrol;
 output o;
