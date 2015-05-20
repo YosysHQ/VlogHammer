@@ -19,7 +19,7 @@
 # All supported SYN_LIST tags: vivado quartus xst yosys verific dc lec
 # All supported SIM_LIST tags: xsim isim modelsim icarus verilator yosim
 
-SYN_LIST     := vivado quartus yosys
+SYN_LIST     := vivado quartus yosys verific
 SIM_LIST     := xsim modelsim icarus verilator yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
