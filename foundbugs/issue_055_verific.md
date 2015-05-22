@@ -2,7 +2,7 @@
 Verific uses incorrect width for self-determined division
 =========================================================
 
-~OPEN~ Verific 35_463_32_140722
+~CLOSED~ Verific 482_32_150519
 
 The self determined size of a division is max(SIZE(left), SIZE(right)).  
 (see IEEE Std. 1364-2005 table 5-22 or IEEE Std. 1800-2012 table 11-21)
@@ -20,10 +20,11 @@ to constant zero.
       assign y = &(a / b);
     endmodule
 
-It looks like Verific 35_463_32_140722 uses only SIZE(left), thus evaluating
+It looks like Verific 463_32_140722 uses only SIZE(left), thus evaluating
 **a=2'b11** and **b=2'b01** to **y=4'b0001**.
 
 **History:**  
 2014-07-25 Reported bug to Verific support  
 2014-07-26 Bug added to issue tracker: VIPER Issue #8861  
+2015-05-20 Fixed in Verific 482_32_150519  
 

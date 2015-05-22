@@ -2,10 +2,10 @@
 Verific sign handling in {N{...}} and {...} again
 =================================================
 
-~OPEN~ Verific 35_463_32_140722
+~CLOSED~ Verific 482_32_150519
 
 The following test case is similar to issue_000 (VIPER Issue #8510).
-Verific 35_463_32_140722 passes issue_000 but fails to implement
+Verific 463_32_140722 passes issue_000 but fails to implement
 **y1** and **y5** correctly in the following module:
 
     :::Verilog
@@ -29,4 +29,5 @@ signed instead of unsigned extension to 8 bits.
 
 **History:**  
 2014-07-23 Reported bug to Verific support  
+2015-05-20 Fixed in Verific 482_32_150519  
 
