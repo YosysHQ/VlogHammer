@@ -5,7 +5,7 @@ wire [`output_bits-1:0] out_v;
 reg [`output_bits-1:0] out_bits, out_dc;
 `module_name uut (`module_args);
 
-integer file, r;
+integer file, r, k;
 integer count = 0;
 reg found_error = 0;
 
@@ -27,6 +27,17 @@ initial begin
       $display("found fail pattern: %x", in_v);
       $display("  expected: %b", out_bits ^ (out_dc & `output_bits'bx));
       $display("       got: %b", out_v);
+      $write("            ");
+      for (k = `output_bits-1; k >= 0; k = k-1)
+`ifdef MATCH_DC
+        if (out_v[k] !== (out_bits[k] ^ (out_dc[k] & 1'bx)))
+`else
+        if ((out_dc[k] | out_bits[k]) !== (out_dc[k] | out_v[k]))
+`endif
+          $write("^");
+	else
+          $write(" ");
+      $display("");
       found_error = 1;
     end
     count = count+1;
