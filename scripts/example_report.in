@@ -6,7 +6,7 @@
 <li>Xilinx Vivado WebPack 2015.4</li>
 <li>Xilinx ISE (XST) WebPack 14.7</li>
 <li>Altera Quartus II Web Edition 15.0</li>
-<li>Xilinx XSIM (from Xilinx Vivado 2015.1)</li>
+<li>Xilinx XSIM (from Xilinx Vivado 2015.3)</li>
 <li>Modelsim 10.3d (from Quartus 15.0)</li>
 <li>Icarus Verilog (git 1572dcd)</li>
 </ul>
