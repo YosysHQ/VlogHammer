@@ -7,7 +7,7 @@ different synthesis tools for equivialence. The following tools are
 supported:
 
 	Yosys (no specific version)
-	Xilinx Vivado WebPack (2015.4)
+	Xilinx Vivado WebPack (2016.1)
 	Xilinx ISE (XST) WebPack (14.7)
 	Altera Quartus II Web Edition (15.0)
 	Cadence Conformal LEC (8.1)
@@ -21,7 +21,7 @@ The test cases that fail this check and the found example patterns are
 then tried using the following Verilog simulators:
 
 	Xilinx ISIM (from Xilinx ISE 14.7)
-	Xilinx XSIM (from Xilinx Vivado 2015.4)
+	Xilinx XSIM (from Xilinx Vivado 2016.1)
 	Modelsim 10.3d (from Quartus 15.0)
 	Icarus Verilog (no specific version)
 	Verilator (no specific version)
@@ -33,7 +33,7 @@ tools anymore.
 Instructions:
 
  * Install Yosys (yosys), Icarus Verilog (iverilog) and Verilator
- * Install Xilinx Vivado WebPack 2015.4 in /opt/Xilinx/Vivado/2015.4/
+ * Install Xilinx Vivado WebPack 2016.1 in /opt/Xilinx/Vivado/2016.1/
  * Install Altera Quartus Web Edition 15.0 in /opt/altera/15.0/
 
  * Generate Test Cases:
