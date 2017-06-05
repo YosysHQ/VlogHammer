@@ -20,13 +20,13 @@
 # All supported SIM_LIST tags: xsim isim modelsim icarus verilator yosim
 
 SYN_LIST     := vivado yosys
-SIM_LIST     := xsim icarus verilator yosim
+SIM_LIST     := xsim icarus verilator yosim modelsim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
 ISE_SETTINGS := /opt/Xilinx/14.7/ISE_DS/settings64.sh
 IVERILOG_DIR := # /home/clifford/Work/iverilog/instdir/bin
-MODELSIM_DIR := /opt/altera/15.0/modelsim_ase/bin
-QUARTUS_DIR  := /opt/altera/15.0/quartus/bin
+MODELSIM_DIR := /opt/altera/15.1/modelsim_ase/linux
+QUARTUS_DIR  := /opt/altera/15.1/quartus/bin
 VIVADO_DIR   := /opt/Xilinx/Vivado/2017.1/bin
 VERILATOR    := /usr/local/bin/verilator
 MAKE_JOBS    := -j4 -l8
