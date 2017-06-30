@@ -2,16 +2,17 @@
 <p>This VlogHammer report was created using the following tool versions:</p>
 
 <ul>
-<li>Yosys 0.6</li>
-<li>Xilinx Vivado WebPack 2017.1</li>
+<li>Yosys 0.7+196</li>
+<li>Xilinx Vivado WebPack 2017.2</li>
 <li>Xilinx ISE (XST) WebPack 14.7</li>
-<li>Altera Quartus II Web Edition 15.1</li>
-<li>Xilinx XSIM (from Xilinx Vivado 2017.1)</li>
-<li>Modelsim 10.4b (from Quartus 15.1)</li>
-<li>Icarus Verilog (git 1572dcd)</li>
+<li>Altera Quartus II Web Edition 17.0</li>
+<li>Xilinx XSIM (from Xilinx Vivado 2017.2)</li>
+<li>Modelsim 10.5b (from Quartus 17.0)</li>
+<li>Icarus Verilog (git 62e0f59)</li>
+<li>Verilator (git 1da5a33)</li>
 </ul>
 
 <p>Only a minimal number of test cases where used in order to yield a small report.</p>
 
-<p>The test was performed on Ubuntu 14.04.1 LTS (64 Bit) on 2016-06-14.</p>
+<p>The test was performed on Ubuntu 16.04 LTS (64 Bit) on 2017-06-30.</p>
 
