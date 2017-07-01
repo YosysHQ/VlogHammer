@@ -721,33 +721,16 @@ module issue_046(a, y);
   // This should set y=4'b1111 but Verilator d7e4bc1 sets y=4'b0001 instead.
   assign y = $signed(5'd1 > a-a);
 endmodule
-module issue_047(a, y);
-  input [1:0] a;
-  wire [8:0] y1;
-  reg [80:0] y2;
+module issue_047(a, b, y);
+  input signed [0:0] a;
+  input signed [1:0] b;
+  output [1:0] y;
 
-  output [89:0] y;
-  assign y = {y1, y2};
+  // For a='b1 and b='b11 this should output y='b00 (because a='b1 is
+  // sign-extended to a='b11). But Yosys 0.7+205 (git sha1 7d2fb6e)
+  // after optimizations outputs y='b10 instead.
 
-  assign y1 = { a == 2'b00, a == 2'b01, a == 2'b0x,
-                a == 2'b10, a == 2'b11, a == 2'b1x,
-                a == 2'bx0, a == 2'bx1, a == 2'bxx };
-
-  function int_to_bit;
-    /* func */ input [1:0] i;
-    begin
-      int_to_bit = i[1] ? 1'bx : i[0];
-    end
-  endfunction
-
-  integer i1, i2, i3, i4;
-  initial begin
-    for (i1 = 0; i1 < 3; i1 = i1+1)
-    for (i2 = 0; i2 < 3; i2 = i2+1)
-    for (i3 = 0; i3 < 3; i3 = i3+1)
-    for (i4 = 0; i4 < 3; i4 = i4+1)
-      y2[i1 + 3*i2 + 9*i3 + 27*i4] <= { int_to_bit(i1), int_to_bit(i2) } == { int_to_bit(i3), int_to_bit(i4) };
-  end
+  assign y = b ^ (a|a);
 endmodule
 module issue_048(a, b, y);
   input [1:0] a;
