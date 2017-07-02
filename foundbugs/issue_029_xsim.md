@@ -2,7 +2,7 @@
 Handling of large RHS in shift operator
 =======================================
 
-~OPEN~ XSim 2015.1
+~CLOSED~ XSim 2017.2
 
 Consider the following test case:
 
@@ -27,3 +27,4 @@ Verilator (git e5af46d) implement this correctly.
 
 **History:**  
 2015-05-15 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/Old-and-new-XSim-bug-reports/td-p/602984) bug in Xilinx Support Forum  
+2017-07-01 Fixed in XSim 2017.2  

@@ -2,7 +2,7 @@
 Quartus Verilog bug in handling $signed in an unsigned expression
 =================================================================
 
-~OPEN~ Quartus 15.0
+~OPEN~ Quartus 17.0
 
 The following module should output constant **0**, but quartus 13.1 generates a
 module that outputs constant **1** instead.
@@ -35,3 +35,4 @@ correctly.
 2014-03-22 Bugfix for Quartus II v14.1 prospected by Altera Support  
 2014-09-28 Verified that bug is still present in Quartus II v14.0  
 2015-05-15 Still broken in Quartus II 15.0  
+2017-07-01 Still broken in Quartus II 17.0  

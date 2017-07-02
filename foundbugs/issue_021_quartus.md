@@ -2,7 +2,7 @@
 Quartus hangs on power operations with large exponents
 ======================================================
 
-~OPEN~ Quartus 15.0
+~OPEN~ Quartus 17.0
 
 The following module should set **y** to constant **6'b110011**, but instead it
 just hangs quartus 13.1:
@@ -28,3 +28,4 @@ Crosscheck: Modelsim 10.1d can simulate this module in an instant and Vivado
 2014-01-27 Bugfix for Quartus II v14.1 prospected by Altera Support  
 2014-09-28 Verified that bug is still present in Quartus II v14.0  
 2015-05-15 Still broken in Quartus II 15.0  
+2017-07-01 Still broken in Quartus II 17.0  

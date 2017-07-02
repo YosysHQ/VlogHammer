@@ -2,7 +2,7 @@
 Bug in Quartus signed/unsigned handling in power operator
 =========================================================
 
-~OPEN~ Quartus 15.0
+~OPEN~ Quartus 17.0
 
 The following module should return 0 for both outputs:
 
@@ -36,3 +36,4 @@ correctly.
 2014-01-27 Bugfix for Quartus II v14.1 prospected by Altera Support  
 2014-09-28 Verified that bug is still present in Quartus II v14.0  
 2015-05-15 Still broken in Quartus II 15.0  
+2017-07-01 Still broken in Quartus II 17.0  

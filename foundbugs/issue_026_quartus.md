@@ -2,7 +2,7 @@
 Incorrect bit-extension of undef const in ?: operator
 =====================================================
 
-~OPEN~ Quartus 15.0
+~OPEN~ Quartus 17.0
 
 Consider the following test case:
 
@@ -28,3 +28,4 @@ right but has a bug regarding y2.
 
 **History:**  
 2015-05-15 Reported via Altera mySupport (SR #11146970)  
+2017-07-01 Still broken in Quartus II 17.0  

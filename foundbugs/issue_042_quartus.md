@@ -2,7 +2,7 @@
 Invalid optimization of reduce expression with undef bits
 =========================================================
 
-~OPEN~ Quartus 15.0
+~OPEN~ Quartus 17.0
 
 Consider the following test case:
 
@@ -21,3 +21,4 @@ Crosscheck: Vivado 2015.1, XSim 2015.1, Modelsim 10.3d, Icarus Verilog (git
 
 **History:**  
 2015-05-15 Reported via Altera mySupport (SR #11146970)  
+2017-07-01 Still broken in Quartus II 17.0  

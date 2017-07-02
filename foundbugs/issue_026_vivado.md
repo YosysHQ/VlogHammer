@@ -2,7 +2,7 @@
 Incorrect bit-extension of undef const in ?: operator
 =====================================================
 
-~OPEN~ Vivado 2016.2
+~OPEN~ Vivado 2017.2
 
 Consider the following test case:
 
@@ -29,3 +29,4 @@ right but has a bug regarding y1.
 **History:**  
 2015-05-15 [Reported](http://forums.xilinx.com/t5/Synthesis/Old-and-new-Vivado-Synthesis-Bugs/td-p/602988) bug in Xilinx Support Forum  
 2016-06-15 Still broken in Vivado 2016.2  
+2017-07-01 Still broken in Vivado 2017.2  

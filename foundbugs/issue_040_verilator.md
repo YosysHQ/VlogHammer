@@ -2,7 +2,7 @@
 Verilator uses undeclared helper function for power op > 64 bits
 ================================================================
 
-~OPEN~ Verilator GIT 621c515
+~OPEN~ Verilator GIT 1da5a33 (3_906)
 
 Verilator 621c515 creates code that uses the undeclared function `VL_POW_WWI`:
 
@@ -20,4 +20,5 @@ The gcc error message is:
          VL_POW_WWI(65,65,4, __Vtemp3, __Vtemp2, (IData)(vlTOPp->a));
 
 **History:**  
-2014-05-05 Reported as [Issue #761](http://www.veripool.org/issues/761-Verilator-Verilator-uses-undeclared-helper-function-for-power-op-64-bits)
+2014-05-05 Reported as [Issue #761](http://www.veripool.org/issues/761-Verilator-Verilator-uses-undeclared-helper-function-for-power-op-64-bits)  
+2017-07-01 Still broken in Verilator GIT 1da5a33 (3_906)  
