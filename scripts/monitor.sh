@@ -36,7 +36,7 @@
 				continue
 			fi
 			if [ $dir == "failed" ]; then
-				count=$( ls check_vivado check_quartus check_xst check_yosys 2> /dev/null | grep '\.err$' | sort -u | wc -l )
+				count=$( ls check_vivado check_quartus check_verific check_yosys 2> /dev/null | grep '\.err$' | sort -u | wc -l )
 			elif [ $dir == "total" ]; then
 				count=$sum
 			else
@@ -52,7 +52,7 @@
 	echo "     +------------------------------+------------------------------+------------------------------+"
 	stat_line {syn,check}_vivado   rtl
 	stat_line {syn,check}_quartus  failed
-	stat_line {syn,check}_xst      report
+	stat_line {syn,check}_verific  report
 	stat_line {syn,check}_yosys    total
 	echo "     +------------------------------+------------------------------+------------------------------+"
 
