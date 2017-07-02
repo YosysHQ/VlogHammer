@@ -2,7 +2,7 @@
 Incorrect results with partially out-of-bounds part select
 ==========================================================
 
-~OPEN~ Verilator GIT 1da5a33 (3_906)
+~OPEN~ Verilator 3_906
 
 This should return `y=4'b100x` for `a=1`, but verilator returns `y=0` instead
 (the MSB should be '1', obviously we don't care about the 'x' in the LSB that

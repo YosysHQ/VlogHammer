@@ -2,7 +2,7 @@
 Verilator uses undeclared helper function for power op > 64 bits
 ================================================================
 
-~OPEN~ Verilator GIT 1da5a33 (3_906)
+~OPEN~ Verilator 3_906
 
 Verilator 621c515 creates code that uses the undeclared function `VL_POW_WWI`:
 
