@@ -24,4 +24,4 @@ Verilog testbench for comparison:
 
 **History:**  
 2014-05-01 Reported as [Issue #756](http://www.veripool.org/issues/756-Verilator-Verilator-bug-with-signedness-and-arithmetic-shift)  
-2014-05-03 Fixed in GIT commit a985a1f
+2014-05-03 Fixed in GIT commit a985a1f  

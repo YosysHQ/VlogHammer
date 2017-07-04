@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-10 Reported as [Issue #763](http://www.veripool.org/issues/763-Verilator-Yet-another-Verilator-shift-bug)  
-2014-05-11 Fixed in GIT commit 6ce2a52
+2014-05-11 Fixed in GIT commit 6ce2a52  

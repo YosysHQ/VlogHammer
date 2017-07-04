@@ -24,4 +24,4 @@ XSim 2014.4, Modelsim 10.1d, Iacrus GIT 6547fde and Verilator GIT f705f9b
 accept this input.
 
 **History:**  
-2014-05-26 Formulated original bug report
+2014-05-26 Formulated original bug report  

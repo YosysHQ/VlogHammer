@@ -18,4 +18,4 @@ But iverilog 020e280 returns `y[3:2] == y[1:0]` instead.
 
 **History:**  
 2014-05-19 [Reported](https://github.com/steveicarus/iverilog/issues/22) bug on GitHub  
-2014-05-20 Fixed in GIT b7b77b2
+2014-05-20 Fixed in GIT b7b77b2  

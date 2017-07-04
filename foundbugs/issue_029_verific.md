@@ -23,5 +23,4 @@ this correctly.
 **History:**  
 2014-03-22 Reported bug to Verific support  
 2014-03-26 Bug added to issue tracker: VIPER Issue #8534  
-2014-07-23 Fixed in Verific 463_32_140722
-
+2014-07-23 Fixed in Verific 463_32_140722  

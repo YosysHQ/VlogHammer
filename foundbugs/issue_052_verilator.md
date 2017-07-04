@@ -18,4 +18,4 @@ The strange part is this: The statements `assign y = (0/0) % 0;` and
 
 **History:**  
 2014-05-24 Reported as [Issue #775](http://www.veripool.org/issues/775-Verilator-Strange-Verilator-Unsupported-Error)  
-2014-09-25 Fixed in GIT commit e8edbad
+2014-09-25 Fixed in GIT commit e8edbad  

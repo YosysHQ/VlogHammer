@@ -29,4 +29,4 @@ This is with Vivado 2013.4 and the following TCL script:
 2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/Strange-output-const-zero-bug-with-Vivado-gt-gt-gt-signedness/td-p/401411) bug in Xilinx Support Forum  
 2014-04-16 [Still broken in Vivado 2014.1](http://forums.xilinx.com/t5/Synthesis/Bugs-in-Vivado-2014-1/td-p/440750)  
 2014-09-27 Still broken in Vivado 2014.2  
-2015-05-15 Fixed in Vivado 2015.1
+2015-05-15 Fixed in Vivado 2015.1  

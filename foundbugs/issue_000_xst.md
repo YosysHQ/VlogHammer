@@ -30,5 +30,5 @@ This is with ISE 14.7 and the following XST settings:
 Crosscheck: Vivado 2013.4, Quartus 13.1, Isim 14.7 and Modelsim 10.1d implement this correctly.
 
 **History:**  
-2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/XST-14-7-sign-handling-bug-in-N-Verilog-operator/td-p/401399) bug in Xilinx Support Forum
+2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/XST-14-7-sign-handling-bug-in-N-Verilog-operator/td-p/401399) bug in Xilinx Support Forum  
 

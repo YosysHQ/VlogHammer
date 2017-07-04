@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-12 Reported as [Issue #765](http://www.veripool.org/issues/765-Verilator-Segfault-in-code-generated-by-Verilator)  
-2014-05-15 Fixed in GIT commit d7e4bc1
+2014-05-15 Fixed in GIT commit d7e4bc1  

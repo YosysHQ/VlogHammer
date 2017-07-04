@@ -25,5 +25,4 @@ incorrect. (Tested with git d1c9dd5.)
 
 **History:**  
 2014-01-06 [Reported](https://github.com/steveicarus/iverilog/issues/8) bug on GitHub  
-2014-02-15 Fixed in GIT commit [ac3aee0](https://github.com/steveicarus/iverilog/commit/ac3aee01720773002f995b9185d2e2024e736177)
-
+2014-02-15 Fixed in GIT commit [ac3aee0](https://github.com/steveicarus/iverilog/commit/ac3aee01720773002f995b9185d2e2024e736177)  

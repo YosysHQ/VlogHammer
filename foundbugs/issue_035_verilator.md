@@ -28,4 +28,4 @@ Self-contained test case:
 
 **History:**  
 2014-04-09 Reported as [Issue #737](http://www.veripool.org/issues/737-Verilator-Verilator-bug-in-signed-unsigned-expression-eval)  
-2014-04-30 Fixed in GIT commit adb39ce
+2014-04-30 Fixed in GIT commit adb39ce  

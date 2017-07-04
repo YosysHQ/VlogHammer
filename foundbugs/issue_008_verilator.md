@@ -43,4 +43,4 @@ Self-contained test case:
 
 **History:**  
 2014-04-08 Reported as [Issue #735](http://www.veripool.org/issues/735-Verilator-Strange-Verilator-behavior-with-power-signdness-and-more)  
-2014-04-09 Fixed in GIT commit fb4928b
+2014-04-09 Fixed in GIT commit fb4928b  

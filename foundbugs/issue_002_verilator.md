@@ -26,4 +26,4 @@ correctly.
 
 **History:**  
 2014-04-03 Reported as [Issue #729](http://www.veripool.org/issues/729-Verilator-Verilator-bug-in-handling-signed-in-an-unsigned-expression)  
-2014-04-06 Fixed in GIT commit 14fcfd8
+2014-04-06 Fixed in GIT commit 14fcfd8  

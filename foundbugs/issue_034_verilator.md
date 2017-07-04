@@ -27,4 +27,4 @@ Self-contained test case:
 
 **History:**  
 2014-04-09 Reported as [Issue #736](http://www.veripool.org/issues/736-Verilator-Verilator-thinks-a-and-a-are-the-same-thing)  
-2014-04-06 Fixed in GIT commit d04eb97
+2014-04-06 Fixed in GIT commit d04eb97  

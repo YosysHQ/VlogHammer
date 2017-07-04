@@ -31,5 +31,5 @@ Crosscheck: Vivado 2013.4, Isim 14.7 and Modelsim 10.1d implement this correctly
 Quartus 13.1 however seems to have [the same bug](issue_001_quartus.html).
 
 **History:**  
-2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/Bug-in-XST-handling-of-constant-first-argument-in-Verilog/td-p/401407) bug in Xilinx Support Forum
+2014-01-10 [Reported](http://forums.xilinx.com/t5/Synthesis/Bug-in-XST-handling-of-constant-first-argument-in-Verilog/td-p/401407) bug in Xilinx Support Forum  
 

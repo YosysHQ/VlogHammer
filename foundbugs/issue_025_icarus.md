@@ -19,5 +19,4 @@ correctly. In the constant case it is too smart and outputs **4'bxx00** instead.
 
 **History:**  
 2014-02-20 [Reported](https://github.com/steveicarus/iverilog/issues/15) bug on GitHub  
-2014-02-25 Fixed in GIT commit [a3450bf](https://github.com/steveicarus/iverilog/commit/a3450bf8560739caea01dbc72dfb6266d144070e)
-
+2014-02-25 Fixed in GIT commit [a3450bf](https://github.com/steveicarus/iverilog/commit/a3450bf8560739caea01dbc72dfb6266d144070e)  

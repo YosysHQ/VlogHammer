@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-11 Reported as [Issue #764](http://www.veripool.org/issues/764-Verilator-Bug-in-evaluating-defined-expression-with-undef-bits)  
-2014-05-11 Fixed in GIT commit 5f5a3db
+2014-05-11 Fixed in GIT commit 5f5a3db  

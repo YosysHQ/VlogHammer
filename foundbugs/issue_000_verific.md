@@ -26,5 +26,5 @@ In other words, Verific connects the MSB of **y0** to GND and the MSB of **y1** 
 **History:**  
 2014-03-08 Reported bug to Verific support  
 2014-03-18 Bug added to issue tracker: VIPER Issue #8510  
-2014-07-23 Fixed in Verific 463_32_140722
+2014-07-23 Fixed in Verific 463_32_140722  
 

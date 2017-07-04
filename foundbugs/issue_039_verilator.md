@@ -16,4 +16,4 @@ Verilator 4a58e85 creates the following error:
 
 **History:**  
 2014-05-04 Reported as [Issue #760](http://www.veripool.org/issues/760-Verilator-Verilator-Internal-Error-for-shift-by-undef-value)  
-2014-05-04 Fixed in GIT commit 621c515
+2014-05-04 Fixed in GIT commit 621c515  

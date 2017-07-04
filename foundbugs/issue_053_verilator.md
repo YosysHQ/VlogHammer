@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-25 Reported as [Issue #776](http://www.veripool.org/issues/776-Verilator-Incorrect-results-with-XNOR-shift-expression)  
-2014-09-25 Fixed in GIT commit e8edbad
+2014-09-25 Fixed in GIT commit e8edbad  

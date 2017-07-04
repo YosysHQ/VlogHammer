@@ -17,4 +17,4 @@ outputs **4'b0001** instead.
 
 **History:**  
 2014-04-06 Reported as [Issue #733](http://www.veripool.org/issues/733-Verilator-Verilator-bug-in-extending-signed)  
-2014-04-08 Fixed in GIT commit 5c39420
+2014-04-08 Fixed in GIT commit 5c39420  

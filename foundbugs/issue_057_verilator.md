@@ -25,5 +25,5 @@ Self-contained test case:
 This is with git e8edbad (verilator_3_864).
 
 **History:**  
-2014-09-23 Reported as [Issue #823](http://www.veripool.org/issues/823-Verilator-Incorrect-results-with-partially-out-of-bounds-part-select)
+2014-09-23 Reported as [Issue #823](http://www.veripool.org/issues/823-Verilator-Incorrect-results-with-partially-out-of-bounds-part-select)  
 2017-07-01 Still broken in Verilator GIT 1da5a33 (3_906)  

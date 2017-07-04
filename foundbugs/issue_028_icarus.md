@@ -16,5 +16,4 @@ But Icarus Verilog (git a3450bf) is too smart and outputs **4'b0000** instead.
 
 **History:**  
 2014-02-27 [Reported](https://github.com/steveicarus/iverilog/issues/18) bug on GitHub  
-2014-02-25 Fixed in GIT commit [ed2e339](https://github.com/steveicarus/iverilog/commit/ed2e339dd6ea366864969cbd929325e117ec23e9)
-
+2014-02-25 Fixed in GIT commit [ed2e339](https://github.com/steveicarus/iverilog/commit/ed2e339dd6ea366864969cbd929325e117ec23e9)  

@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-03 Reported as [Issue #759](http://www.veripool.org/issues/759-Verilator-Verilator-bug-in-signdness-of-)  
-2014-05-03 Fixed in GIT commit 4a58e85
+2014-05-03 Fixed in GIT commit 4a58e85  

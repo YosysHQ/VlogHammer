@@ -22,4 +22,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-15 Reported as [Issue #768](http://www.veripool.org/issues/768-Verilator-Verilator-bug-in-sign-extending-special-boolean-expression)  
-2014-05-16 Fixed in GIT commit 06744b6
+2014-05-16 Fixed in GIT commit 06744b6  

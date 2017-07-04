@@ -32,5 +32,4 @@ Isim 14.7 incorrectly returns **4'b0010** for the same test case.
 
 **History:**  
 2014-01-24 [Reported](http://forums.xilinx.com/t5/Simulation-and-Verification/XSim-fails-to-recognize-signed-expression-with-shift-in/td-p/406617) bug in Xilinx Support Forum  
-2014-04-16 Fixed in XSim 2014.1
-
+2014-04-16 Fixed in XSim 2014.1  

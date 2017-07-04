@@ -21,5 +21,4 @@ the bug goes away if the **(1 ? b : b)** is replaced by **b**.
 
 **History:**  
 2014-03-06 [Reported](https://github.com/steveicarus/iverilog/issues/20) bug on GitHub  
-2014-03-06 Fixed in GIT commit [bc9382e](https://github.com/steveicarus/iverilog/commit/bc9382eea39b65119c5496a54675d55a1162416d)
-
+2014-03-06 Fixed in GIT commit [bc9382e](https://github.com/steveicarus/iverilog/commit/bc9382eea39b65119c5496a54675d55a1162416d)  

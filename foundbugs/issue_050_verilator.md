@@ -20,4 +20,4 @@ Self-contained test case:
 
 **History:**  
 2014-05-23 Reported as [Issue #773](http://www.veripool.org/issues/773-Verilator-Verilator-returns-incorrect-expression-result)  
-2014-05-24 Fixed in GIT commit f705f9b
+2014-05-24 Fixed in GIT commit f705f9b  

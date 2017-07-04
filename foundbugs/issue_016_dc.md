@@ -25,5 +25,5 @@ XSim 2014.4, Modelsim 10.1d, Iacrus GIT 6547fde and Verilator GIT f705f9b
 implement this correctly. Quartus II 13.1 has the same bug.
 
 **History:**  
-2014-05-26 Formulated original bug report
+2014-05-26 Formulated original bug report  
 

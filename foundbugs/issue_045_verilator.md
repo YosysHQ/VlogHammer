@@ -20,4 +20,4 @@ The error created is:
 
 **History:**  
 2014-05-15 Reported as [Issue #766](http://www.veripool.org/issues/766-Verilator-Verilator-internal-fault-related-to-huge-shifts)  
-2014-05-16 Fixed in GIT commit 06744b6
+2014-05-16 Fixed in GIT commit 06744b6  

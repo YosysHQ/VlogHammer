@@ -29,4 +29,4 @@ Verilog testbench for comparison:
 
 **History:**  
 2014-04-30 Reported as [Issue #754](http://www.veripool.org/issues/754-Verilator-Verilator-bug-with-shift-expression-width-and-signedness)  
-2014-04-30 Fixed in GIT commit b631b59
+2014-04-30 Fixed in GIT commit b631b59  
