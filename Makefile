@@ -19,7 +19,7 @@
 # All supported SYN_LIST tags: vivado quartus xst yosys verific dc lec
 # All supported SIM_LIST tags: xsim isim modelsim icarus verilator yosim
 
-SYN_LIST     := vivado quartus yosys verific
+SYN_LIST     := vivado yosys
 SIM_LIST     := xsim modelsim icarus verilator yosim
 RTL_LIST     := $(shell ls rtl 2> /dev/null | cut -f1 -d.)
 REPORT_LIST  := $(shell ls $(addprefix check_,$(SYN_LIST)) 2> /dev/null | grep '\.err$$' | cut -f1 -d. | sort -u)
@@ -31,7 +31,7 @@ VIVADO_DIR   := /opt/Xilinx/Vivado/2017.2/bin
 VERILATOR    := /usr/local/bin/verilator
 MAKE_JOBS    := -j4 -l8
 YOSYS_MODE   := default
-REPORT_FULL  := 1
+REPORT_FULL  :=
 REPORT_OPTS  :=
 
 ifdef REPORT_FULL
