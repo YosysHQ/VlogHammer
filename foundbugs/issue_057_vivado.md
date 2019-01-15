@@ -2,7 +2,7 @@
 Vivado handling of partly out-of-bounds parts select
 ====================================================
 
-~OPEN~ Vivado 2017.2
+~OPEN~ Vivado 2018.3
 
 Consider the following test case:
 
@@ -25,3 +25,4 @@ Crosscheck: Verific 35_463_32_140722, Modelsim 10.1e, XSim 2014.2 and Icarus Ver
 2015-05-15 [Still broken in Vivado 2015.1](http://forums.xilinx.com/t5/Synthesis/Old-and-new-Vivado-Synthesis-Bugs/td-p/602988)  
 2016-06-15 Still broken in Vivado 2016.2  
 2017-07-01 Still broken in Vivado 2017.2  
+2019-01-15 Still broken in Vivado 2018.3  
