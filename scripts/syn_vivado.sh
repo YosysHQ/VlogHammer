@@ -33,6 +33,9 @@ cd temp/syn_vivado_$job
 
 sed 's/^module/(* use_dsp48="no" *) module/;' < ../../rtl/$job.v > rtl.v
 cat > $job.tcl <<- EOT
+	# CRITICAL WARNING: [Synth 8-5821] Potential divide by zero
+	set_msg_config -id {Synth 8-5821} -new_severity {WARNING}
+
 	read_verilog rtl.v
 	synth_design -part xc7k70t -top $job
 	write_verilog -force synth.v
