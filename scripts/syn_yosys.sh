@@ -52,6 +52,9 @@ case "$YOSYS_MODE" in
 	6|simgates)
 		yosys -q -l synth.log -b 'verilog -noexpr -noattr' -o synth.v \
 		      -p 'hierarchy; proc; opt; techmap; opt' ../../rtl/$job.v ;;
+	7|minimal)
+		yosys -q -l synth.log -b 'verilog -noattr' -o synth.v \
+		      -p 'hierarchy; proc' ../../rtl/$job.v ;;
 	*)
 		echo "Unsupported mode: $YOSYS_MODE" >&2
 		exit 1 ;;

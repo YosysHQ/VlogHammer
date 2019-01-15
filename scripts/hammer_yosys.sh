@@ -18,7 +18,7 @@
 #
 
 set -ex
-ALL_MODES="default abc lateopt noopt nomap simlib simgates"
+ALL_MODES="default abc lateopt noopt nomap simlib simgates minimal"
 
 rm -rf check_yosys_*
 for mode in $ALL_MODES; do
