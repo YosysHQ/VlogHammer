@@ -154,7 +154,7 @@ void print_expression(FILE *f, int budget, uint32_t mask, bool avoid_undef, bool
 		return;
 	}
 
-	while ((mask & ~((~0) << num_modes)) == 0)
+	while ((mask & ~((~0U) << num_modes)) == 0)
 		mask = xorshift32() & (in_param ? ~4 : ~0);
 
 	if ((mask & 3) != 0)
