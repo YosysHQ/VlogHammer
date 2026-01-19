@@ -14,7 +14,7 @@ bool pattern_bits[PATTERN_BITS_N];
 int pattern_cursor, pattern_idx;
 
 std::string input_pat_list;
-std::vector<string> input_patterns_buf;
+std::vector<std::string> input_patterns_buf;
 std::set<int> undef_bits;
 
 static inline void set_pattern(const char *pattern)

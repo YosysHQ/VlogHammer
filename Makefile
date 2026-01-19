@@ -16,7 +16,7 @@
 #  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-# All supported SYN_LIST tags: vivado quartus xst yosys verific dc lec
+# All supported SYN_LIST tags: vivado quartus xst yosys verific dc lec circt
 # All supported SIM_LIST tags: xsim isim modelsim icarus verilator yosim
 
 SYN_LIST     := vivado yosys
@@ -28,7 +28,7 @@ IVERILOG_DIR := # /home/claire/Work/iverilog/instdir/bin
 MODELSIM_DIR := /opt/intelFPGA_lite/17.0/modelsim_ase/linux
 QUARTUS_DIR  := /opt/intelFPGA_lite/17.0/quartus/bin
 VIVADO_DIR   := /opt/Xilinx/Vivado/2018.3/bin
-VERILATOR    := /usr/local/bin/verilator
+VERILATOR    := $(which verilator)
 MAKE_JOBS    := -j4 -l8
 YOSYS_MODE   := default
 REPORT_FULL  :=

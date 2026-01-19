@@ -12,6 +12,7 @@ supported:
 	Altera Quartus II Web Edition (17.0)
 	Cadence Conformal LEC (8.1)
 	Synopsys Design Compiler (C-2009.06)
+	CIRCT (no specific version)
 
 Note: Cadence Conformal and Synopsys Design Compiler are disabled by
 default. Add "lec" and "dc" to SYN_LIST in the Makefile to enable them.

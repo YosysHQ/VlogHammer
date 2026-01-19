@@ -335,7 +335,7 @@ if [[ " ${SIM_LIST} " == *" verilator "* ]]; then
 		done
 		bash ../../scripts/verilator_tb.sh ${job} $( echo rtl ${SYN_LIST} | tr ' ' , ) $( echo $inputs | tr -d ' ' ) \
 				$( echo $bits\'b0 ~$bits\'b0 $( sort -u fail_patterns.txt | sed "s/^/$bits'b/;" ) $extra_patterns | tr ' ' ',' ) $undef_ref > sim_verilator.cc
-		if ! make -C obj_dir -f Vtestbench.mk || ! g++ -I "$( grep 'VERILATOR_ROOT *=' obj_dir/Vtestbench.mk | sed 's,.*= *,,' )/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a; then
+		if ! make -C obj_dir -f Vtestbench.mk || ! g++ -I "$( grep 'VERILATOR_ROOT *=' obj_dir/Vtestbench.mk | sed 's,.*= *,,' )/include" -o sim_verilator sim_verilator.cc obj_dir/Vtestbench__ALL.a obj_dir/libVtestbench.a obj_dir/libverilated.a; then
 			echo -n > sim_verilator.log
 		else
 			./sim_verilator > sim_verilator.log
@@ -496,7 +496,7 @@ fi
 			$y =~ /^(module|input|wire|reg|integer|localparam|output|assign|signed|if|else|for|begin|end|case|endcase|task|endtask|function|endfunction|always|initial|endmodule|\$(display|unsigned|signed))$/ ? "#080" : "#008", $y)!eg' )</small></pre>"
 
 	echo "<!-- VALUES:BEGIN -->"
-	python ../../scripts/valtab.py ${SIM_LIST}
+	python2 ../../scripts/valtab.py ${SIM_LIST}
 	echo "<!-- VALUES:END -->"
 	echo "<!-- REPORT:END -->"
 } > report.html
